@@ -32,6 +32,13 @@
     },
     "plugins": [
       "expo-router"
-    ]
+    ],
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "49b2db9e-1967-4831-b6e0-5a0eb5d03423"
+      }
+    },
+    "owner": "krispel"
   }
 }
