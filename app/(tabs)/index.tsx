@@ -103,9 +103,8 @@ export default function Home() {
                   <Text style={{ fontSize: 18 }}>🔍</Text>
                 </TouchableOpacity>
               </View>
-              {/* Center: app icon + title in frosted pill */}
+              {/* Center: title in frosted pill */}
               <View style={s.heroTop}>
-                <Image source={require('../../assets/icon.png')} style={s.appIcon} />
                 <View style={s.heroPill}>
                   <Text style={s.heroTitle}>ברוכים הבאים ל<Text style={{ color: Colors.GOLD }}>דובאי</Text></Text>
                   <Text style={s.heroSub}>המדריך המלא לתייר הישראלי</Text>
