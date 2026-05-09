@@ -272,7 +272,7 @@ function IsraeliContent() {
       </View>
 
       {/* Submit project CTA */}
-      <TouchableOpacity style={s.submitProject} onPress={() => Linking.openURL('https://wellcomedubai.com/#realestate')}>
+      <TouchableOpacity style={s.submitProject} onPress={() => router.push('/submit-project' as any)}>
         <Text style={s.submitProjectTxt}>📤 העלה פרויקט חדש</Text>
         <Text style={s.submitProjectArrow}>‹</Text>
       </TouchableOpacity>
