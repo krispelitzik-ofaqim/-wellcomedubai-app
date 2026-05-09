@@ -75,7 +75,7 @@ export default function CategoryScreen() {
         {list.length === 0 ? (
           <Text style={{ textAlign: 'center', color: Colors.MUTED, marginTop: 20 }}>אין פריטים בקטגוריה זו</Text>
         ) : list.map(item => (
-          <TouchableOpacity key={item.id} activeOpacity={0.85} style={s.card} onPress={() => item.lat && Linking.openURL(`https://www.google.com/maps/search/?api=1&query=${item.lat},${item.lng}`)}>
+          <TouchableOpacity key={item.id} activeOpacity={0.85} style={s.card} onPress={() => router.push(`/item/${item.id}?cat=${cat}` as any)}>
             <View style={{ position: 'relative' }}>
               {imgUrl(item) ? (
                 <Image source={{ uri: imgUrl(item) }} style={s.cardImg} />

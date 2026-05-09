@@ -162,7 +162,7 @@ export default function Home() {
               </View>
               <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 14, gap: 10 }}>
                 {items.map((it: any) => (
-                  <TouchableOpacity key={it.id} activeOpacity={0.85} onPress={() => router.push(`/category/${cat}` as any)} style={[s.card, { width: cardW }]}>
+                  <TouchableOpacity key={it.id} activeOpacity={0.85} onPress={() => router.push(`/item/${it.id}?cat=${cat}` as any)} style={[s.card, { width: cardW }]}>
                     <View style={{ position: 'relative' }}>
                       <Image source={{ uri: imgUrl(it) }} style={s.cardImg} />
                       {it.kosher ? <View style={s.kosherBadge}><Text style={s.kosherText}>✡ מכבד כשרות</Text></View> : null}
@@ -219,7 +219,7 @@ export default function Home() {
                   </View>
                   <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 14, gap: 10 }}>
                     {items.map((it: any) => (
-                      <TouchableOpacity key={it.id} activeOpacity={0.85} onPress={() => router.push(`/category/${cat}` as any)} style={[s.card, { width: 140 }]}>
+                      <TouchableOpacity key={it.id} activeOpacity={0.85} onPress={() => router.push(`/item/${it.id}?cat=${cat}` as any)} style={[s.card, { width: 140 }]}>
                         <Image source={{ uri: imgUrl(it) }} style={[s.cardImg, { height: 90 }]} />
                         <View style={s.cardBody}>
                           <Text numberOfLines={2} style={[s.cardName, { fontSize: 12 }]}>{it.name}</Text>
