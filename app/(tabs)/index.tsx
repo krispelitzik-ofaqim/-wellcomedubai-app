@@ -121,7 +121,7 @@ export default function Home() {
                       <Text style={[s.linkMed, { color: l.color }]}>{l.label}</Text>
                     </TouchableOpacity>
                   ))}
-                  <TouchableOpacity onPress={() => router.push('/(tabs)/map' as any)}>
+                  <TouchableOpacity onPress={() => router.push('/itineraries' as any)}>
                     <Text style={[s.linkMed, { color: Colors.SECONDARY }]}>מסלולים מוכנים</Text>
                   </TouchableOpacity>
                 </View>
