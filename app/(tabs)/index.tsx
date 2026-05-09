@@ -30,9 +30,9 @@ const CAT_SM = [
 ];
 
 const QUICK_TOOLS = [
-  { id: 'flights', label: 'טיסות', icon: '✈️', color: '#1A6B8A', desc: 'TLV ↔ DXB' },
-  { id: 'weather', label: 'מזג אוויר', icon: '☀️', color: '#F4A261', desc: 'דובאי כעת' },
-  { id: 'currency', label: 'המרת מטבע', icon: '💱', color: '#2A9D8F', desc: 'ש״ח ⇄ AED' },
+  { id: 'flights',  label: 'לוח טיסות',  desc: 'TLV ↔ DXB',     icon: '✈️', color: '#1A6B8A', img: 'https://images.pexels.com/photos/2026324/pexels-photo-2026324.jpeg' },
+  { id: 'weather',  label: 'מזג אוויר',   desc: 'תחזית בדובאי',  icon: '☀️', color: '#F4A261', img: 'https://wellcomedubai.com/images/Yizhak/dubai-skyline-evening.jpg' },
+  { id: 'currency', label: 'שער שקל',     desc: '₪ ↔ AED',       icon: '💰', color: '#B8923A', img: 'https://wellcomedubai.com/images/Yizhak/economy-uae-currency.jpg' },
 ];
 
 const LEARN_TILES = [
@@ -240,13 +240,18 @@ export default function Home() {
           </ImageBackground>
         </TouchableOpacity>
 
-        {/* Quick Tools — under RE banner */}
+        {/* Quick Tools — image header + colored stripe + label/desc */}
         <View style={s.qtRow}>
           {QUICK_TOOLS.map(t => (
-            <TouchableOpacity key={t.id} activeOpacity={0.85} style={[s.qtCard, { backgroundColor: t.color }]} onPress={() => router.push(`/tools/${t.id}` as any)}>
-              <Text style={s.qtIcon}>{t.icon}</Text>
-              <Text style={s.qtLabel}>{t.label}</Text>
-              <Text style={s.qtDesc}>{t.desc}</Text>
+            <TouchableOpacity key={t.id} activeOpacity={0.85} style={s.qtCard} onPress={() => router.push(`/tools/${t.id}` as any)}>
+              <View style={s.qtImgWrap}>
+                <Image source={{ uri: t.img }} style={s.qtImg} />
+                <View style={[s.qtIconBadge, { backgroundColor: t.color + 'cc' }]}><Text style={{ fontSize: 12 }}>{t.icon}</Text></View>
+              </View>
+              <View style={[s.qtBody, { borderTopColor: t.color }]}>
+                <Text style={s.qtLabel}>{t.label}</Text>
+                <Text style={s.qtDesc}>{t.desc}</Text>
+              </View>
             </TouchableOpacity>
           ))}
         </View>
@@ -293,10 +298,13 @@ const s = StyleSheet.create({
   nearMeRow: { alignItems: 'center', marginTop: 4 },
   nearMe: { color: '#fff', fontSize: 14, fontWeight: '700', textShadowColor: 'rgba(0,0,0,0.7)', textShadowOffset: { width: 0, height: 1 }, textShadowRadius: 4 },
   qtRow: { flexDirection: 'row-reverse', gap: 8, paddingHorizontal: 14, marginTop: 14 },
-  qtCard: { flex: 1, padding: 12, borderRadius: 12, alignItems: 'center' },
-  qtIcon: { fontSize: 22 },
-  qtLabel: { color: '#fff', fontSize: 12, fontWeight: '900', marginTop: 4 },
-  qtDesc: { color: 'rgba(255,255,255,0.85)', fontSize: 9, marginTop: 2 },
+  qtCard: { flex: 1, borderRadius: 12, overflow: 'hidden', backgroundColor: '#fff', borderWidth: 1, borderColor: '#E5E7EB' },
+  qtImgWrap: { height: 100, position: 'relative' },
+  qtImg: { width: '100%', height: '100%' },
+  qtIconBadge: { position: 'absolute', top: 6, right: 6, width: 26, height: 26, borderRadius: 13, alignItems: 'center', justifyContent: 'center' },
+  qtBody: { backgroundColor: '#fff', padding: 8, borderTopWidth: 3, alignItems: 'center' },
+  qtLabel: { color: Colors.TEXT, fontSize: 12, fontWeight: '900' },
+  qtDesc: { color: Colors.MUTED, fontSize: 9, marginTop: 2 },
   sectionHead: { flexDirection: 'row-reverse', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 18, marginTop: 18, marginBottom: 8 },
   sectionTitle: { fontSize: 16, fontWeight: '900', writingDirection: 'rtl' },
   seeAll: { color: Colors.ACCENT, fontSize: 11, fontWeight: '700' },

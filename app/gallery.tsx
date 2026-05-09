@@ -61,19 +61,19 @@ export default function GalleryScreen() {
 }
 
 const s = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#000' },
+  container: { flex: 1, backgroundColor: Colors.BG },
   header: { flexDirection: 'row-reverse', alignItems: 'center', paddingHorizontal: 14, paddingVertical: 12, backgroundColor: Colors.PRIMARY, gap: 10 },
   back: { padding: 4 },
   title: { flex: 1, color: '#fff', fontSize: 17, fontWeight: '900', writingDirection: 'rtl' },
   count: { color: Colors.GOLD, fontSize: 13, fontWeight: '800' },
-  imageWrap: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#000', position: 'relative' },
+  imageWrap: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: Colors.BG, position: 'relative' },
   image: { width: '100%', height: '100%' },
   watermark: { position: 'absolute', bottom: 18, right: 18, backgroundColor: 'rgba(0,0,0,0.55)', borderColor: 'rgba(233,196,106,0.5)', borderWidth: 1, paddingHorizontal: 10, paddingVertical: 5, borderRadius: 8 },
   watermarkTxt: { color: Colors.GOLD, fontWeight: '900', fontSize: 11, letterSpacing: 0.5 },
   navBtn: { position: 'absolute', top: '50%', marginTop: -28, width: 56, height: 56, borderRadius: 28, backgroundColor: 'rgba(0,0,0,0.55)', alignItems: 'center', justifyContent: 'center' },
   navTxt: { color: '#fff', fontSize: 32, fontWeight: '300' },
-  stripWrap: { backgroundColor: '#0E2A38' },
-  stripTitle: { color: '#fff', fontSize: 12, fontWeight: '700', paddingHorizontal: 14, paddingTop: 10, paddingBottom: 6, textAlign: 'right', writingDirection: 'rtl' },
-  thumb: { borderRadius: 6, overflow: 'hidden', borderWidth: 1, borderColor: 'rgba(255,255,255,0.15)' },
+  stripWrap: { backgroundColor: '#fff', borderTopWidth: 1, borderTopColor: '#E8DEC8' },
+  stripTitle: { color: Colors.TEXT, fontSize: 12, fontWeight: '700', paddingHorizontal: 14, paddingTop: 10, paddingBottom: 6, textAlign: 'right', writingDirection: 'rtl' },
+  thumb: { borderRadius: 6, overflow: 'hidden', borderWidth: 1, borderColor: '#E5E7EB' },
   thumbActive: { borderWidth: 2, borderColor: Colors.ACCENT },
 });
