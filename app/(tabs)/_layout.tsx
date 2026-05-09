@@ -13,10 +13,10 @@ export default function TabsLayout() {
         tabBarLabelStyle: { fontSize: 11, fontWeight: '700' },
       }}
     >
-      <Tabs.Screen name="index"     options={{ title: 'בית',     tabBarIcon: ({ color }) => <Text style={{ fontSize: 22, color }}>🏠</Text> }} />
-      <Tabs.Screen name="map"       options={{ title: 'מפה',     tabBarIcon: ({ color }) => <Text style={{ fontSize: 22, color }}>🗺️</Text> }} />
-      <Tabs.Screen name="favorites" options={{ title: 'המסע',   tabBarIcon: ({ color }) => <Text style={{ fontSize: 22, color }}>❤️</Text> }} />
-      <Tabs.Screen name="contact"   options={{ title: 'קשר',     tabBarIcon: ({ color }) => <Text style={{ fontSize: 22, color }}>✉️</Text> }} />
+      <Tabs.Screen name="index"     options={{ title: 'בית',     tabBarIcon: ({ color }) => <Text style={{ fontSize: 22 }}>🏠</Text> }} />
+      <Tabs.Screen name="map"       options={{ title: 'אזורים', tabBarIcon: ({ color }) => <Text style={{ fontSize: 22 }}>🗺️</Text> }} />
+      <Tabs.Screen name="favorites" options={{ title: 'המסע',   tabBarIcon: ({ color }) => <Text style={{ fontSize: 22 }}>❤️</Text> }} />
+      <Tabs.Screen name="contact"   options={{ title: 'WhatsApp', tabBarIcon: ({ color }) => <Text style={{ fontSize: 22 }}>💬</Text> }} />
     </Tabs>
   );
 }
