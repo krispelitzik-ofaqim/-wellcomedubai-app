@@ -82,6 +82,7 @@ function imgUrl(item: any) {
 export default function Home() {
   const { width } = useWindowDimensions();
   const [moreOpen, setMoreOpen] = useState(false);
+  const [galleryOpen, setGalleryOpen] = useState(false);
   const [heroIdx, setHeroIdx] = useState(0);
   // Scale fonts based on width — 390px (iPhone 12) is baseline 1.0; tablets get larger
   const scale = Math.min(1.5, Math.max(0.85, width / 390));
@@ -228,21 +229,6 @@ export default function Home() {
           </View>
         )}
 
-        {/* Gallery preview */}
-        <View style={s.sectionHead}>
-          <Text style={[s.sectionTitle, { color: Colors.ACCENT }]}>📷 הגלרייה שלנו</Text>
-          <TouchableOpacity onPress={() => router.push('/gallery' as any)}>
-            <Text style={s.seeAll}>הכל ←</Text>
-          </TouchableOpacity>
-        </View>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 14, gap: 8 }}>
-          {(GALLERY as string[]).slice(0, 12).map((name, i) => (
-            <TouchableOpacity key={i} onPress={() => router.push('/gallery' as any)}>
-              <Image source={{ uri: `https://wellcomedubai.com/images/wellcomedubai.stamp/${name}` }} style={{ width: 130, height: 130, borderRadius: 8 }} />
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
-
         {/* RE Banner */}
         <TouchableOpacity activeOpacity={0.9} style={s.reBanner} onPress={() => router.push('/realestate' as any)} key="re-banner">
           <ImageBackground source={{ uri: 'https://wellcomedubai.com/images/wellcomedubai.stamp/skyscrapers-looking-up-sky-modern-metropolis-modern-city.jpg' }} style={{ flex: 1 }} imageStyle={{ borderRadius: 16 }}>
@@ -264,6 +250,25 @@ export default function Home() {
             </TouchableOpacity>
           ))}
         </View>
+
+        {/* Gallery preview — collapsed by default, at bottom */}
+        <TouchableOpacity onPress={() => setGalleryOpen(o => !o)} style={s.galleryToggle}>
+          <Text style={s.galleryToggleText}>📷 הגלרייה שלנו {galleryOpen ? '▲' : '▼'}</Text>
+        </TouchableOpacity>
+        {galleryOpen && (
+          <>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 14, gap: 8 }}>
+              {(GALLERY as string[]).slice(0, 12).map((name, i) => (
+                <TouchableOpacity key={i} onPress={() => router.push('/gallery' as any)}>
+                  <Image source={{ uri: `https://wellcomedubai.com/images/wellcomedubai.stamp/${name}` }} style={{ width: 130, height: 130, borderRadius: 8 }} />
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+            <TouchableOpacity onPress={() => router.push('/gallery' as any)} style={{ alignItems: 'center', paddingVertical: 8 }}>
+              <Text style={{ color: Colors.ACCENT, fontWeight: '700', fontSize: 12 }}>לתצוגה מלאה ←</Text>
+            </TouchableOpacity>
+          </>
+        )}
       </ScrollView>
     </View>
   );
@@ -306,6 +311,8 @@ const s = StyleSheet.create({
   learnTile: { borderRadius: 10, overflow: 'hidden', justifyContent: 'flex-end' },
   learnOverlay: { padding: 6, backgroundColor: 'rgba(0,0,0,0.4)' },
   learnText: { color: '#fff', fontSize: 10, fontWeight: '800', textShadowColor: 'rgba(0,0,0,0.85)', textShadowOffset: { width: 0, height: 1 }, textShadowRadius: 3, writingDirection: 'rtl' },
+  galleryToggle: { alignItems: 'center', marginTop: 22, marginBottom: 6, paddingVertical: 6 },
+  galleryToggleText: { color: Colors.TEXT, fontWeight: '700', fontSize: 14 },
   moreToggle: { flexDirection: 'row-reverse', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 18, marginTop: 18 },
   moreToggleText: { color: Colors.ACCENT, fontWeight: '900', fontSize: 14 },
   moreToggleArrow: { color: Colors.ACCENT, fontSize: 13 },
