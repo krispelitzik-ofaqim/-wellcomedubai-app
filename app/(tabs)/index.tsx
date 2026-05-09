@@ -286,7 +286,7 @@ const s = StyleSheet.create({
   heroPill: { paddingHorizontal: 20, paddingVertical: 14, backgroundColor: 'rgba(0,0,0,0.32)', borderRadius: 18, borderWidth: 1, borderColor: 'rgba(255,255,255,0.16)' },
   heroTitle: { color: '#fff', fontWeight: '900', letterSpacing: -0.5, textAlign: 'center', writingDirection: 'rtl', textShadowColor: 'rgba(0,0,0,0.85)', textShadowOffset: { width: 0, height: 2 }, textShadowRadius: 5 },
   heroSub: { color: 'rgba(255,255,255,0.95)', fontWeight: '600', textAlign: 'center', marginTop: 4, writingDirection: 'rtl', textShadowColor: 'rgba(0,0,0,0.7)', textShadowOffset: { width: 0, height: 1 }, textShadowRadius: 4 },
-  heroBottom: { paddingBottom: 12 },
+  heroBottom: { paddingBottom: 32 },
   linkRowBig: { flexDirection: 'row-reverse', justifyContent: 'center', gap: 16, marginBottom: 4 },
   linkRowMed: { flexDirection: 'row-reverse', justifyContent: 'center', gap: 12, marginBottom: 2, flexWrap: 'wrap' },
   linkBig: { fontSize: 18, fontWeight: '800', textShadowColor: 'rgba(0,0,0,0.6)', textShadowOffset: { width: 0, height: 1 }, textShadowRadius: 4 },
