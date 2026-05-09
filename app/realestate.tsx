@@ -50,70 +50,70 @@ export default function RealEstateScreen() {
 
   return (
     <View style={s.container}>
-      {/* Dark header */}
-      <SafeAreaView edges={['top']} style={{ backgroundColor: '#0E2A38' }}>
-        <View style={s.header}>
-          <TouchableOpacity onPress={() => router.back()} style={s.back}>
-            <Text style={{ fontSize: 22, color: '#fff' }}>←</Text>
-          </TouchableOpacity>
-          <Text style={s.title}>פורטל הנדל"ן בדובאי</Text>
-        </View>
-
-        {/* Financial KPI hero */}
-        <View style={s.kpiHero}>
-          <View style={s.kpiHeroHead}>
-            <Text style={s.kpiKicker}>DUBAI REAL ESTATE INDEX</Text>
-            <Text style={s.kpiLive}>LIVE • Q2 2026</Text>
-          </View>
-          <View style={s.kpiGrid}>
-            <View style={s.kpiBox}>
-              <Text style={s.kpiLabel}>מחיר ממוצע למ"ר</Text>
-              <Text style={s.kpiVal}>AED 1,580</Text>
-              <Text style={[s.kpiDelta, { color: '#4ADE80' }]}>▲ 19.8% YoY</Text>
-            </View>
-            <View style={s.kpiBox}>
-              <Text style={s.kpiLabel}>תשואה ממוצעת</Text>
-              <Text style={s.kpiVal}>8.2%</Text>
-              <Text style={[s.kpiDelta, { color: '#4ADE80' }]}>▲ 0.6pt YoY</Text>
-            </View>
-            <View style={s.kpiBox}>
-              <Text style={s.kpiLabel}>AED / ILS</Text>
-              <Text style={s.kpiVal}>0.998</Text>
-              <Text style={[s.kpiDelta, { color: '#F87171' }]}>▼ 0.4% MoM</Text>
-            </View>
-          </View>
-        </View>
-      </SafeAreaView>
-
-      {/* Flat tabs */}
-      <View style={s.tabsStrip}>
-        {TABS.map(t => {
-          const isActive = tab === t.id;
-          return (
-            <TouchableOpacity
-              key={t.id}
-              style={s.tabBtn}
-              onPress={() => {
-                if (t.isExternal) {
-                  Linking.openURL('https://wellcomedubai.com/#business');
-                } else {
-                  setTab(t.id as any);
-                }
-              }}
-            >
-              <Text style={[s.tabL1, { color: isActive ? t.color : Colors.MUTED, fontWeight: isActive ? '900' : '600' }]}>{t.line1}</Text>
-              <Text style={[s.tabL2, { color: isActive ? t.color : Colors.MUTED, fontWeight: isActive ? '900' : '600' }]}>{t.line2}</Text>
-              {isActive && <View style={[s.tabUnderline, { backgroundColor: t.color }]} />}
+      <ScrollView contentContainerStyle={{ paddingBottom: 60 }} stickyHeaderIndices={[1]}>
+        {/* Dark header + KPI hero (scrolls) */}
+        <SafeAreaView edges={['top']} style={{ backgroundColor: '#0E2A38' }}>
+          <View style={s.header}>
+            <TouchableOpacity onPress={() => router.back()} style={s.back}>
+              <Text style={{ fontSize: 22, color: '#fff' }}>←</Text>
             </TouchableOpacity>
-          );
-        })}
-      </View>
+            <Text style={s.title}>פורטל הנדל"ן בדובאי</Text>
+          </View>
+          <View style={s.kpiHero}>
+            <View style={s.kpiHeroHead}>
+              <Text style={s.kpiKicker}>DUBAI REAL ESTATE INDEX</Text>
+              <Text style={s.kpiLive}>LIVE • Q2 2026</Text>
+            </View>
+            <View style={s.kpiGrid}>
+              <View style={s.kpiBox}>
+                <Text style={s.kpiLabel}>מחיר ממוצע למ"ר</Text>
+                <Text style={s.kpiVal}>AED 1,580</Text>
+                <Text style={[s.kpiDelta, { color: '#4ADE80' }]}>▲ 19.8% YoY</Text>
+              </View>
+              <View style={s.kpiBox}>
+                <Text style={s.kpiLabel}>תשואה ממוצעת</Text>
+                <Text style={s.kpiVal}>8.2%</Text>
+                <Text style={[s.kpiDelta, { color: '#4ADE80' }]}>▲ 0.6pt YoY</Text>
+              </View>
+              <View style={s.kpiBox}>
+                <Text style={s.kpiLabel}>AED / ILS</Text>
+                <Text style={s.kpiVal}>0.998</Text>
+                <Text style={[s.kpiDelta, { color: '#F87171' }]}>▼ 0.4% MoM</Text>
+              </View>
+            </View>
+          </View>
+        </SafeAreaView>
 
-      <ScrollView contentContainerStyle={{ padding: 14, paddingBottom: 60 }}>
-        {tab === 'invest' && <InvestContent />}
-        {tab === 'israeli' && <IsraeliContent />}
-        {(tab === 'sale' || tab === 'rent') && <ListingsPlaceholder type={tab} />}
-        <BrokersBanner />
+        {/* Flat tabs (sticky) */}
+        <View style={s.tabsStrip}>
+          {TABS.map(t => {
+            const isActive = tab === t.id;
+            return (
+              <TouchableOpacity
+                key={t.id}
+                style={s.tabBtn}
+                onPress={() => {
+                  if (t.isExternal) {
+                    Linking.openURL('https://wellcomedubai.com/#business');
+                  } else {
+                    setTab(t.id as any);
+                  }
+                }}
+              >
+                <Text style={[s.tabL1, { color: isActive ? t.color : Colors.MUTED, fontWeight: isActive ? '900' : '600' }]}>{t.line1}</Text>
+                <Text style={[s.tabL2, { color: isActive ? t.color : Colors.MUTED, fontWeight: isActive ? '900' : '600' }]}>{t.line2}</Text>
+                {isActive && <View style={[s.tabUnderline, { backgroundColor: t.color }]} />}
+              </TouchableOpacity>
+            );
+          })}
+        </View>
+
+        <View style={{ padding: 14 }}>
+          {tab === 'invest' && <InvestContent />}
+          {tab === 'israeli' && <IsraeliContent />}
+          {(tab === 'sale' || tab === 'rent') && <ListingsPlaceholder type={tab} />}
+          <BrokersBanner />
+        </View>
       </ScrollView>
     </View>
   );
@@ -368,10 +368,10 @@ const s = StyleSheet.create({
   kpiVal: { color: '#fff', fontSize: 16, fontWeight: '800' },
   kpiDelta: { fontSize: 11, fontWeight: '700', marginTop: 2 },
 
-  tabsStrip: { flexDirection: 'row-reverse', backgroundColor: '#FDF6EC', borderBottomWidth: 1, borderBottomColor: '#E8DEC8', paddingVertical: 6 },
-  tabBtn: { flex: 1, alignItems: 'center', paddingVertical: 8, position: 'relative' },
-  tabL1: { fontSize: 13, lineHeight: 16 },
-  tabL2: { fontSize: 13, lineHeight: 16 },
+  tabsStrip: { flexDirection: 'row-reverse', backgroundColor: '#FDF6EC', borderBottomWidth: 1, borderBottomColor: '#E8DEC8', paddingVertical: 4, paddingHorizontal: 4 },
+  tabBtn: { flex: 1, alignItems: 'center', paddingVertical: 8, position: 'relative', minWidth: 0 },
+  tabL1: { fontSize: 11, lineHeight: 14 },
+  tabL2: { fontSize: 11, lineHeight: 14 },
   tabUnderline: { position: 'absolute', bottom: 0, left: 14, right: 14, height: 1.5 },
 
   sectionTitle: { fontWeight: '900', color: '#1A4A5E', fontSize: 16, marginTop: 18, marginBottom: 12 },

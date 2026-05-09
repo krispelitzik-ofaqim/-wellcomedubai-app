@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, StyleSheet, ImageBackground, Image, useWindowDimensions, Linking } from 'react-native';
+import { useEffect, useRef, useState } from 'react';
+import { View, Text, ScrollView, TouchableOpacity, StyleSheet, ImageBackground, Image, useWindowDimensions, Linking, Animated } from 'react-native';
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Colors } from '../../constants/colors';
@@ -81,9 +81,13 @@ function imgUrl(item: any) {
 export default function Home() {
   const { width } = useWindowDimensions();
   const [moreOpen, setMoreOpen] = useState(false);
+  const [heroIdx, setHeroIdx] = useState(0);
   const cardW = 160;
   const tileW = 110;
-  const heroIdx = 0; // could rotate later
+  useEffect(() => {
+    const t = setInterval(() => setHeroIdx(i => (i + 1) % HERO_IMAGES.length), 5000);
+    return () => clearInterval(t);
+  }, []);
 
   return (
     <View style={s.container}>
@@ -92,12 +96,14 @@ export default function Home() {
         <SafeAreaView edges={['top']} style={{ backgroundColor: Colors.PRIMARY }}>
           <ImageBackground source={{ uri: HERO_IMAGES[heroIdx] }} style={s.hero}>
             <View style={s.heroOverlay}>
-              {/* Top: title in frosted pill */}
-              <View style={s.heroTop}>
-                <TouchableOpacity onPress={() => router.push('/search' as any)} style={s.searchPill}>
-                  <Text style={{ fontSize: 16 }}>🔍</Text>
-                  <Text style={s.searchPillTxt}>חיפוש מלון, אטרקציה, מסעדה...</Text>
+              {/* Search icon top-right corner */}
+              <View style={s.searchCorner}>
+                <TouchableOpacity onPress={() => router.push('/search' as any)} style={s.searchIconBtn}>
+                  <Text style={{ fontSize: 18 }}>🔍</Text>
                 </TouchableOpacity>
+              </View>
+              {/* Center: title in frosted pill */}
+              <View style={s.heroTop}>
                 <View style={s.heroPill}>
                   <Text style={s.heroTitle}>ברוכים הבאים ל<Text style={{ color: Colors.GOLD }}>דובאי</Text></Text>
                   <Text style={s.heroSub}>המדריך המלא לתייר הישראלי</Text>
@@ -256,9 +262,9 @@ const s = StyleSheet.create({
   container: { flex: 1, backgroundColor: Colors.BG },
   hero: { height: 540, backgroundColor: Colors.PRIMARY },
   heroOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.35)', justifyContent: 'space-between', padding: 18 },
-  heroTop: { alignItems: 'center', marginTop: 6, gap: 12 },
-  searchPill: { flexDirection: 'row-reverse', alignItems: 'center', backgroundColor: 'rgba(255,255,255,0.95)', paddingHorizontal: 16, paddingVertical: 10, borderRadius: 22, gap: 8, alignSelf: 'stretch' },
-  searchPillTxt: { color: '#9CA3AF', fontSize: 13, flex: 1, writingDirection: 'rtl', textAlign: 'right' },
+  heroTop: { alignItems: 'center', marginTop: 16 },
+  searchCorner: { position: 'absolute', top: 8, left: 8, zIndex: 5 },
+  searchIconBtn: { width: 38, height: 38, borderRadius: 19, backgroundColor: 'rgba(255,255,255,0.95)', alignItems: 'center', justifyContent: 'center' },
   heroPill: { paddingHorizontal: 20, paddingVertical: 14, backgroundColor: 'rgba(0,0,0,0.32)', borderRadius: 18, borderWidth: 1, borderColor: 'rgba(255,255,255,0.16)' },
   heroTitle: { color: '#fff', fontSize: 26, fontWeight: '900', letterSpacing: -0.5, textAlign: 'center', writingDirection: 'rtl' },
   heroSub: { color: 'rgba(255,255,255,0.92)', fontSize: 14, fontWeight: '600', textAlign: 'center', marginTop: 4, writingDirection: 'rtl' },

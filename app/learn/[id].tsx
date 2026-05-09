@@ -1,6 +1,8 @@
+import { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Linking } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, router } from 'expo-router';
+import { Audio } from 'expo-av';
 import { Colors } from '../../constants/colors';
 import LEARN from '../../data/learn.json';
 
@@ -13,6 +15,33 @@ function imgUrl(img: string) {
 export default function LearnScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const item = (LEARN as any)[id || ''];
+  const [audioUrl, setAudioUrl] = useState<string | null>(null);
+  const [sound, setSound] = useState<Audio.Sound | null>(null);
+  const [playing, setPlaying] = useState(false);
+
+  useEffect(() => {
+    fetch('https://wellcomedubaicom-production.up.railway.app/api/audio?_t=' + Date.now())
+      .then(r => r.json())
+      .then(j => {
+        const file = (j.files || []).find((f: any) => f.dest === id);
+        if (file && file.url) setAudioUrl('https://wellcomedubaicom-production.up.railway.app' + file.url);
+      })
+      .catch(() => {});
+    return () => { if (sound) sound.unloadAsync(); };
+  }, [id]);
+
+  const togglePlay = async () => {
+    if (!audioUrl) return;
+    if (sound) {
+      if (playing) { await sound.pauseAsync(); setPlaying(false); }
+      else { await sound.playAsync(); setPlaying(true); }
+      return;
+    }
+    const { sound: snd } = await Audio.Sound.createAsync({ uri: audioUrl }, { shouldPlay: true });
+    snd.setOnPlaybackStatusUpdate((st: any) => { if (st.didJustFinish) setPlaying(false); });
+    setSound(snd);
+    setPlaying(true);
+  };
 
   if (!item) {
     return (
@@ -55,6 +84,12 @@ export default function LearnScreen() {
           <Image source={{ uri: imgUrl(item.image) }} style={s.cover} />
         ) : null}
 
+        {audioUrl ? (
+          <TouchableOpacity onPress={togglePlay} style={s.audioBar}>
+            <Text style={{ fontSize: 22 }}>{playing ? '⏸' : '▶️'}</Text>
+            <Text style={s.audioTxt}>{playing ? 'מנגן את הסיפור...' : 'הקשב לסיפור'}</Text>
+          </TouchableOpacity>
+        ) : null}
         <View style={s.body}>
           {isHtml ? (
             <Text style={s.text}>{(item.text || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim()}</Text>
@@ -78,6 +113,8 @@ const s = StyleSheet.create({
   videoThumb: { width: '100%', height: '100%' },
   playOverlay: { position: 'absolute', top: 0, right: 0, left: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.4)', alignItems: 'center', justifyContent: 'center' },
   cover: { width: '100%', height: 220 },
+  audioBar: { flexDirection: 'row-reverse', alignItems: 'center', gap: 12, padding: 14, backgroundColor: Colors.PRIMARY, marginHorizontal: 14, marginTop: 12, borderRadius: 12 },
+  audioTxt: { color: '#fff', fontWeight: '800', fontSize: 14 },
   body: { padding: 18 },
   text: { color: Colors.TEXT, fontSize: 14, lineHeight: 24, marginBottom: 14, writingDirection: 'rtl', textAlign: 'right' },
 });
