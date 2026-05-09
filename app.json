@@ -39,6 +39,12 @@
         "projectId": "49b2db9e-1967-4831-b6e0-5a0eb5d03423"
       }
     },
-    "owner": "krispel"
+    "owner": "krispel",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/49b2db9e-1967-4831-b6e0-5a0eb5d03423"
+    }
   }
 }

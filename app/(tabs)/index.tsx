@@ -187,7 +187,7 @@ export default function Home() {
         </View>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 14, gap: 8 }}>
           {LEARN_TILES.map(t => (
-            <TouchableOpacity key={t.id} activeOpacity={0.85} onPress={() => t.isEvents ? router.push('/events' as any) : Linking.openURL(`https://wellcomedubai.com/#${t.id}`)}>
+            <TouchableOpacity key={t.id} activeOpacity={0.85} onPress={() => t.isEvents ? router.push('/events' as any) : router.push(`/learn/${t.id}` as any)}>
               <ImageBackground source={{ uri: t.img }} style={[s.learnTile, { width: tileW, height: tileW }]} imageStyle={{ borderRadius: 10 }}>
                 <View style={s.learnOverlay}>
                   <Text style={s.learnText}>{t.title}</Text>

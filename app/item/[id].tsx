@@ -1,8 +1,10 @@
+import { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image, Linking } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, router } from 'expo-router';
 import { Colors } from '../../constants/colors';
 import { CATALOG } from '../../data/catalog';
+import { isFavorite, toggleFavorite } from '../../utils/favorites';
 
 function imgUrl(img: string) {
   if (!img) return 'https://wellcomedubai.com/images/Yizhak/dubai-skyline-evening.jpg';
@@ -19,6 +21,9 @@ export default function ItemDetail() {
   const { id, cat } = useLocalSearchParams<{ id: string; cat: string }>();
   const list: any[] = (CATALOG as any)[cat || ''] || [];
   const item = list.find(i => String(i.id) === String(id));
+  const [fav, setFav] = useState(false);
+  useEffect(() => { if (item) isFavorite(cat || '', id).then(setFav); }, [id, cat, item]);
+  const onToggleFav = async () => { const next = await toggleFavorite(cat || '', id); setFav(next); };
 
   if (!item) {
     return (
@@ -39,6 +44,9 @@ export default function ItemDetail() {
         <View style={s.headerOver}>
           <TouchableOpacity onPress={() => router.back()} style={s.backBtn}>
             <Text style={{ color: '#fff', fontSize: 20 }}>←</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={onToggleFav} style={s.favBtn}>
+            <Text style={{ fontSize: 22 }}>{fav ? '❤️' : '🤍'}</Text>
           </TouchableOpacity>
         </View>
       </SafeAreaView>
@@ -131,8 +139,9 @@ const s = StyleSheet.create({
   container: { flex: 1, backgroundColor: Colors.BG },
   header: { padding: 14 },
   title: { color: Colors.TEXT, fontWeight: '900' },
-  headerOver: { position: 'absolute', top: 0, right: 0, left: 0, padding: 12, zIndex: 10, flexDirection: 'row-reverse' },
+  headerOver: { position: 'absolute', top: 0, right: 0, left: 0, padding: 12, zIndex: 10, flexDirection: 'row-reverse', justifyContent: 'space-between' },
   backBtn: { width: 38, height: 38, borderRadius: 19, backgroundColor: 'rgba(0,0,0,0.5)', alignItems: 'center', justifyContent: 'center' },
+  favBtn: { width: 38, height: 38, borderRadius: 19, backgroundColor: 'rgba(0,0,0,0.5)', alignItems: 'center', justifyContent: 'center' },
   cover: { width: '100%', height: 280, backgroundColor: '#E5E7EB' },
   kosherBadge: { position: 'absolute', top: 240, left: 14, backgroundColor: '#0E2A38', borderColor: Colors.GOLD, borderWidth: 1, borderRadius: 8, paddingHorizontal: 10, paddingVertical: 5 },
   kosherText: { color: Colors.GOLD, fontSize: 12, fontWeight: '900' },
