@@ -25,6 +25,7 @@ const CAT_MED = [
   { id: 'casino', label: 'בידור ומשחקים', color: '#F4A261' },
 ];
 const CAT_SM = [
+  { id: 'shopping', label: 'קניות', color: '#F4A261' },
   { id: 'transport', label: 'תחבורה', color: '#B8923A' },
 ];
 
