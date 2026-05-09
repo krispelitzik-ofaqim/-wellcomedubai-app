@@ -120,13 +120,62 @@ export default function RealEstateScreen() {
 }
 
 function InvestContent() {
+  const [news, setNews] = useState<any[]>([]);
+  const [preview, setPreview] = useState<any | null>(null);
+
+  useEffect(() => {
+    const rss = 'https://news.google.com/rss/search?q=' + encodeURIComponent('דובאי נדלן') + '&hl=he&gl=IL&ceid=IL:he';
+    fetch('https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent(rss))
+      .then(r => r.json())
+      .then(j => setNews((j.items || []).slice(0, 8)))
+      .catch(() => {});
+  }, []);
+
   return (
     <>
       <Text style={s.sectionTitle}>חדשות נדל״ן בדובאי</Text>
-      <View style={s.placeholder}>
-        <Text style={{ fontSize: 32 }}>📰</Text>
-        <Text style={s.placeholderSub}>לחדשות בזמן אמת — ראה אתר wellcomedubai.com</Text>
-      </View>
+      {news.length === 0 ? (
+        <View style={s.placeholder}><Text style={s.placeholderSub}>⏳ טוען חדשות...</Text></View>
+      ) : (
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 10, paddingBottom: 6 }}>
+          {news.map((it, i) => {
+            const img = it.enclosure?.link || it.thumbnail || 'https://wellcomedubai.com/images/wellcomedubai.stamp/skyscrapers-looking-up-sky-modern-metropolis-modern-city.jpg';
+            const date = it.pubDate ? new Date(it.pubDate).toLocaleDateString('he-IL') : '';
+            return (
+              <TouchableOpacity key={i} style={s.newsCard} onPress={() => setPreview(it)}>
+                <Image source={{ uri: img }} style={s.newsImg} />
+                <View style={{ padding: 8 }}>
+                  <Text style={s.newsTitle} numberOfLines={3}>{it.title}</Text>
+                  <Text style={s.newsDate}>{date}</Text>
+                </View>
+              </TouchableOpacity>
+            );
+          })}
+        </ScrollView>
+      )}
+
+      {preview && (
+        <View style={s.modalBackdrop}>
+          <View style={s.modalCard}>
+            <View style={s.modalHead}>
+              <Text style={s.modalKicker}>חדשות</Text>
+              <TouchableOpacity onPress={() => setPreview(null)} style={s.modalClose}>
+                <Text style={{ color: '#fff', fontSize: 18 }}>×</Text>
+              </TouchableOpacity>
+            </View>
+            <ScrollView contentContainerStyle={{ padding: 16 }}>
+              {(preview.enclosure?.link || preview.thumbnail) && (
+                <Image source={{ uri: preview.enclosure?.link || preview.thumbnail }} style={s.modalImg} />
+              )}
+              <Text style={s.modalTitle}>{preview.title}</Text>
+              <Text style={s.modalSummary}>{(preview.description || '').replace(/<[^>]+>/g, '').slice(0, 600)}</Text>
+              <TouchableOpacity onPress={() => Linking.openURL(preview.link)}>
+                <Text style={s.modalLink}>לכתבה במקור ←</Text>
+              </TouchableOpacity>
+            </ScrollView>
+          </View>
+        </View>
+      )}
 
       <Text style={s.sectionTitle}>מאמרים ומדריכים</Text>
       {RE_ARTICLES.map(a => (
@@ -395,6 +444,19 @@ const s = StyleSheet.create({
   actionBtn: { flex: 1, paddingVertical: 8, borderRadius: 6, alignItems: 'center' },
   actionTxt: { color: '#fff', fontSize: 12, fontWeight: '800' },
 
+  newsCard: { width: 220, backgroundColor: '#fff', borderRadius: 10, overflow: 'hidden', borderWidth: 1, borderColor: '#E8DEC8' },
+  newsImg: { width: '100%', height: 110 },
+  newsTitle: { fontSize: 12, fontWeight: '800', color: Colors.TEXT, lineHeight: 16, writingDirection: 'rtl', textAlign: 'right' },
+  newsDate: { fontSize: 10, color: Colors.MUTED, marginTop: 4 },
+  modalBackdrop: { position: 'absolute', top: 0, right: 0, left: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.6)', justifyContent: 'center', alignItems: 'center', padding: 14, zIndex: 100 },
+  modalCard: { backgroundColor: '#fff', borderRadius: 14, width: '100%', maxHeight: '85%', overflow: 'hidden' },
+  modalHead: { flexDirection: 'row-reverse', justifyContent: 'space-between', alignItems: 'center', padding: 14, backgroundColor: '#0E2A38' },
+  modalKicker: { color: '#fff', backgroundColor: Colors.ACCENT, paddingHorizontal: 8, paddingVertical: 3, borderRadius: 6, fontSize: 11, fontWeight: '800' },
+  modalClose: { width: 32, height: 32, borderRadius: 16, backgroundColor: 'rgba(255,255,255,0.2)', alignItems: 'center', justifyContent: 'center' },
+  modalImg: { width: '100%', height: 180, borderRadius: 8, marginBottom: 12 },
+  modalTitle: { fontWeight: '900', color: '#1A4A5E', fontSize: 16, marginBottom: 8, writingDirection: 'rtl', textAlign: 'right' },
+  modalSummary: { color: Colors.TEXT, fontSize: 13, lineHeight: 22, writingDirection: 'rtl', textAlign: 'right' },
+  modalLink: { color: Colors.PRIMARY, fontWeight: '800', fontSize: 14, marginTop: 14, textAlign: 'left' },
   brokersBanner: { height: 110, marginTop: 16, borderRadius: 14, overflow: 'hidden' },
   brokersOverlay: { flex: 1, backgroundColor: 'rgba(184,92,142,0.65)', alignItems: 'center', justifyContent: 'center', padding: 14, borderRadius: 14 },
   brokersKicker: { color: '#fff', fontSize: 10, fontWeight: '700', letterSpacing: 1.5, opacity: 0.85 },
