@@ -100,12 +100,6 @@ export default function Home() {
         <SafeAreaView edges={['top']} style={{ backgroundColor: Colors.PRIMARY }}>
           <ImageBackground source={{ uri: HERO_IMAGES[heroIdx] }} style={s.hero}>
             <View style={s.heroOverlay}>
-              {/* Search icon top-right corner */}
-              <View style={s.searchCorner}>
-                <TouchableOpacity onPress={() => router.push('/search' as any)} style={s.searchIconBtn}>
-                  <Text style={{ fontSize: 18 }}>🔍</Text>
-                </TouchableOpacity>
-              </View>
               {/* Center: title (no block) */}
               <View style={s.heroTop}>
                 <Text style={[s.heroTitle, { fontSize: f(22) }]}>ברוכים הבאים ל<Text style={{ color: Colors.GOLD }}>דובאי</Text></Text>

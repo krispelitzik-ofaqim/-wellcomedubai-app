@@ -74,6 +74,9 @@ export default function CategoryScreen() {
             <Text style={{ fontSize: 22, color: '#fff' }}>←</Text>
           </TouchableOpacity>
           <Text style={s.title}>{meta.emoji} {meta.he}</Text>
+          <TouchableOpacity onPress={() => router.push('/search' as any)} style={s.searchBtn}>
+            <Text style={{ fontSize: 18 }}>🔍</Text>
+          </TouchableOpacity>
           <View style={s.countBadge}><Text style={[s.countTxt, { color: meta.color }]}>{items.length}</Text></View>
         </View>
       </SafeAreaView>
@@ -161,6 +164,7 @@ const s = StyleSheet.create({
   header: { flexDirection: 'row-reverse', alignItems: 'center', paddingHorizontal: 14, paddingVertical: 12, gap: 10 },
   back: { padding: 4 },
   title: { flex: 1, color: '#fff', fontSize: 17, fontWeight: '900', writingDirection: 'rtl' },
+  searchBtn: { width: 36, height: 36, borderRadius: 18, backgroundColor: 'rgba(255,255,255,0.2)', alignItems: 'center', justifyContent: 'center' },
   countBadge: { backgroundColor: '#fff', paddingHorizontal: 10, paddingVertical: 3, borderRadius: 10 },
   countTxt: { fontSize: 12, fontWeight: '900' },
   filterStrip: { backgroundColor: '#fff', borderBottomWidth: 1, borderBottomColor: '#E5E7EB', paddingVertical: 8, flexGrow: 0 },
