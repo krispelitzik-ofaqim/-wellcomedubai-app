@@ -83,8 +83,11 @@ export default function Home() {
   const { width } = useWindowDimensions();
   const [moreOpen, setMoreOpen] = useState(false);
   const [heroIdx, setHeroIdx] = useState(0);
-  const cardW = 160;
-  const tileW = 110;
+  // Scale fonts based on width — 390px (iPhone 12) is baseline 1.0; tablets get larger
+  const scale = Math.min(1.5, Math.max(0.85, width / 390));
+  const f = (n: number) => Math.round(n * scale);
+  const cardW = Math.round(160 * scale);
+  const tileW = Math.round(110 * scale);
   useEffect(() => {
     const t = setInterval(() => setHeroIdx(i => (i + 1) % HERO_IMAGES.length), 5000);
     return () => clearInterval(t);
@@ -103,42 +106,40 @@ export default function Home() {
                   <Text style={{ fontSize: 18 }}>🔍</Text>
                 </TouchableOpacity>
               </View>
-              {/* Center: title in frosted pill */}
+              {/* Center: title (no block) */}
               <View style={s.heroTop}>
-                <View style={s.heroPill}>
-                  <Text style={s.heroTitle}>ברוכים הבאים ל<Text style={{ color: Colors.GOLD }}>דובאי</Text></Text>
-                  <Text style={s.heroSub}>המדריך המלא לתייר הישראלי</Text>
-                </View>
+                <Text style={[s.heroTitle, { fontSize: f(22) }]}>ברוכים הבאים ל<Text style={{ color: Colors.GOLD }}>דובאי</Text></Text>
+                <Text style={[s.heroSub, { fontSize: f(12) }]}>המדריך המלא לתייר הישראלי</Text>
               </View>
               {/* Bottom: category links + near me */}
               <View style={s.heroBottom}>
                 <View style={s.linkRowBig}>
                   {CAT_BIG.map(l => (
                     <TouchableOpacity key={l.id} onPress={() => router.push(`/category/${l.id}` as any)}>
-                      <Text style={[s.linkBig, { color: l.color }]}>{l.label}</Text>
+                      <Text style={[s.linkBig, { color: l.color, fontSize: f(16) }]}>{l.label}</Text>
                     </TouchableOpacity>
                   ))}
                 </View>
                 <View style={s.linkRowMed}>
                   {CAT_MED.map(l => (
                     <TouchableOpacity key={l.id} onPress={() => router.push(`/category/${l.id}` as any)}>
-                      <Text style={[s.linkMed, { color: l.color }]}>{l.label}</Text>
+                      <Text style={[s.linkMed, { color: l.color, fontSize: f(11) }]}>{l.label}</Text>
                     </TouchableOpacity>
                   ))}
                 </View>
                 <View style={s.linkRowMed}>
                   {CAT_SM.map(l => (
                     <TouchableOpacity key={l.id} onPress={() => router.push(`/category/${l.id}` as any)}>
-                      <Text style={[s.linkMed, { color: l.color }]}>{l.label}</Text>
+                      <Text style={[s.linkMed, { color: l.color, fontSize: f(11) }]}>{l.label}</Text>
                     </TouchableOpacity>
                   ))}
                   <TouchableOpacity onPress={() => router.push('/itineraries' as any)}>
-                    <Text style={[s.linkMed, { color: Colors.SECONDARY }]}>מסלולים מוכנים</Text>
+                    <Text style={[s.linkMed, { color: Colors.SECONDARY, fontSize: f(11) }]}>מסלולים מוכנים</Text>
                   </TouchableOpacity>
                 </View>
                 <View style={s.nearMeRow}>
                   <TouchableOpacity onPress={() => router.push('/(tabs)/map' as any)}>
-                    <Text style={s.nearMe}>📍 הראה לי מה קרוב אליי עכשיו</Text>
+                    <Text style={[s.nearMe, { fontSize: f(12) }]}>📍 הראה לי מה קרוב אליי עכשיו</Text>
                   </TouchableOpacity>
                 </View>
               </View>
@@ -276,47 +277,47 @@ export default function Home() {
 
 const s = StyleSheet.create({
   container: { flex: 1, backgroundColor: Colors.BG },
-  hero: { height: 540, backgroundColor: Colors.PRIMARY },
+  hero: { minHeight: 620, backgroundColor: Colors.PRIMARY },
   heroOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.35)', justifyContent: 'space-between', padding: 18 },
-  heroTop: { alignItems: 'center', marginTop: 16, gap: 12 },
+  heroTop: { alignItems: 'center', marginTop: 24 },
   appIcon: { width: 72, height: 72, borderRadius: 18, borderWidth: 2, borderColor: Colors.GOLD, shadowColor: '#000', shadowOpacity: 0.4, shadowRadius: 6, shadowOffset: { width: 0, height: 3 } },
   searchCorner: { position: 'absolute', top: 8, left: 8, zIndex: 5 },
   searchIconBtn: { width: 38, height: 38, borderRadius: 19, backgroundColor: 'rgba(255,255,255,0.95)', alignItems: 'center', justifyContent: 'center' },
   heroPill: { paddingHorizontal: 20, paddingVertical: 14, backgroundColor: 'rgba(0,0,0,0.32)', borderRadius: 18, borderWidth: 1, borderColor: 'rgba(255,255,255,0.16)' },
-  heroTitle: { color: '#fff', fontSize: 26, fontWeight: '900', letterSpacing: -0.5, textAlign: 'center', writingDirection: 'rtl' },
-  heroSub: { color: 'rgba(255,255,255,0.92)', fontSize: 14, fontWeight: '600', textAlign: 'center', marginTop: 4, writingDirection: 'rtl' },
+  heroTitle: { color: '#fff', fontWeight: '900', letterSpacing: -0.5, textAlign: 'center', writingDirection: 'rtl', textShadowColor: 'rgba(0,0,0,0.85)', textShadowOffset: { width: 0, height: 2 }, textShadowRadius: 5 },
+  heroSub: { color: 'rgba(255,255,255,0.95)', fontWeight: '600', textAlign: 'center', marginTop: 4, writingDirection: 'rtl', textShadowColor: 'rgba(0,0,0,0.7)', textShadowOffset: { width: 0, height: 1 }, textShadowRadius: 4 },
   heroBottom: { paddingBottom: 12 },
-  linkRowBig: { flexDirection: 'row-reverse', justifyContent: 'center', gap: 18, marginBottom: 8 },
-  linkRowMed: { flexDirection: 'row-reverse', justifyContent: 'center', gap: 14, marginBottom: 6, flexWrap: 'wrap' },
+  linkRowBig: { flexDirection: 'row-reverse', justifyContent: 'center', gap: 16, marginBottom: 4 },
+  linkRowMed: { flexDirection: 'row-reverse', justifyContent: 'center', gap: 12, marginBottom: 2, flexWrap: 'wrap' },
   linkBig: { fontSize: 18, fontWeight: '800', textShadowColor: 'rgba(0,0,0,0.6)', textShadowOffset: { width: 0, height: 1 }, textShadowRadius: 4 },
   linkMed: { fontSize: 13, fontWeight: '700', textShadowColor: 'rgba(0,0,0,0.5)', textShadowOffset: { width: 0, height: 1 }, textShadowRadius: 3 },
-  nearMeRow: { alignItems: 'center', marginTop: 10 },
+  nearMeRow: { alignItems: 'center', marginTop: 4 },
   nearMe: { color: '#fff', fontSize: 14, fontWeight: '700', textShadowColor: 'rgba(0,0,0,0.7)', textShadowOffset: { width: 0, height: 1 }, textShadowRadius: 4 },
   qtRow: { flexDirection: 'row-reverse', gap: 8, paddingHorizontal: 14, marginTop: 14 },
   qtCard: { flex: 1, padding: 12, borderRadius: 12, alignItems: 'center' },
-  qtIcon: { fontSize: 24 },
-  qtLabel: { color: '#fff', fontSize: 13, fontWeight: '900', marginTop: 4 },
-  qtDesc: { color: 'rgba(255,255,255,0.85)', fontSize: 10, marginTop: 2 },
+  qtIcon: { fontSize: 22 },
+  qtLabel: { color: '#fff', fontSize: 12, fontWeight: '900', marginTop: 4 },
+  qtDesc: { color: 'rgba(255,255,255,0.85)', fontSize: 9, marginTop: 2 },
   sectionHead: { flexDirection: 'row-reverse', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 18, marginTop: 18, marginBottom: 8 },
-  sectionTitle: { fontSize: 18, fontWeight: '900', writingDirection: 'rtl' },
-  seeAll: { color: Colors.ACCENT, fontSize: 12, fontWeight: '700' },
+  sectionTitle: { fontSize: 16, fontWeight: '900', writingDirection: 'rtl' },
+  seeAll: { color: Colors.ACCENT, fontSize: 11, fontWeight: '700' },
   card: { backgroundColor: '#fff', borderRadius: 10, overflow: 'hidden', borderWidth: 1, borderColor: '#E5E7EB' },
   cardImg: { width: '100%', height: 110 },
   cardBody: { padding: 8 },
-  cardName: { fontSize: 13, fontWeight: '800', color: Colors.TEXT, writingDirection: 'rtl' },
-  cardRating: { fontSize: 11, color: Colors.GOLD, fontWeight: '700' },
-  cardPrice: { fontSize: 11, color: Colors.ACCENT, fontWeight: '700' },
+  cardName: { fontSize: 12, fontWeight: '800', color: Colors.TEXT, writingDirection: 'rtl' },
+  cardRating: { fontSize: 10, color: Colors.GOLD, fontWeight: '700' },
+  cardPrice: { fontSize: 10, color: Colors.ACCENT, fontWeight: '700' },
   kosherBadge: { position: 'absolute', bottom: 6, left: 6, backgroundColor: '#0E2A38', borderColor: Colors.GOLD, borderWidth: 1, borderRadius: 6, paddingHorizontal: 6, paddingVertical: 2 },
   kosherText: { color: Colors.GOLD, fontSize: 9, fontWeight: '900' },
   learnTile: { borderRadius: 10, overflow: 'hidden', justifyContent: 'flex-end' },
   learnOverlay: { padding: 6, backgroundColor: 'rgba(0,0,0,0.4)' },
-  learnText: { color: '#fff', fontSize: 11, fontWeight: '800', textShadowColor: 'rgba(0,0,0,0.85)', textShadowOffset: { width: 0, height: 1 }, textShadowRadius: 3, writingDirection: 'rtl' },
+  learnText: { color: '#fff', fontSize: 10, fontWeight: '800', textShadowColor: 'rgba(0,0,0,0.85)', textShadowOffset: { width: 0, height: 1 }, textShadowRadius: 3, writingDirection: 'rtl' },
   moreToggle: { flexDirection: 'row-reverse', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 18, marginTop: 18 },
-  moreToggleText: { color: Colors.ACCENT, fontWeight: '900', fontSize: 16 },
-  moreToggleArrow: { color: Colors.ACCENT, fontSize: 14 },
+  moreToggleText: { color: Colors.ACCENT, fontWeight: '900', fontSize: 14 },
+  moreToggleArrow: { color: Colors.ACCENT, fontSize: 13 },
   reBanner: { height: 130, marginHorizontal: 14, marginTop: 22, borderRadius: 16, overflow: 'hidden', backgroundColor: Colors.PRIMARY },
   reOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.55)', padding: 18, borderRadius: 16, justifyContent: 'center', alignItems: 'center' },
-  reKicker: { color: Colors.GOLD, fontSize: 11, letterSpacing: 2, fontWeight: '800' },
-  reTitle: { color: '#fff', fontSize: 20, fontWeight: '900', marginTop: 4, writingDirection: 'rtl' },
-  reSub: { color: 'rgba(255,255,255,0.92)', fontSize: 12, marginTop: 4, writingDirection: 'rtl' },
+  reKicker: { color: Colors.GOLD, fontSize: 10, letterSpacing: 2, fontWeight: '800' },
+  reTitle: { color: '#fff', fontSize: 18, fontWeight: '900', marginTop: 4, writingDirection: 'rtl' },
+  reSub: { color: 'rgba(255,255,255,0.92)', fontSize: 11, marginTop: 4, writingDirection: 'rtl' },
 });
