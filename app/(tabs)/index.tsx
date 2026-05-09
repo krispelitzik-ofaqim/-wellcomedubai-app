@@ -110,21 +110,21 @@ export default function Home() {
                 <View style={s.linkRowBig}>
                   {CAT_BIG.map(l => (
                     <TouchableOpacity key={l.id} onPress={() => router.push(`/category/${l.id}` as any)}>
-                      <Text style={[s.linkBig, { color: l.color, fontSize: f(16) }]}>{l.label}</Text>
+                      <Text style={[s.linkBig, { color: l.color, fontSize: f(17) }]}>{l.label}</Text>
                     </TouchableOpacity>
                   ))}
                 </View>
                 <View style={s.linkRowMed}>
                   {CAT_MED.map(l => (
                     <TouchableOpacity key={l.id} onPress={() => router.push(`/category/${l.id}` as any)}>
-                      <Text style={[s.linkMed, { color: l.color, fontSize: f(14) }]}>{l.label}</Text>
+                      <Text style={[s.linkMed, { color: l.color, fontSize: f(15) }]}>{l.label}</Text>
                     </TouchableOpacity>
                   ))}
                 </View>
                 <View style={s.linkRowMed}>
                   {CAT_SM.map(l => (
                     <TouchableOpacity key={l.id} onPress={() => router.push(`/category/${l.id}` as any)}>
-                      <Text style={[s.linkMed, { color: l.color, fontSize: f(14) }]}>{l.label}</Text>
+                      <Text style={[s.linkMed, { color: l.color, fontSize: f(15) }]}>{l.label}</Text>
                     </TouchableOpacity>
                   ))}
                   <TouchableOpacity onPress={() => router.push('/itineraries' as any)}>
