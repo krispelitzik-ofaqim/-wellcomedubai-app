@@ -94,6 +94,10 @@ export default function Home() {
             <View style={s.heroOverlay}>
               {/* Top: title in frosted pill */}
               <View style={s.heroTop}>
+                <TouchableOpacity onPress={() => router.push('/search' as any)} style={s.searchPill}>
+                  <Text style={{ fontSize: 16 }}>🔍</Text>
+                  <Text style={s.searchPillTxt}>חיפוש מלון, אטרקציה, מסעדה...</Text>
+                </TouchableOpacity>
                 <View style={s.heroPill}>
                   <Text style={s.heroTitle}>ברוכים הבאים ל<Text style={{ color: Colors.GOLD }}>דובאי</Text></Text>
                   <Text style={s.heroSub}>המדריך המלא לתייר הישראלי</Text>
@@ -252,7 +256,9 @@ const s = StyleSheet.create({
   container: { flex: 1, backgroundColor: Colors.BG },
   hero: { height: 540, backgroundColor: Colors.PRIMARY },
   heroOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.35)', justifyContent: 'space-between', padding: 18 },
-  heroTop: { alignItems: 'center', marginTop: 6 },
+  heroTop: { alignItems: 'center', marginTop: 6, gap: 12 },
+  searchPill: { flexDirection: 'row-reverse', alignItems: 'center', backgroundColor: 'rgba(255,255,255,0.95)', paddingHorizontal: 16, paddingVertical: 10, borderRadius: 22, gap: 8, alignSelf: 'stretch' },
+  searchPillTxt: { color: '#9CA3AF', fontSize: 13, flex: 1, writingDirection: 'rtl', textAlign: 'right' },
   heroPill: { paddingHorizontal: 20, paddingVertical: 14, backgroundColor: 'rgba(0,0,0,0.32)', borderRadius: 18, borderWidth: 1, borderColor: 'rgba(255,255,255,0.16)' },
   heroTitle: { color: '#fff', fontSize: 26, fontWeight: '900', letterSpacing: -0.5, textAlign: 'center', writingDirection: 'rtl' },
   heroSub: { color: 'rgba(255,255,255,0.92)', fontSize: 14, fontWeight: '600', textAlign: 'center', marginTop: 4, writingDirection: 'rtl' },
