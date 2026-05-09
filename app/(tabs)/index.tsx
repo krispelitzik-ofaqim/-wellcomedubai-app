@@ -4,6 +4,7 @@ import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Colors } from '../../constants/colors';
 import { CATALOG } from '../../data/catalog';
+import GALLERY from '../../data/gallery.json';
 
 const HERO_IMAGES = [
   'https://wellcomedubai.com/images/Yizhak/1.jpg',
@@ -242,6 +243,21 @@ export default function Home() {
             })}
           </View>
         )}
+
+        {/* Gallery preview */}
+        <View style={s.sectionHead}>
+          <Text style={[s.sectionTitle, { color: Colors.ACCENT }]}>📷 הגלרייה שלנו</Text>
+          <TouchableOpacity onPress={() => router.push('/gallery' as any)}>
+            <Text style={s.seeAll}>הכל ←</Text>
+          </TouchableOpacity>
+        </View>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 14, gap: 8 }}>
+          {(GALLERY as string[]).slice(0, 12).map((name, i) => (
+            <TouchableOpacity key={i} onPress={() => router.push('/gallery' as any)}>
+              <Image source={{ uri: `https://wellcomedubai.com/images/wellcomedubai.stamp/${name}` }} style={{ width: 130, height: 130, borderRadius: 8 }} />
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
 
         {/* RE Banner */}
         <TouchableOpacity activeOpacity={0.9} style={s.reBanner} onPress={() => router.push('/realestate' as any)}>
