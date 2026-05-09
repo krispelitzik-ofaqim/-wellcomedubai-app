@@ -102,7 +102,7 @@ export default function Home() {
             <View style={s.heroOverlay}>
               {/* Center: title (no block) */}
               <View style={s.heroTop}>
-                <Text style={[s.heroTitle, { fontSize: f(25) }]}>ברוכים הבאים ל<Text style={{ color: Colors.GOLD }}>דובאי</Text></Text>
+                <Text style={[s.heroTitle, { fontSize: f(26) }]}>ברוכים הבאים ל<Text style={{ color: Colors.GOLD }}>דובאי</Text></Text>
                 <Text style={[s.heroSub, { fontSize: f(15) }]}>המדריך המלא לתייר הישראלי</Text>
               </View>
               {/* Bottom: category links + near me */}
