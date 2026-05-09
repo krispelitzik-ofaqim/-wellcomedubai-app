@@ -103,8 +103,9 @@ export default function Home() {
                   <Text style={{ fontSize: 18 }}>🔍</Text>
                 </TouchableOpacity>
               </View>
-              {/* Center: title in frosted pill */}
+              {/* Center: app icon + title in frosted pill */}
               <View style={s.heroTop}>
+                <Image source={require('../../assets/icon.png')} style={s.appIcon} />
                 <View style={s.heroPill}>
                   <Text style={s.heroTitle}>ברוכים הבאים ל<Text style={{ color: Colors.GOLD }}>דובאי</Text></Text>
                   <Text style={s.heroSub}>המדריך המלא לתייר הישראלי</Text>
@@ -278,7 +279,8 @@ const s = StyleSheet.create({
   container: { flex: 1, backgroundColor: Colors.BG },
   hero: { height: 540, backgroundColor: Colors.PRIMARY },
   heroOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.35)', justifyContent: 'space-between', padding: 18 },
-  heroTop: { alignItems: 'center', marginTop: 16 },
+  heroTop: { alignItems: 'center', marginTop: 16, gap: 12 },
+  appIcon: { width: 72, height: 72, borderRadius: 18, borderWidth: 2, borderColor: Colors.GOLD, shadowColor: '#000', shadowOpacity: 0.4, shadowRadius: 6, shadowOffset: { width: 0, height: 3 } },
   searchCorner: { position: 'absolute', top: 8, left: 8, zIndex: 5 },
   searchIconBtn: { width: 38, height: 38, borderRadius: 19, backgroundColor: 'rgba(255,255,255,0.95)', alignItems: 'center', justifyContent: 'center' },
   heroPill: { paddingHorizontal: 20, paddingVertical: 14, backgroundColor: 'rgba(0,0,0,0.32)', borderRadius: 18, borderWidth: 1, borderColor: 'rgba(255,255,255,0.16)' },
