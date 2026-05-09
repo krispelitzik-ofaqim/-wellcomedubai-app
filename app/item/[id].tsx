@@ -40,11 +40,12 @@ export default function ItemDetail() {
 
   return (
     <View style={s.container}>
-      <SafeAreaView edges={['top']} style={{ backgroundColor: '#000' }}>
-        <View style={s.headerOver}>
+      <SafeAreaView edges={['top']} style={{ backgroundColor: Colors.PRIMARY }}>
+        <View style={s.headerBar}>
           <TouchableOpacity onPress={() => router.back()} style={s.backBtn}>
-            <Text style={{ color: '#fff', fontSize: 20 }}>←</Text>
+            <Text style={{ color: '#fff', fontSize: 22 }}>←</Text>
           </TouchableOpacity>
+          <Text style={s.headerTitle} numberOfLines={1}>{item.name}</Text>
           <TouchableOpacity onPress={onToggleFav} style={s.favBtn}>
             <Text style={{ fontSize: 22 }}>{fav ? '❤️' : '🤍'}</Text>
           </TouchableOpacity>
@@ -139,9 +140,10 @@ const s = StyleSheet.create({
   container: { flex: 1, backgroundColor: Colors.BG },
   header: { padding: 14 },
   title: { color: Colors.TEXT, fontWeight: '900' },
-  headerOver: { position: 'absolute', top: 0, right: 0, left: 0, padding: 12, zIndex: 10, flexDirection: 'row-reverse', justifyContent: 'space-between' },
-  backBtn: { width: 38, height: 38, borderRadius: 19, backgroundColor: 'rgba(0,0,0,0.5)', alignItems: 'center', justifyContent: 'center' },
-  favBtn: { width: 38, height: 38, borderRadius: 19, backgroundColor: 'rgba(0,0,0,0.5)', alignItems: 'center', justifyContent: 'center' },
+  headerBar: { flexDirection: 'row-reverse', alignItems: 'center', paddingHorizontal: 12, paddingVertical: 10, gap: 10 },
+  headerTitle: { color: '#fff', fontSize: 16, fontWeight: '900', flex: 1, writingDirection: 'rtl', textAlign: 'right' },
+  backBtn: { width: 38, height: 38, alignItems: 'center', justifyContent: 'center' },
+  favBtn: { width: 38, height: 38, alignItems: 'center', justifyContent: 'center' },
   cover: { width: '100%', height: 280, backgroundColor: '#E5E7EB' },
   kosherBadge: { position: 'absolute', top: 240, left: 14, backgroundColor: '#0E2A38', borderColor: Colors.GOLD, borderWidth: 1, borderRadius: 8, paddingHorizontal: 10, paddingVertical: 5 },
   kosherText: { color: Colors.GOLD, fontSize: 12, fontWeight: '900' },
