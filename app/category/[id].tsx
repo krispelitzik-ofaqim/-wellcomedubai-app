@@ -94,11 +94,8 @@ export default function CategoryScreen() {
 
       <ScrollView contentContainerStyle={{ padding: 12, paddingBottom: 60 }}>
         {itemsWithCoords.length > 0 ? (
-          <TouchableOpacity style={[s.mapAllBtn, { backgroundColor: meta.color }]} onPress={() => {
-            const url = `https://www.google.com/maps/search/${encodeURIComponent(meta.he + ' Dubai')}`;
-            Linking.openURL(url);
-          }}>
-            <Text style={s.mapAllTxt}>🗺️ ראה כל ה{meta.he} במפה ({itemsWithCoords.length})</Text>
+          <TouchableOpacity style={[s.mapAllBtn, { backgroundColor: meta.color }]} onPress={() => router.push(`/category-map/${cat}` as any)}>
+            <Text style={s.mapAllTxt}>🗺️ פתח מפה אינטראקטיבית — {itemsWithCoords.length} נקודות</Text>
           </TouchableOpacity>
         ) : null}
         {list.length === 0 ? (
