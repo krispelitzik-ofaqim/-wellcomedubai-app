@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image, Linking } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useLocalSearchParams, router } from 'expo-router';
+import { useLocalSearchParams, router, useFocusEffect } from 'expo-router';
 import { Colors } from '../../constants/colors';
 import { CATALOG } from '../../data/catalog';
+import { getFavorites, toggleFavorite } from '../../utils/favorites';
 
 const TITLES: Record<string, { he: string; emoji: string; color: string }> = {
   hotels:      { he: 'מלונות',          emoji: '🏨', color: Colors.GOLD },
@@ -46,16 +47,36 @@ export default function CategoryScreen() {
 
   const sorted = [...items].sort((a, b) => (b.rating || 0) - (a.rating || 0));
   const list = active === 'all' ? sorted : sorted.filter(it => it.subcategory === active);
+  const [favIds, setFavIds] = useState<Set<string>>(new Set());
+  useFocusEffect(useCallback(() => {
+    getFavorites().then(favs => setFavIds(new Set(favs.filter(f => f.cat === cat).map(f => String(f.id)))));
+  }, [cat]));
+  const onToggle = async (e: any, itemId: any) => {
+    e.stopPropagation?.();
+    const next = await toggleFavorite(cat, itemId);
+    setFavIds(prev => {
+      const n = new Set(prev);
+      if (next) n.add(String(itemId)); else n.delete(String(itemId));
+      return n;
+    });
+  };
+
+  const itemsWithCoords = items.filter(i => i.lat && i.lng);
+  const mapAllUrl = itemsWithCoords.length
+    ? `https://www.google.com/maps/search/?api=1&query=${itemsWithCoords[0].lat},${itemsWithCoords[0].lng}`
+    : null;
 
   return (
-    <SafeAreaView edges={['top']} style={s.container}>
-      <View style={[s.header, { backgroundColor: meta.color }]}>
-        <TouchableOpacity onPress={() => router.back()} style={s.back}>
-          <Text style={{ fontSize: 22, color: '#fff' }}>←</Text>
-        </TouchableOpacity>
-        <Text style={s.title}>{meta.emoji} {meta.he}</Text>
-        <View style={s.countBadge}><Text style={[s.countTxt, { color: meta.color }]}>{items.length}</Text></View>
-      </View>
+    <View style={s.container}>
+      <SafeAreaView edges={['top']} style={{ backgroundColor: meta.color }}>
+        <View style={s.header}>
+          <TouchableOpacity onPress={() => router.back()} style={s.back}>
+            <Text style={{ fontSize: 22, color: '#fff' }}>←</Text>
+          </TouchableOpacity>
+          <Text style={s.title}>{meta.emoji} {meta.he}</Text>
+          <View style={s.countBadge}><Text style={[s.countTxt, { color: meta.color }]}>{items.length}</Text></View>
+        </View>
+      </SafeAreaView>
 
       {/* Filter tabs */}
       {filters.length > 1 && (
@@ -72,6 +93,14 @@ export default function CategoryScreen() {
       )}
 
       <ScrollView contentContainerStyle={{ padding: 12, paddingBottom: 60 }}>
+        {itemsWithCoords.length > 0 ? (
+          <TouchableOpacity style={[s.mapAllBtn, { backgroundColor: meta.color }]} onPress={() => {
+            const url = `https://www.google.com/maps/search/${encodeURIComponent(meta.he + ' Dubai')}`;
+            Linking.openURL(url);
+          }}>
+            <Text style={s.mapAllTxt}>🗺️ ראה כל ה{meta.he} במפה ({itemsWithCoords.length})</Text>
+          </TouchableOpacity>
+        ) : null}
         {list.length === 0 ? (
           <Text style={{ textAlign: 'center', color: Colors.MUTED, marginTop: 20 }}>אין פריטים בקטגוריה זו</Text>
         ) : list.map(item => (
@@ -89,6 +118,9 @@ export default function CategoryScreen() {
                   <Text style={s.kosherText}>✡ מכבד כשרות</Text>
                 </View>
               ) : null}
+              <TouchableOpacity style={s.addBtn} onPress={(e) => onToggle(e, item.id)}>
+                <Text style={s.addBtnTxt}>{favIds.has(String(item.id)) ? '✓' : '+'}</Text>
+              </TouchableOpacity>
             </View>
             <View style={s.cardBody}>
               <View style={s.cardHead}>
@@ -123,7 +155,7 @@ export default function CategoryScreen() {
           </TouchableOpacity>
         ))}
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -154,4 +186,8 @@ const s = StyleSheet.create({
   actions: { flexDirection: 'row-reverse', gap: 6, marginTop: 10 },
   actionBtn: { flex: 1, paddingVertical: 8, borderRadius: 6, alignItems: 'center' },
   actionTxt: { color: '#fff', fontSize: 11, fontWeight: '800' },
+  mapAllBtn: { paddingVertical: 12, paddingHorizontal: 16, borderRadius: 10, marginBottom: 12, alignItems: 'center' },
+  mapAllTxt: { color: '#fff', fontWeight: '800', fontSize: 14 },
+  addBtn: { position: 'absolute', top: 8, right: 8, width: 36, height: 36, borderRadius: 18, backgroundColor: 'rgba(0,0,0,0.55)', alignItems: 'center', justifyContent: 'center', zIndex: 5 },
+  addBtnTxt: { color: '#fff', fontSize: 22, fontWeight: '300', lineHeight: 24 },
 });
