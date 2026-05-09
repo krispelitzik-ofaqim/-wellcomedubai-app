@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Image, Linking, ImageBackground } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
@@ -232,14 +232,55 @@ function IsraeliContent() {
 }
 
 function ListingsPlaceholder({ type }: { type: 'sale' | 'rent' }) {
+  const [listings, setListings] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch('https://wellcomedubaicom-production.up.railway.app/api/listings?_t=' + Date.now())
+      .then(r => r.json())
+      .then(j => { if (!cancelled) { setListings((j.listings || []).filter((l: any) => l.type === type)); setLoading(false); } })
+      .catch(() => { if (!cancelled) setLoading(false); });
+    return () => { cancelled = true; };
+  }, [type]);
+
+  if (loading) {
+    return <View style={s.placeholder}><Text style={s.placeholderSub}>⏳ טוען מודעות...</Text></View>;
+  }
+
   return (
-    <View style={s.placeholder}>
-      <Text style={{ fontSize: 50 }}>🏠</Text>
-      <Text style={s.placeholderTitle}>מודעות {type === 'sale' ? 'למכירה' : 'להשכרה'}</Text>
-      <Text style={s.placeholderSub}>מערכת מודעות פעילה באתר. לפרסום ועדכון:</Text>
-      <TouchableOpacity style={s.openWebBtn} onPress={() => Linking.openURL(`https://wellcomedubai.com/#${type === 'sale' ? 'sale' : 'rent'}`)}>
-        <Text style={s.openWebBtnTxt}>פתח באתר</Text>
+    <View>
+      <TouchableOpacity style={s.publishBtn} onPress={() => Linking.openURL('https://wellcomedubai.com/#realestate')}>
+        <Text style={s.publishTxt}>📤 פרסם מודעה חדשה — {type === 'sale' ? 'למכירה' : 'להשכרה'}</Text>
+        <Text style={s.publishArrow}>‹</Text>
       </TouchableOpacity>
+      {listings.length === 0 ? (
+        <View style={s.placeholder}>
+          <Text style={{ fontSize: 40 }}>🏠</Text>
+          <Text style={s.placeholderSub}>אין מודעות {type === 'sale' ? 'למכירה' : 'להשכרה'} כרגע. תהיה הראשון!</Text>
+        </View>
+      ) : listings.map(l => {
+        const photo = l.photos?.[0] ? (l.photos[0].startsWith('http') ? l.photos[0] : 'https://wellcomedubaicom-production.up.railway.app' + l.photos[0]) : '';
+        return (
+          <View key={l.id} style={s.listingCard}>
+            {photo ? <Image source={{ uri: photo }} style={s.listingImg} /> : null}
+            <View style={s.listingBody}>
+              <Text style={s.listingTitle}>{l.title}</Text>
+              <Text style={s.listingArea}>📍 {l.area}</Text>
+              <Text style={s.listingPrice}>AED {l.price}</Text>
+              {l.desc ? <Text style={s.listingDesc} numberOfLines={3}>{l.desc}</Text> : null}
+              <View style={{ flexDirection: 'row-reverse', gap: 6, marginTop: 8 }}>
+                <TouchableOpacity style={[s.actionBtn, { backgroundColor: '#25D366' }]} onPress={() => Linking.openURL(`https://wa.me/${(l.phone || '').replace(/\D/g, '')}`)}>
+                  <Text style={s.actionTxt}>💬 WhatsApp</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={[s.actionBtn, { backgroundColor: Colors.PRIMARY }]} onPress={() => Linking.openURL(`tel:${l.phone}`)}>
+                  <Text style={s.actionTxt}>📞 חייג</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        );
+      })}
     </View>
   );
 }
@@ -341,6 +382,18 @@ const s = StyleSheet.create({
   placeholderSub: { fontSize: 13, color: Colors.MUTED, textAlign: 'center' },
   openWebBtn: { backgroundColor: Colors.PRIMARY, paddingHorizontal: 18, paddingVertical: 10, borderRadius: 8, marginTop: 8 },
   openWebBtnTxt: { color: '#fff', fontWeight: '700' },
+  publishBtn: { flexDirection: 'row-reverse', alignItems: 'center', justifyContent: 'space-between', backgroundColor: Colors.PRIMARY, padding: 12, borderRadius: 8, marginBottom: 14 },
+  publishTxt: { color: '#fff', fontWeight: '700', fontSize: 14 },
+  publishArrow: { color: '#fff', fontSize: 16 },
+  listingCard: { backgroundColor: '#fff', borderRadius: 12, marginBottom: 12, overflow: 'hidden', borderWidth: 1, borderColor: '#E8DEC8' },
+  listingImg: { width: '100%', height: 180 },
+  listingBody: { padding: 12 },
+  listingTitle: { fontWeight: '900', color: Colors.TEXT, fontSize: 15, writingDirection: 'rtl', textAlign: 'right' },
+  listingArea: { color: Colors.MUTED, fontSize: 12, marginTop: 4, writingDirection: 'rtl', textAlign: 'right' },
+  listingPrice: { color: Colors.ACCENT, fontWeight: '900', fontSize: 16, marginTop: 6 },
+  listingDesc: { color: Colors.TEXT, fontSize: 12, marginTop: 6, lineHeight: 17, writingDirection: 'rtl', textAlign: 'right' },
+  actionBtn: { flex: 1, paddingVertical: 8, borderRadius: 6, alignItems: 'center' },
+  actionTxt: { color: '#fff', fontSize: 12, fontWeight: '800' },
 
   brokersBanner: { height: 110, marginTop: 16, borderRadius: 14, overflow: 'hidden' },
   brokersOverlay: { flex: 1, backgroundColor: 'rgba(184,92,142,0.65)', alignItems: 'center', justifyContent: 'center', padding: 14, borderRadius: 14 },

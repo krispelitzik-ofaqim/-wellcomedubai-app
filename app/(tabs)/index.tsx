@@ -138,7 +138,7 @@ export default function Home() {
         {/* Quick Tools */}
         <View style={s.qtRow}>
           {QUICK_TOOLS.map(t => (
-            <TouchableOpacity key={t.id} activeOpacity={0.85} style={[s.qtCard, { backgroundColor: t.color }]} onPress={() => Linking.openURL(`https://wellcomedubai.com/#${t.id}`)}>
+            <TouchableOpacity key={t.id} activeOpacity={0.85} style={[s.qtCard, { backgroundColor: t.color }]} onPress={() => router.push(`/tools/${t.id}` as any)}>
               <Text style={s.qtIcon}>{t.icon}</Text>
               <Text style={s.qtLabel}>{t.label}</Text>
               <Text style={s.qtDesc}>{t.desc}</Text>
