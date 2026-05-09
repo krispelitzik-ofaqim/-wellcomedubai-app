@@ -20,7 +20,6 @@ const CAT_BIG = [
   { id: 'attractions', label: 'אטרקציות', color: '#2A9D8F' },
 ];
 const CAT_MED = [
-  { id: 'shopping', label: 'קניות', color: '#F4A261' },
   { id: 'nightlife', label: 'בילויים', color: '#fff' },
   { id: 'kids', label: 'ילדים', color: '#E76F51' },
   { id: 'casino', label: 'בידור ומשחקים', color: '#F4A261' },
@@ -117,18 +116,18 @@ export default function Home() {
                 <View style={s.linkRowMed}>
                   {CAT_MED.map(l => (
                     <TouchableOpacity key={l.id} onPress={() => router.push(`/category/${l.id}` as any)}>
-                      <Text style={[s.linkMed, { color: l.color, fontSize: f(11) }]}>{l.label}</Text>
+                      <Text style={[s.linkMed, { color: l.color, fontSize: f(14) }]}>{l.label}</Text>
                     </TouchableOpacity>
                   ))}
                 </View>
                 <View style={s.linkRowMed}>
                   {CAT_SM.map(l => (
                     <TouchableOpacity key={l.id} onPress={() => router.push(`/category/${l.id}` as any)}>
-                      <Text style={[s.linkMed, { color: l.color, fontSize: f(11) }]}>{l.label}</Text>
+                      <Text style={[s.linkMed, { color: l.color, fontSize: f(14) }]}>{l.label}</Text>
                     </TouchableOpacity>
                   ))}
                   <TouchableOpacity onPress={() => router.push('/itineraries' as any)}>
-                    <Text style={[s.linkMed, { color: Colors.SECONDARY, fontSize: f(11) }]}>מסלולים מוכנים</Text>
+                    <Text style={[s.linkMed, { color: Colors.SECONDARY, fontSize: f(14) }]}>מסלולים מוכנים</Text>
                   </TouchableOpacity>
                 </View>
                 <View style={s.nearMeRow}>
