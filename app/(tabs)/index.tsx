@@ -141,17 +141,6 @@ export default function Home() {
           </ImageBackground>
         </SafeAreaView>
 
-        {/* Quick Tools */}
-        <View style={s.qtRow}>
-          {QUICK_TOOLS.map(t => (
-            <TouchableOpacity key={t.id} activeOpacity={0.85} style={[s.qtCard, { backgroundColor: t.color }]} onPress={() => router.push(`/tools/${t.id}` as any)}>
-              <Text style={s.qtIcon}>{t.icon}</Text>
-              <Text style={s.qtLabel}>{t.label}</Text>
-              <Text style={s.qtDesc}>{t.desc}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-
         {/* Top sections — main 3 */}
         {(['hotels','attractions','restaurants'] as const).map(cat => {
           const items = topItems(cat, 6);
@@ -255,7 +244,7 @@ export default function Home() {
         </ScrollView>
 
         {/* RE Banner */}
-        <TouchableOpacity activeOpacity={0.9} style={s.reBanner} onPress={() => router.push('/realestate' as any)}>
+        <TouchableOpacity activeOpacity={0.9} style={s.reBanner} onPress={() => router.push('/realestate' as any)} key="re-banner">
           <ImageBackground source={{ uri: 'https://wellcomedubai.com/images/wellcomedubai.stamp/skyscrapers-looking-up-sky-modern-metropolis-modern-city.jpg' }} style={{ flex: 1 }} imageStyle={{ borderRadius: 16 }}>
             <View style={s.reOverlay}>
               <Text style={s.reKicker}>DUBAI REAL ESTATE</Text>
@@ -264,6 +253,17 @@ export default function Home() {
             </View>
           </ImageBackground>
         </TouchableOpacity>
+
+        {/* Quick Tools — under RE banner */}
+        <View style={s.qtRow}>
+          {QUICK_TOOLS.map(t => (
+            <TouchableOpacity key={t.id} activeOpacity={0.85} style={[s.qtCard, { backgroundColor: t.color }]} onPress={() => router.push(`/tools/${t.id}` as any)}>
+              <Text style={s.qtIcon}>{t.icon}</Text>
+              <Text style={s.qtLabel}>{t.label}</Text>
+              <Text style={s.qtDesc}>{t.desc}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
       </ScrollView>
     </View>
   );
