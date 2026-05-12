@@ -37,13 +37,19 @@ export default function SearchScreen() {
   }, [q]);
 
   return (
-    <SafeAreaView edges={['top']} style={s.container}>
-      <View style={s.header}>
-        <TouchableOpacity onPress={() => router.back()} style={s.back}>
-          <Text style={{ fontSize: 22, color: '#fff' }}>←</Text>
+    <View style={s.container}>
+      <SafeAreaView edges={['top']} style={{ backgroundColor: '#000' }} />
+      <View style={s.brandBar}>
+        <Text style={s.brandTxt}>
+          <Text style={{ color: '#1A6B8A' }}>WellCome </Text>
+          <Text style={{ color: '#E76F51' }}>Dubai</Text>
+        </Text>
+        <TouchableOpacity onPress={() => router.back()} style={s.brandClose}>
+          <Text style={{ color: '#2C5F6E', fontSize: 18, fontWeight: '700' }}>✕</Text>
         </TouchableOpacity>
+      </View>
+      <View style={s.header}>
         <View style={s.searchBar}>
-          <Text style={{ fontSize: 16 }}>🔍</Text>
           <TextInput
             value={q}
             onChangeText={setQ}
@@ -63,13 +69,11 @@ export default function SearchScreen() {
       <ScrollView contentContainerStyle={{ padding: 12, paddingBottom: 60 }}>
         {!q.trim() ? (
           <View style={s.empty}>
-            <Text style={{ fontSize: 56 }}>🔍</Text>
             <Text style={s.emptyTitle}>הקלד מילת חיפוש</Text>
             <Text style={s.emptySub}>חפש לפי שם, תיאור, תגית או אזור</Text>
           </View>
         ) : results.length === 0 ? (
           <View style={s.empty}>
-            <Text style={{ fontSize: 40 }}>🤷</Text>
             <Text style={s.emptyTitle}>אין תוצאות עבור "{q}"</Text>
           </View>
         ) : (
@@ -88,7 +92,7 @@ export default function SearchScreen() {
           </>
         )}
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -96,6 +100,10 @@ const s = StyleSheet.create({
   container: { flex: 1, backgroundColor: Colors.BG },
   header: { flexDirection: 'row-reverse', alignItems: 'center', paddingHorizontal: 12, paddingVertical: 10, backgroundColor: Colors.PRIMARY, gap: 8 },
   back: { padding: 4 },
+  closeBtn: { width: 36, height: 36, borderRadius: 18, backgroundColor: 'rgba(255,255,255,0.25)', alignItems: 'center', justifyContent: 'center' },
+  brandBar: { flexDirection: 'row-reverse', alignItems: 'center', paddingHorizontal: 14, paddingVertical: 10, backgroundColor: '#fff', borderBottomWidth: 1, borderBottomColor: '#E5E7EB' },
+  brandTxt: { flex: 1, fontSize: 22, fontWeight: '900', letterSpacing: -0.3, textAlign: 'center' },
+  brandClose: { width: 32, alignItems: 'center' },
   searchBar: { flex: 1, flexDirection: 'row-reverse', alignItems: 'center', backgroundColor: '#fff', borderRadius: 22, paddingHorizontal: 14, paddingVertical: 8, gap: 8 },
   input: { flex: 1, fontSize: 14, color: Colors.TEXT, writingDirection: 'rtl', textAlign: 'right' },
   empty: { alignItems: 'center', padding: 60 },

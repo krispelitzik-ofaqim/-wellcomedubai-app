@@ -6,7 +6,7 @@ export const Colors = {
   WARM: '#F4A261',        // Light orange
   GOLD: '#E9C46A',        // Gold
   PINK: '#B85C8E',        // Pink
-  BG: '#FDF6EC',          // Cream background
+  BG: '#F0DFB8',          // Cream background
   TEXT: '#2C5F6E',        // Deep teal text
   MUTED: '#6B7F8D',       // Muted text
   WHITE: '#FFFFFF',

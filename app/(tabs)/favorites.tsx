@@ -39,9 +39,16 @@ export default function FavoritesScreen() {
   useFocusEffect(useCallback(() => { load(); }, [load]));
 
   return (
-    <SafeAreaView edges={['top']} style={s.container}>
+    <View style={s.container}>
+      <SafeAreaView edges={['top']} style={{ backgroundColor: '#000' }} />
+      <View style={s.brandBar}>
+        <Text style={s.brandTxt}>
+          <Text style={{ color: '#1A6B8A' }}>WellCome </Text>
+          <Text style={{ color: '#E76F51' }}>Dubai</Text>
+        </Text>
+      </View>
       <View style={s.header}>
-        <Text style={s.title}>❤️ המועדפים שלי</Text>
+        <Text style={s.title}>המועדפים שלי</Text>
         <Text style={s.subtitle}>{items.length} פריטים</Text>
       </View>
       <ScrollView contentContainerStyle={{ padding: 12, paddingBottom: 60 }}>
@@ -67,12 +74,14 @@ export default function FavoritesScreen() {
           </TouchableOpacity>
         ))}
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }
 
 const s = StyleSheet.create({
   container: { flex: 1, backgroundColor: Colors.BG },
+  brandBar: { paddingHorizontal: 14, paddingVertical: 10, backgroundColor: '#fff', borderBottomWidth: 1, borderBottomColor: '#E5E7EB', alignItems: 'center' },
+  brandTxt: { fontSize: 22, fontWeight: '900', letterSpacing: -0.3 },
   header: { paddingHorizontal: 18, paddingTop: 8, paddingBottom: 14, backgroundColor: '#fff', borderBottomWidth: 1, borderBottomColor: '#E8DEC8' },
   title: { fontSize: 18, fontWeight: '900', color: '#1A4A5E', writingDirection: 'rtl', textAlign: 'right' },
   subtitle: { color: Colors.MUTED, fontSize: 12, marginTop: 2, writingDirection: 'rtl', textAlign: 'right' },

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Linking } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { Colors } from '../constants/colors';
@@ -35,12 +35,19 @@ export default function EventsScreen() {
   };
 
   return (
-    <SafeAreaView edges={['top']} style={s.container}>
-      <View style={s.header}>
-        <TouchableOpacity onPress={() => router.back()} style={s.back}>
-          <Text style={{ fontSize: 22, color: '#fff' }}>←</Text>
+    <View style={s.container}>
+      <SafeAreaView edges={['top']} style={{ backgroundColor: '#000' }} />
+      <View style={s.brandBar}>
+        <Text style={s.brandTxt}>
+          <Text style={{ color: '#1A6B8A' }}>WellCome </Text>
+          <Text style={{ color: '#E76F51' }}>Dubai</Text>
+        </Text>
+        <TouchableOpacity onPress={() => router.back()} style={s.brandClose}>
+          <Text style={{ color: '#2C5F6E', fontSize: 18, fontWeight: '700' }}>✕</Text>
         </TouchableOpacity>
-        <Text style={s.title}>📅 לוח אירועים</Text>
+      </View>
+      <View style={s.header}>
+        <Text style={[s.title, { flex: 1 }]}>לוח אירועים</Text>
       </View>
 
       <ScrollView contentContainerStyle={{ padding: 18, paddingBottom: 60, backgroundColor: yearBg[activeYear] || '#FAF6EE' }}>
@@ -70,22 +77,26 @@ export default function EventsScreen() {
                   {events.length ? `${events.length} אירועים` : 'אין אירועים'}{isCurrent ? ' · החודש' : ''}
                 </Text>
               </View>
-              {events.map((ev, idx) => (
-                <View key={idx} style={s.eventCard}>
-                  <View style={s.eventDay}>
-                    <Text style={s.eventDayTxt}>{ev.day}</Text>
-                  </View>
-                  <View style={{ flex: 1 }}>
-                    <Text style={s.eventName}>{ev.name}</Text>
-                    <Text style={s.eventDesc}>{ev.desc}</Text>
-                    <View style={[s.catChip, { backgroundColor: ev.cat === 'sport' ? Colors.SECONDARY + '25' : Colors.PINK + '25' }]}>
-                      <Text style={[s.catChipTxt, { color: ev.cat === 'sport' ? Colors.SECONDARY : Colors.PINK }]}>
-                        {ev.cat === 'sport' ? '⚽ ספורט' : '🎉 תרבות'}
-                      </Text>
+              {events.map((ev, idx) => {
+                const dayParts = String(ev.day).split('.');
+                const dayNum = dayParts[0] || ev.day;
+                const monShort = HEB_MONTHS[parseInt(dayParts[1]) || monthNum]?.slice(0, 3) || HEB_MONTHS[monthNum].slice(0, 3);
+                return (
+                  <View key={idx} style={s.eventRow}>
+                    <View style={s.dayCol}>
+                      <Text style={s.dayNum}>{dayNum}</Text>
+                      <Text style={s.dayMon}>{monShort}</Text>
+                    </View>
+                    <View style={{ flex: 1, minWidth: 0 }}>
+                      <Text style={s.eventName}>{ev.name}</Text>
+                      <Text style={s.eventDesc}>{ev.desc}</Text>
+                      <TouchableOpacity onPress={() => Linking.openURL('https://klook.tpk.lv/8HSINbXI')}>
+                        <Text style={s.ticketLink}>רכישת כרטיסים ←</Text>
+                      </TouchableOpacity>
                     </View>
                   </View>
-                </View>
-              ))}
+                );
+              })}
             </View>
           );
         })}
@@ -96,20 +107,24 @@ export default function EventsScreen() {
           </View>
         ) : null}
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }
 
 const s = StyleSheet.create({
   container: { flex: 1, backgroundColor: Colors.BG },
+  brandBar: { flexDirection: 'row-reverse', alignItems: 'center', paddingHorizontal: 14, paddingVertical: 10, backgroundColor: '#fff', borderBottomWidth: 1, borderBottomColor: '#E5E7EB' },
+  brandTxt: { flex: 1, fontSize: 22, fontWeight: '900', letterSpacing: -0.3, textAlign: 'center' },
+  brandClose: { width: 32, alignItems: 'center' },
   header: { flexDirection: 'row-reverse', alignItems: 'center', paddingHorizontal: 14, paddingVertical: 12, backgroundColor: Colors.PRIMARY, gap: 10 },
   back: { padding: 4 },
-  title: { color: '#fff', fontSize: 17, fontWeight: '900', writingDirection: 'rtl' },
-  eventCard: { flexDirection: 'row-reverse', backgroundColor: '#fff', borderRadius: 12, padding: 12, marginBottom: 8, borderWidth: 1, borderColor: '#E8DEC8', gap: 12, alignItems: 'flex-start' },
-  eventDay: { backgroundColor: Colors.PRIMARY, paddingHorizontal: 10, paddingVertical: 6, borderRadius: 8, minWidth: 56, alignItems: 'center' },
-  eventDayTxt: { color: '#fff', fontSize: 11, fontWeight: '800' },
-  eventName: { fontSize: 14, fontWeight: '900', color: Colors.TEXT, writingDirection: 'rtl', textAlign: 'right' },
-  eventDesc: { color: Colors.MUTED, fontSize: 12, marginTop: 4, lineHeight: 17, writingDirection: 'rtl', textAlign: 'right' },
-  catChip: { alignSelf: 'flex-end', paddingHorizontal: 8, paddingVertical: 3, borderRadius: 6, marginTop: 6 },
-  catChipTxt: { fontSize: 10, fontWeight: '800' },
+  closeBtn: { width: 36, height: 36, borderRadius: 18, backgroundColor: 'rgba(255,255,255,0.25)', alignItems: 'center', justifyContent: 'center' },
+  title: { color: '#fff', fontSize: 17, fontWeight: '900', writingDirection: 'rtl', textAlign: 'right' },
+  eventRow: { flexDirection: 'row-reverse', gap: 18, paddingVertical: 18, borderBottomWidth: 1, borderBottomColor: 'rgba(184,146,58,0.15)' },
+  dayCol: { flexShrink: 0, alignItems: 'center', minWidth: 60, borderLeftWidth: 1, borderLeftColor: 'rgba(184,146,58,0.4)', paddingLeft: 14 },
+  dayNum: { fontWeight: '800', fontSize: 22, color: '#2C5F6E', lineHeight: 24 },
+  dayMon: { fontSize: 10, color: '#B8923A', fontWeight: '600', letterSpacing: 1, marginTop: 4 },
+  eventName: { fontWeight: '600', color: '#2C5F6E', fontSize: 16, lineHeight: 22, marginBottom: 5, writingDirection: 'rtl', textAlign: 'right' },
+  eventDesc: { color: '#6B7F8D', fontSize: 13, lineHeight: 20, marginBottom: 8, writingDirection: 'rtl', textAlign: 'right' },
+  ticketLink: { color: '#E76F51', fontSize: 13, fontWeight: '700', letterSpacing: 0.3, textAlign: 'right' },
 });

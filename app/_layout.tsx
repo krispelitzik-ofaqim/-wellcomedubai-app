@@ -11,9 +11,10 @@ if (!I18nManager.isRTL) {
 export default function RootLayout() {
   return (
     <SafeAreaProvider>
-      <StatusBar style="dark" />
+      <StatusBar style="light" />
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="(tabs)" />
+        <Stack.Screen name="learn/[id]" options={{ presentation: 'transparentModal', animation: 'fade', animationDuration: 200 }} />
       </Stack>
     </SafeAreaProvider>
   );

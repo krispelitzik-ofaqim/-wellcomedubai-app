@@ -64,12 +64,19 @@ export default function SubmitProject() {
   };
 
   return (
-    <SafeAreaView edges={['top']} style={s.container}>
-      <View style={s.header}>
-        <TouchableOpacity onPress={() => router.back()} style={s.back}>
-          <Text style={{ fontSize: 22, color: Colors.GOLD }}>←</Text>
+    <View style={s.container}>
+      <SafeAreaView edges={['top']} style={{ backgroundColor: '#000' }} />
+      <View style={s.brandBar}>
+        <Text style={s.brandTxt}>
+          <Text style={{ color: '#1A6B8A' }}>WellCome </Text>
+          <Text style={{ color: '#E76F51' }}>Dubai</Text>
+        </Text>
+        <TouchableOpacity onPress={() => router.back()} style={s.brandClose}>
+          <Text style={{ color: '#2C5F6E', fontSize: 18, fontWeight: '700' }}>✕</Text>
         </TouchableOpacity>
-        <Text style={s.title}>🏗️ העלה פרויקט נדל"ן</Text>
+      </View>
+      <View style={s.header}>
+        <Text style={[s.title, { flex: 1 }]}>העלה פרויקט נדל"ן</Text>
       </View>
 
       <ScrollView contentContainerStyle={{ padding: 14, paddingBottom: 40 }}>
@@ -104,7 +111,7 @@ export default function SubmitProject() {
 
         <Section title="תמונות">
           <TouchableOpacity onPress={pickPhotos} style={s.uploadBtn}>
-            <Text style={s.uploadTxt}>📷 בחר תמונות (עד 8)</Text>
+            <Text style={s.uploadTxt}>בחר תמונות (עד 8)</Text>
           </TouchableOpacity>
           {photos.length > 0 && (
             <ScrollView horizontal style={{ marginTop: 8 }} contentContainerStyle={{ gap: 6 }}>
@@ -132,11 +139,11 @@ export default function SubmitProject() {
         </Section>
 
         <TouchableOpacity onPress={submit} disabled={submitting} style={[s.submitBtn, submitting && { opacity: 0.5 }]}>
-          <Text style={s.submitTxt}>{submitting ? '⏳ שולח...' : '📤 שלח לאישור'}</Text>
+          <Text style={s.submitTxt}>{submitting ? 'שולח...' : 'שלח לאישור'}</Text>
         </TouchableOpacity>
         <Text style={s.disclaimer}>* שדות חובה. הפרויקט יופיע באתר לאחר אישור מנהל.</Text>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -162,7 +169,11 @@ const s = StyleSheet.create({
   container: { flex: 1, backgroundColor: Colors.BG },
   header: { flexDirection: 'row-reverse', alignItems: 'center', paddingHorizontal: 14, paddingVertical: 12, backgroundColor: '#0E2A38', gap: 10 },
   back: { padding: 4 },
-  title: { color: Colors.GOLD, fontSize: 17, fontWeight: '900', writingDirection: 'rtl' },
+  closeBtn: { width: 36, height: 36, borderRadius: 18, backgroundColor: 'rgba(233,196,106,0.15)', alignItems: 'center', justifyContent: 'center' },
+  brandBar: { flexDirection: 'row-reverse', alignItems: 'center', paddingHorizontal: 14, paddingVertical: 10, backgroundColor: '#fff', borderBottomWidth: 1, borderBottomColor: '#E5E7EB' },
+  brandTxt: { flex: 1, fontSize: 22, fontWeight: '900', letterSpacing: -0.3, textAlign: 'center' },
+  brandClose: { width: 32, alignItems: 'center' },
+  title: { color: Colors.GOLD, fontSize: 17, fontWeight: '900', writingDirection: 'rtl', textAlign: 'right' },
   section: { backgroundColor: '#fff', borderRadius: 12, padding: 14, marginBottom: 12, borderWidth: 1, borderColor: '#E8DEC8' },
   sectionTitle: { fontWeight: '800', color: '#1A4A5E', fontSize: 14, marginBottom: 10, paddingBottom: 6, borderBottomWidth: 1, borderBottomColor: '#F0E6D2', writingDirection: 'rtl', textAlign: 'right' },
   label: { color: Colors.MUTED, fontSize: 12, fontWeight: '700', marginBottom: 4, writingDirection: 'rtl', textAlign: 'right' },

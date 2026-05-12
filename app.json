@@ -15,7 +15,10 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.wellcomedubai.app"
+      "bundleIdentifier": "com.wellcomedubai.app",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "אנחנו משתמשים במיקום שלך כדי להראות מסעדות, אטרקציות ומלונות קרובים בדובאי."
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -31,7 +34,14 @@
       "bundler": "metro"
     },
     "plugins": [
-      "expo-router"
+      "expo-router",
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "אנחנו משתמשים במיקום שלך כדי להראות מסעדות, אטרקציות ומלונות קרובים בדובאי."
+        }
+      ],
+      "@react-native-community/datetimepicker"
     ],
     "extra": {
       "router": {},
