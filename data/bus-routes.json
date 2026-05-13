@@ -1,0 +1,81 @@
+{
+  "521": {
+    "name": "Big Bus Dubai",
+    "routes": [
+      {
+        "id": "city",
+        "name": "City Route",
+        "nameHe": "מסלול עירוני (אדום)",
+        "color": "#E63946",
+        "officialUrl": "https://www.bigbustours.com/en/dubai/red-city-route-dubai",
+        "stops": [
+          { "name": "Wafi Mall",          "nameHe": "Wafi Mall (התחלה)",      "lat": 25.2278, "lng": 55.3219 },
+          { "name": "Dubai Frame",         "nameHe": "Dubai Frame",             "lat": 25.2356, "lng": 55.3007 },
+          { "name": "Museum of the Future","nameHe": "מוזיאון העתיד",          "lat": 25.2245, "lng": 55.2823 },
+          { "name": "WTC",                 "nameHe": "מרכז סחר עולמי",         "lat": 25.2278, "lng": 55.2806 },
+          { "name": "Burj Khalifa/Dubai Mall","nameHe": "ברג' ח'ליפה / Dubai Mall","lat": 25.1972, "lng": 55.2796 },
+          { "name": "Heritage Village",    "nameHe": "כפר המורשת",              "lat": 25.2685, "lng": 55.2940 },
+          { "name": "Al Fahidi",           "nameHe": "אל פאהידי",               "lat": 25.2641, "lng": 55.3000 },
+          { "name": "Spice Souk",          "nameHe": "שוק התבלינים",            "lat": 25.2680, "lng": 55.2986 },
+          { "name": "Gold Souk",           "nameHe": "שוק הזהב",                "lat": 25.2723, "lng": 55.2978 },
+          { "name": "Deira City Centre",   "nameHe": "Deira City Centre",       "lat": 25.2526, "lng": 55.3309 }
+        ]
+      },
+      {
+        "id": "beach",
+        "name": "Beach Route",
+        "nameHe": "מסלול חופים (כחול)",
+        "color": "#1A6B8A",
+        "officialUrl": "https://www.bigbustours.com/en/dubai/blue-marina-route-dubai",
+        "stops": [
+          { "name": "Souk Madinat Jumeirah","nameHe": "שוק מדינת ג'ומיירה",     "lat": 25.1316, "lng": 55.1860 },
+          { "name": "Burj Al Arab",         "nameHe": "ברג' אל ערב",             "lat": 25.1412, "lng": 55.1855 },
+          { "name": "Mall of the Emirates", "nameHe": "קניון האמירויות",         "lat": 25.1199, "lng": 55.2007 },
+          { "name": "Ain Dubai",            "nameHe": "עין דובאי",                "lat": 25.0796, "lng": 55.1248 },
+          { "name": "Dubai Marina Mall",    "nameHe": "קניון מרינה דובאי",       "lat": 25.0760, "lng": 55.1394 },
+          { "name": "Atlantis the Palm",    "nameHe": "Atlantis the Palm",        "lat": 25.1308, "lng": 55.1175 },
+          { "name": "The Pointe",           "nameHe": "The Pointe",               "lat": 25.1230, "lng": 55.1107 },
+          { "name": "Palm Jumeirah",        "nameHe": "Palm Jumeirah",            "lat": 25.1100, "lng": 55.1380 }
+        ]
+      }
+    ]
+  },
+  "522": {
+    "name": "City Sightseeing Dubai",
+    "routes": [
+      {
+        "id": "red",
+        "name": "Red Line",
+        "nameHe": "הקו האדום (היסטוריה+דאון טאון)",
+        "color": "#E63946",
+        "officialUrl": "https://city-sightseeing.com/en/112/dubai/244/hop-on-hop-off-dubai",
+        "stops": [
+          { "name": "Deira City Centre",    "nameHe": "Deira City Centre",        "lat": 25.2526, "lng": 55.3309 },
+          { "name": "Gold Souk",            "nameHe": "שוק הזהב",                 "lat": 25.2723, "lng": 55.2978 },
+          { "name": "Al Fahidi",            "nameHe": "אל פאהידי",                "lat": 25.2641, "lng": 55.3000 },
+          { "name": "Heritage House",       "nameHe": "כפר המורשת",               "lat": 25.2685, "lng": 55.2940 },
+          { "name": "Dubai Frame",          "nameHe": "Dubai Frame",              "lat": 25.2356, "lng": 55.3007 },
+          { "name": "Burj Khalifa/Dubai Mall","nameHe": "ברג' ח'ליפה / Dubai Mall","lat": 25.1972, "lng": 55.2796 },
+          { "name": "Museum of the Future", "nameHe": "מוזיאון העתיד",           "lat": 25.2245, "lng": 55.2823 },
+          { "name": "Wafi Mall",            "nameHe": "Wafi Mall",                "lat": 25.2278, "lng": 55.3219 }
+        ]
+      },
+      {
+        "id": "blue",
+        "name": "Blue Line",
+        "nameHe": "הקו הכחול (חופים+מרינה)",
+        "color": "#1A6B8A",
+        "officialUrl": "https://city-sightseeing.com/en/112/dubai/244/hop-on-hop-off-dubai",
+        "stops": [
+          { "name": "Souk Madinat",         "nameHe": "שוק מדינת",                "lat": 25.1316, "lng": 55.1860 },
+          { "name": "Burj Al Arab",         "nameHe": "ברג' אל ערב",              "lat": 25.1412, "lng": 55.1855 },
+          { "name": "Mall of the Emirates", "nameHe": "קניון האמירויות",          "lat": 25.1199, "lng": 55.2007 },
+          { "name": "Dubai Marina",         "nameHe": "Dubai Marina",             "lat": 25.0791, "lng": 55.1411 },
+          { "name": "JBR",                  "nameHe": "JBR",                       "lat": 25.0760, "lng": 55.1325 },
+          { "name": "Ain Dubai",            "nameHe": "עין דובאי",                 "lat": 25.0796, "lng": 55.1248 },
+          { "name": "Atlantis the Palm",    "nameHe": "Atlantis the Palm",         "lat": 25.1308, "lng": 55.1175 }
+        ]
+      }
+    ]
+  }
+}

@@ -340,5 +340,24 @@ export const ITINERARIES = [
         "lng": 55.123
       }
     ]
+  },
+  {
+    "title": "סיור מודרך בעברית — דובאי הקלאסית",
+    "icon": "🎧",
+    "color": "#B85C8E",
+    "duration": "~5 שעות · אודיו בעברית",
+    "bestFor": "תיירים שרוצים חוויה מודרכת בעברית",
+    "sourceUrl": "https://dubai.co.il/attraction/guided-tour-of-dubai-in-the-hebrew/",
+    "stops": [
+      { "time": "09:00", "name": "Dubai Marina",            "nameHe": "מרינה",                  "desc": "תצפית פנורמית על יאכטות ומגדלי יוקרה.",                                            "image": "https://images.pexels.com/photos/175773/pexels-photo-175773.jpeg",        "lat": 25.0791, "lng": 55.1411, "audio": "" },
+      { "time": "09:30", "name": "Palm Jumeirah",           "nameHe": "פאלם ג'ומיירה",          "desc": "סיור פנורמי באי המלאכותי הגדול בעולם, הסברים על ההנדסה.",                          "image": "https://images.pexels.com/photos/7144247/pexels-photo-7144247.jpeg",      "lat": 25.1100, "lng": 55.1380, "audio": "" },
+      { "time": "10:00", "name": "Victory Monument",        "nameHe": "פסל הניצחון",            "desc": "תחנת צילום ליד פסל היד המפורסם.",                                                  "image": "https://images.pexels.com/photos/4119024/pexels-photo-4119024.jpeg",      "lat": 25.2189, "lng": 55.2750, "audio": "" },
+      { "time": "10:30", "name": "Souk Madinat Jumeirah",   "nameHe": "שוק מדינת ג'ומיירה",     "desc": "הליכה לאורך תעלות מקסימות ושוק מסורתי.",                                         "image": "https://images.pexels.com/photos/3290071/pexels-photo-3290071.jpeg",      "lat": 25.1316, "lng": 55.1860, "audio": "" },
+      { "time": "11:30", "name": "Burj Al Arab",            "nameHe": "מלון ברג' אל ערב",       "desc": "צילום לצד המגדל בצורת מפרש. הפסקת קפה אופציונלית.",                                "image": "https://images.pexels.com/photos/3214960/pexels-photo-3214960.jpeg",      "lat": 25.1412, "lng": 55.1855, "audio": "" },
+      { "time": "12:30", "name": "Museum of the Future",    "nameHe": "מוזיאון העתיד",          "desc": "צילום לציון הדרך האדריכלי המרהיב.",                                                "image": "https://images.pexels.com/photos/29196946/pexels-photo-29196946.jpeg",    "lat": 25.2245, "lng": 55.2823, "audio": "" },
+      { "time": "13:00", "name": "Al Seef & Al Fahidi",     "nameHe": "אל סייף ואל פאהידי",     "desc": "הרובע ההיסטורי, מבנים בני 150 שנה, סמטאות וגלריות.",                              "image": "https://images.pexels.com/photos/30245006/pexels-photo-30245006.jpeg",    "lat": 25.2627, "lng": 55.2950, "audio": "" },
+      { "time": "13:30", "name": "Abra Boat Ride",          "nameHe": "שייט אברה על הקריק",     "desc": "סירת עץ מסורתית, טעימת מאפים ושוקולד דובאי מפורסם.",                              "image": "https://images.pexels.com/photos/14750357/pexels-photo-14750357.jpeg",    "lat": 25.2660, "lng": 55.2980, "audio": "" },
+      { "time": "14:00", "name": "Al Qarmah",               "nameHe": "שכונת אל קארמה",         "desc": "קניות אופציונליות ב-Day To Day / Gift Village, ספא מסורתי.",                       "image": "https://images.pexels.com/photos/1414408/pexels-photo-1414408.jpeg",      "lat": 25.2434, "lng": 55.3094, "audio": "" }
+    ]
   }
 ];

@@ -1,5 +1,13 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image, Linking, Modal, FlatList, I18nManager } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image, Linking, Modal, FlatList, I18nManager, Alert } from 'react-native';
+import * as Location from 'expo-location';
+
+function haversineKm(lat1: number, lng1: number, lat2: number, lng2: number) {
+  const R = 6371; const toRad = (d: number) => (d * Math.PI) / 180;
+  const dLat = toRad(lat2 - lat1); const dLng = toRad(lng2 - lng1);
+  const a = Math.sin(dLat/2)**2 + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLng/2)**2;
+  return 2 * R * Math.asin(Math.sqrt(a));
+}
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, router, useFocusEffect } from 'expo-router';
 import { WebView } from 'react-native-webview';
@@ -7,6 +15,7 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import { Colors } from '../../constants/colors';
 import { CATALOG } from '../../data/catalog';
 import { getFavorites, toggleFavorite } from '../../utils/favorites';
+import METRO from '../../data/metro.json';
 import HOTEL_PHOTOS from '../../data/hotel-photos.json';
 import ATTRACTION_PHOTOS from '../../data/attraction-photos.json';
 import RESTAURANT_PHOTOS from '../../data/restaurant-places-photos.json';
@@ -43,13 +52,71 @@ const TITLES: Record<string, { he: string; emoji: string; color: string }> = {
 const FILTERS: Record<string, { label: string; key: string }[]> = {
   hotels:      [{label:'הכל',key:'all'},{label:'יוקרה',key:'7star'},{label:'תקציב גבוה',key:'5star'},{label:'תקציב בינוני',key:'4-5star'},{label:'סביר',key:'3-4star'},{label:'תקציב צנוע',key:'budget'}],
   attractions: [{label:'הכל',key:'all'},{label:'חובה',key:'landmark'},{label:'מוזיאון',key:'museum'},{label:'אומנות',key:'art'},{label:'אקסטרים',key:'extreme'},{label:'חוף',key:'beach'},{label:'פארק מים',key:'waterpark'},{label:'פארק שעשועים',key:'theme-park'},{label:'סיור',key:'tour'},{label:'גן חיות',key:'zoo'},{label:'ספארי',key:'desert'},{label:'יהדות',key:'judaism'},{label:'ספורט',key:'sport'},{label:'אקווריום',key:'aquarium'},{label:'מופע',key:'show'},{label:'הרפתקה',key:'adventure'}],
-  restaurants: [{label:'הכל',key:'all'},{label:'יוקרה',key:'ultra-luxury'},{label:'ישראלי',key:'israeli'},{label:'בתי קפה',key:'cafe'},{label:'אסיאתי',key:'asian'},{label:'הודי',key:'indian'},{label:'איטלקי',key:'italian'},{label:'טורקי',key:'turkish'},{label:'מקומי',key:'local'},{label:'רחוב',key:'street'},{label:'דגים',key:'seafood'},{label:'סטייקייה',key:'steakhouse'},{label:'טבעוני',key:'vegan'}],
-  shopping:    [{label:'הכל',key:'all'},{label:'קניון',key:'mall'},{label:'שוק',key:'souk'}],
+  restaurants: [{label:'הכל',key:'all'},{label:'⭐ מישלין',key:'michelin'},{label:'יוקרה',key:'ultra-luxury'},{label:'ישראלי',key:'israeli'},{label:'בתי קפה',key:'cafe'},{label:'אסיאתי',key:'asian'},{label:'הודי',key:'indian'},{label:'איטלקי',key:'italian'},{label:'טורקי',key:'turkish'},{label:'מקומי',key:'local'},{label:'רחוב',key:'street'},{label:'דגים',key:'seafood'},{label:'סטייקייה',key:'steakhouse'},{label:'טבעוני',key:'vegan'}],
+  shopping:    [{label:'הכל',key:'all'},{label:'קניון',key:'mall'},{label:'שוק',key:'souk'},{label:'אלכוהול וסיגרים',key:'alcohol'}],
   nightlife:   [{label:'הכל',key:'all'},{label:'בר',key:'bar'},{label:'מועדון',key:'club'},{label:'אלכוהול',key:'alcohol'}],
-  transport:   [{label:'הכל',key:'all'},{label:'מטרו',key:'metro'},{label:'מונית',key:'taxi'},{label:'השכרה',key:'rental'}],
+  transport:   [{label:'הכל',key:'all'},{label:'מטרו',key:'metro'},{label:'מונית',key:'taxi'},{label:'אפליקציות',key:'app'},{label:'השכרת רכב',key:'car-rental'},{label:'אוטובוס',key:'bus'},{label:'אברה',key:'boat'}],
   kids:        [{label:'הכל',key:'all'}],
   casino:      [{label:'הכל',key:'all'},{label:'קזינו',key:'casino'},{label:'מרוצים',key:'racing'},{label:'ספורט',key:'sport'},{label:'הופעות',key:'music-show'}],
   abudhabi:    [{label:'הכל',key:'all'}],
+};
+
+const SUBCAT_LABELS: Record<string, { label: string; color: string }> = {
+  landmark:    { label: 'חובה',          color: '#E76F51' },
+  museum:      { label: 'מוזיאון',       color: '#2A9D8F' },
+  art:         { label: 'אומנות',         color: '#B85C8E' },
+  adventure:   { label: 'הרפתקה',         color: '#F4A261' },
+  extreme:     { label: 'אקסטרים',        color: '#E63946' },
+  beach:       { label: 'חוף',            color: '#5B9DC7' },
+  waterpark:   { label: 'פארק מים',       color: '#5B9DC7' },
+  'theme-park':{ label: 'פארק שעשועים',   color: '#F4A261' },
+  tour:        { label: 'סיור',           color: '#B8923A' },
+  zoo:         { label: 'גן חיות',        color: '#7FA77F' },
+  aquarium:    { label: 'אקווריום',       color: '#5B9DC7' },
+  snow:        { label: 'סקי',            color: '#1A6B8A' },
+  desert:      { label: 'ספארי',          color: '#B8923A' },
+  show:        { label: 'מופע',           color: '#B85C8E' },
+  sport:       { label: 'ספורט',          color: '#2A9D8F' },
+  judaism:     { label: 'יהדות',          color: '#1A4A5E' },
+  'kids-zone': { label: 'ילדים',          color: '#E76F51' },
+  'kids-city': { label: 'עיר הילדים',      color: '#E76F51' },
+  'vr-park':   { label: 'פארק מציאות מדומה', color: '#B85C8E' },
+  trampoline:  { label: 'מתחם טרמפולינה',  color: '#F4A261' },
+  arcade:      { label: 'לונה פארק',       color: '#E63946' },
+  toddlers:    { label: 'פארק משחקים לפעוטות', color: '#5B9DC7' },
+  '7star':     { label: '7★',             color: '#B8923A' },
+  '5star':     { label: '5★',             color: '#B8923A' },
+  '4-5star':   { label: '4-5★',           color: '#B8923A' },
+  '3-4star':   { label: '3-4★',           color: '#7FA77F' },
+  budget:      { label: 'תקציבי',         color: '#7FA77F' },
+  mall:        { label: 'קניון',          color: '#F4A261' },
+  souk:        { label: 'שוק',            color: '#B8923A' },
+  alcohol:     { label: 'אלכוהול',        color: '#E63946' },
+  metro:       { label: 'מטרו',           color: '#E63946' },
+  taxi:        { label: 'מונית',          color: '#B8923A' },
+  bus:         { label: 'אוטובוס',        color: '#F4A261' },
+  app:         { label: 'אפליקציה',       color: '#1A6B8A' },
+  boat:        { label: 'סירה',           color: '#5B9DC7' },
+  'car-rental':{ label: 'השכרת רכב',      color: '#7FA77F' },
+  bar:         { label: 'בר',             color: '#B85C8E' },
+  club:        { label: 'מועדון',          color: '#B85C8E' },
+  entertainment:{ label: 'בידור',         color: '#E76F51' },
+  casino:      { label: 'קזינו',          color: '#B8923A' },
+  racing:      { label: 'מרוצים',         color: '#E63946' },
+  'music-show':{ label: 'מופע',           color: '#B85C8E' },
+  ultraluxury: { label: 'יוקרה',          color: '#B8923A' },
+  'ultra-luxury': { label: 'יוקרה',       color: '#B8923A' },
+  israeli:     { label: 'ישראלי',         color: '#1A6B8A' },
+  cafe:        { label: 'בית קפה',        color: '#B8923A' },
+  asian:       { label: 'אסיאתי',         color: '#E76F51' },
+  indian:      { label: 'הודי',           color: '#F4A261' },
+  italian:     { label: 'איטלקי',         color: '#2A9D8F' },
+  turkish:     { label: 'טורקי',          color: '#E76F51' },
+  local:       { label: 'מקומי',          color: '#B8923A' },
+  street:      { label: 'רחוב',           color: '#F4A261' },
+  seafood:     { label: 'דגים',           color: '#5B9DC7' },
+  steakhouse:  { label: 'סטייקייה',       color: '#E63946' },
+  vegan:       { label: 'טבעוני',         color: '#7FA77F' },
 };
 
 function imgUrl(item: any, cat?: string) {
@@ -72,7 +139,7 @@ export default function CategoryScreen() {
   const [active, setActive] = useState(firstFilter);
 
   const sorted = [...items].sort((a, b) => (b.rating || 0) - (a.rating || 0));
-  const list = active === 'all' ? sorted : sorted.filter(it => it.subcategory === active);
+  const list = active === 'all' ? sorted : active === 'michelin' ? sorted.filter(it => (it.michelinStars || 0) > 0) : active === 'ultra-luxury' ? sorted.filter(it => it.subcategory === 'ultra-luxury' && !(it.michelinStars > 0)) : sorted.filter(it => it.subcategory === active);
   const [favIds, setFavIds] = useState<Set<string>>(new Set());
   useFocusEffect(useCallback(() => {
     getFavorites().then(favs => setFavIds(new Set(favs.filter(f => f.cat === cat).map(f => String(f.id)))));
@@ -96,6 +163,38 @@ export default function CategoryScreen() {
   const [mapBig, setMapBig] = useState(false);
   const [focusItem, setFocusItem] = useState<{ lat: number; lng: number; name: string } | null>(null);
   const [iframeUrl, setIframeUrl] = useState<string | null>(null);
+  const [userCoords, setUserCoords] = useState<{ lat: number; lng: number } | null>(null);
+  const [nearestStation, setNearestStation] = useState<any | null>(null);
+
+  const askLocation = async (findNearest: boolean) => {
+    try {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        Alert.alert('הרשאת מיקום', 'יש לאשר הרשאת מיקום בהגדרות.');
+        return;
+      }
+      const pos = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.High });
+      const u = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+      setUserCoords(u);
+      if (findNearest) {
+        let nearest = null; let best = Infinity;
+        for (const st of METRO.stations) {
+          const d = haversineKm(u.lat, u.lng, st.lat, st.lng);
+          if (d < best) { best = d; nearest = { ...st, _dist: d }; }
+        }
+        setNearestStation(nearest);
+      }
+    } catch {
+      Alert.alert('שגיאה', 'לא הצלחנו לאתר את המיקום.');
+    }
+  };
+  const metroMapHtml = useMemo(() => {
+    const userJs = userCoords ? `const u={lat:${userCoords.lat},lng:${userCoords.lng}};new google.maps.Marker({position:u,map,title:'אני כאן',icon:{path:google.maps.SymbolPath.CIRCLE,scale:11,fillColor:'#1A6B8A',fillOpacity:1,strokeColor:'#fff',strokeWeight:3}});bounds.extend(u);` : '';
+    const nearestJs = nearestStation ? `new google.maps.Marker({position:{lat:${nearestStation.lat},lng:${nearestStation.lng}},map,icon:{path:google.maps.SymbolPath.CIRCLE,scale:16,fillColor:'transparent',fillOpacity:0,strokeColor:'#1A6B8A',strokeWeight:3}});` : '';
+    const fitJs = (userCoords || nearestStation) ? `if(bounds.isEmpty()===false)map.fitBounds(bounds,60);` : '';
+    return `<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><style>html,body,#m{margin:0;padding:0;height:100%;width:100%;}</style></head><body><div id="m"></div><script>function init(){const map=new google.maps.Map(document.getElementById('m'),{center:{lat:25.18,lng:55.25},zoom:11,mapTypeControl:false,streetViewControl:false,fullscreenControl:false});const bounds=new google.maps.LatLngBounds();const stations=${JSON.stringify(METRO.stations)};const redPath=[];const greenPath=[];stations.forEach(s=>{const pos={lat:s.lat,lng:s.lng};const isRed=s.lines.includes('red');const isGreen=s.lines.includes('green');const isInter=s.lines.length>1;const color=isInter?'#B8923A':(isRed?'#E63946':'#2A9D8F');const m=new google.maps.Marker({position:pos,map,title:s.nameHe,icon:{path:google.maps.SymbolPath.CIRCLE,scale:isInter?9:6,fillColor:color,fillOpacity:1,strokeColor:'#fff',strokeWeight:2}});if(isRed)redPath.push(pos);if(isGreen)greenPath.push(pos);const iw=new google.maps.InfoWindow({content:'<div style="direction:rtl;font-family:-apple-system,sans-serif;"><b>'+s.nameHe+'</b><br><span style="color:#6B7F8D;font-size:11px;">'+s.nameEn+' · '+s.area+'</span></div>'});m.addListener('click',()=>iw.open({anchor:m,map}));});if(redPath.length>1)new google.maps.Polyline({path:redPath,geodesic:true,strokeColor:'#E63946',strokeOpacity:0.85,strokeWeight:3.5,map});if(greenPath.length>1)new google.maps.Polyline({path:greenPath,geodesic:true,strokeColor:'#2A9D8F',strokeOpacity:0.85,strokeWeight:3.5,map});${userJs}${nearestJs}${fitJs}}</script><script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDw09Bg7XaH7apEWJBcFtogVfrdUwF_gEM&language=he&callback=init" async defer></script></body></html>`;
+  }, [userCoords, nearestStation]);
+
   const mapHtml = useMemo(() => {
     const pts = itemsWithCoords.map(it => ({
       lat: it.lat, lng: it.lng, name: it.name, nameEn: it.nameEn || '', address: it.address || '',
@@ -202,7 +301,7 @@ export default function CategoryScreen() {
             <View style={s.mapWrap}>
               <WebView
                 originWhitelist={['*']}
-                source={{ html: mapHtml }}
+                source={{ html: (cat === 'transport' && (active === 'all' || active === 'metro')) ? metroMapHtml : mapHtml }}
                 style={{ flex: 1 }}
                 scrollEnabled={false}
               />
@@ -218,17 +317,37 @@ export default function CategoryScreen() {
                     <Text style={{ color: '#fff', fontSize: 14, fontWeight: '800' }}>סגור ✕</Text>
                   </TouchableOpacity>
                 </View>
-                <WebView originWhitelist={['*']} source={{ html: mapHtml }} style={{ flex: 1 }} />
+                <WebView originWhitelist={['*']} source={{ html: (cat === 'transport' && (active === 'all' || active === 'metro')) ? metroMapHtml : mapHtml }} style={{ flex: 1 }} />
               </View>
             </Modal>
-            <View style={s.mapToolsRow}>
-              <TouchableOpacity style={s.jumpBtn} onPress={() => setJumpOpen(true)}>
-                <Text style={s.jumpBtnTxt} numberOfLines={1}>📍 קפוץ למיקום על המפה...</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={[s.areasBtn, areasOn && s.areasBtnOn]} onPress={() => setAreasOn(o => !o)}>
-                <Text style={[s.areasBtnTxt, areasOn && s.areasBtnTxtOn]}>{areasOn ? '✓ אזורים' : 'אזורים'}</Text>
-              </TouchableOpacity>
-            </View>
+            {cat === 'transport' && (active === 'all' || active === 'metro') ? (
+              <View style={{ flexDirection: 'row-reverse', gap: 8, marginVertical: 8 }}>
+                <TouchableOpacity onPress={() => askLocation(false)} style={{ flex: 1, paddingVertical: 12, backgroundColor: '#1A6B8A', alignItems: 'center', justifyContent: 'center' }}>
+                  <Text style={{ color: '#fff', fontWeight: '800', fontSize: 13, textAlign: 'center' }}>איפה אני?</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => askLocation(true)} style={{ flex: 1, paddingVertical: 12, backgroundColor: '#E76F51', alignItems: 'center', justifyContent: 'center' }}>
+                  <Text style={{ color: '#fff', fontWeight: '800', fontSize: 13, textAlign: 'center' }}>התחנה הקרובה</Text>
+                </TouchableOpacity>
+              </View>
+            ) : (
+              <View style={s.mapToolsRow}>
+                <TouchableOpacity style={s.jumpBtn} onPress={() => setJumpOpen(true)}>
+                  <Text style={s.jumpBtnTxt} numberOfLines={1}>📍 קפוץ למיקום על המפה...</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={[s.areasBtn, areasOn && s.areasBtnOn]} onPress={() => setAreasOn(o => !o)}>
+                  <Text style={[s.areasBtnTxt, areasOn && s.areasBtnTxtOn]}>{areasOn ? '✓ אזורים' : 'אזורים'}</Text>
+                </TouchableOpacity>
+              </View>
+            )}
+            {cat === 'transport' && nearestStation ? (
+              <View style={{ backgroundColor: '#E8F2F7', borderRightWidth: 4, borderRightColor: '#1A6B8A', padding: 12, marginBottom: 8 }}>
+                <Text style={{ color: Colors.TEXT, fontWeight: '900', fontSize: 14, writingDirection: 'rtl' }}>🚉 {nearestStation.nameHe}</Text>
+                <Text style={{ color: Colors.MUTED, fontSize: 12, marginTop: 3, writingDirection: 'rtl' }}>{nearestStation.nameEn} · {nearestStation.area} · {nearestStation._dist.toFixed(2)} ק"מ ממך</Text>
+                <TouchableOpacity onPress={() => Linking.openURL(`https://www.google.com/maps/dir/?api=1&destination=${nearestStation.lat},${nearestStation.lng}&travelmode=walking&hl=he`)} style={{ marginTop: 8 }}>
+                  <Text style={{ color: '#1A6B8A', fontSize: 12.5, fontWeight: '700' }}>נווט אליה ←</Text>
+                </TouchableOpacity>
+              </View>
+            ) : null}
             <Modal visible={jumpOpen} transparent animationType="fade" onRequestClose={() => setJumpOpen(false)}>
               <TouchableOpacity activeOpacity={1} style={s.jumpBackdrop} onPress={() => setJumpOpen(false)}>
                 <View style={s.jumpSheet}>
@@ -247,6 +366,36 @@ export default function CategoryScreen() {
             </Modal>
           </>
         ) : null}
+        {cat === 'transport' && (active === 'all' || active === 'metro') ? (
+          <View style={{ marginBottom: 10 }}>
+            <View style={{ backgroundColor: '#FAF6EE', paddingHorizontal: 16, paddingVertical: 12 }}>
+              <Text style={{ color: Colors.MUTED, fontSize: 11, fontWeight: '700', letterSpacing: 0.8, marginBottom: 6, textTransform: 'uppercase', writingDirection: 'rtl', textAlign: 'right' }}>שעות פעילות מטרו</Text>
+              {METRO.hours.map((h: any, i: number) => (
+                <View key={i} style={{ flexDirection: 'row-reverse', justifyContent: 'space-between', paddingVertical: 3 }}>
+                  <Text style={{ color: Colors.TEXT, fontSize: 13, fontWeight: '700', writingDirection: 'rtl' }}>{h.day}</Text>
+                  <Text style={{ color: Colors.TEXT, fontSize: 13, fontWeight: '600' }}>{h.open} – {h.close}</Text>
+                </View>
+              ))}
+            </View>
+            <View style={{ flexDirection: 'row-reverse', gap: 8, marginTop: 8 }}>
+              <View style={{ flexDirection: 'row-reverse', alignItems: 'center', gap: 6 }}>
+                <View style={{ width: 12, height: 12, borderRadius: 6, backgroundColor: '#E63946' }} />
+                <Text style={{ fontSize: 12, color: Colors.TEXT, fontWeight: '700' }}>הקו האדום</Text>
+              </View>
+              <View style={{ flexDirection: 'row-reverse', alignItems: 'center', gap: 6 }}>
+                <View style={{ width: 12, height: 12, borderRadius: 6, backgroundColor: '#2A9D8F' }} />
+                <Text style={{ fontSize: 12, color: Colors.TEXT, fontWeight: '700' }}>הקו הירוק</Text>
+              </View>
+              <View style={{ flexDirection: 'row-reverse', alignItems: 'center', gap: 6 }}>
+                <View style={{ width: 12, height: 12, borderRadius: 6, backgroundColor: '#B8923A' }} />
+                <Text style={{ fontSize: 12, color: Colors.TEXT, fontWeight: '700' }}>החלפה</Text>
+              </View>
+            </View>
+            <TouchableOpacity onPress={() => Linking.openURL('https://www.google.com/maps/dir///@25.2048,55.2708,11z/data=!3m1!4b1!4m2!4m1!3e3?hl=he')} style={{ backgroundColor: Colors.PRIMARY, padding: 14, alignItems: 'center', justifyContent: 'center', marginTop: 8 }}>
+              <Text style={{ color: '#fff', fontWeight: '800', fontSize: 14, textAlign: 'center' }}>תכנן מסלול בתחבורה ציבורית</Text>
+            </TouchableOpacity>
+          </View>
+        ) : null}
         {list.length === 0 ? (
           <Text style={{ textAlign: 'center', color: Colors.MUTED, marginTop: 20 }}>אין פריטים בקטגוריה זו</Text>
         ) : list.map(item => (
@@ -264,18 +413,29 @@ export default function CategoryScreen() {
                   <Text style={s.kosherText}>✡ מכבד כשרות</Text>
                 </View>
               ) : null}
-              {(cat === 'shopping' || cat === 'abudhabi') ? (() => {
+              {item.michelinStars > 0 ? (
+                <View style={s.michelinStamp}>
+                  <Text style={s.michelinStampStars}>{'★'.repeat(item.michelinStars)}</Text>
+                  <Text style={s.michelinStampTxt}>MICHELIN</Text>
+                </View>
+              ) : null}
+              {item.subcategory && SUBCAT_LABELS[item.subcategory] ? (
+                <View style={[s.subcatBadge, { backgroundColor: SUBCAT_LABELS[item.subcategory].color }]}>
+                  <Text style={s.subcatBadgeTxt}>{SUBCAT_LABELS[item.subcategory].label}</Text>
+                </View>
+              ) : null}
+              {(() => {
                 const isHe = /[֐-׿]/.test(item.name || '');
                 const heName = item.nameHe || (isHe ? item.name : '');
                 return heName ? <Text style={s.imgNameTxt} numberOfLines={1}>{heName}</Text> : null;
-              })() : null}
+              })()}
               <TouchableOpacity style={s.addBtn} onPress={(e) => onToggle(e, item.id)}>
                 <FontAwesome5 name="heart" solid={favIds.has(String(item.id))} size={20} color="#E76F51" style={{ textShadowColor: 'rgba(0,0,0,0.7)', textShadowOffset: { width: 0, height: 1 }, textShadowRadius: 4 }} />
               </TouchableOpacity>
             </View>
             <View style={s.cardBody}>
               <View style={s.cardHead}>
-                <Text style={s.cardTitle} numberOfLines={1}>{cat === 'abudhabi' || cat === 'shopping' ? (item.nameEn || item.name) : item.name}</Text>
+                <Text style={s.cardTitle} numberOfLines={1}>{(cat === 'abudhabi' || cat === 'shopping' || cat === 'casino' || cat === 'nightlife') ? (item.nameEn || item.name) : item.name}</Text>
                 {item.rating ? <View style={s.ratingBadge}><Text style={s.ratingTxt}>⭐ {item.rating}</Text></View> : null}
               </View>
               {item.description ? <Text style={s.cardDesc} numberOfLines={2}>{item.description}</Text> : null}
@@ -300,14 +460,14 @@ export default function CategoryScreen() {
                       <Text style={s.actionTxt}>הזמן</Text>
                     </TouchableOpacity>
                   ) : null}
-                  {['attractions','kids','nightlife','transport','casino','abudhabi'].includes(cat) ? (
+                  {(['attractions','kids','nightlife','casino','abudhabi'].includes(cat) || (cat === 'transport' && item.subcategory === 'bus' && /sightseeing|big bus|hop on|hop-on/i.test((item.nameEn || item.name || '')))) ? (
                     <TouchableOpacity style={[s.actionBtn, { backgroundColor: '#FF5C00' }]} onPress={() => Linking.openURL('https://klook.tpk.lv/8HSINbXI')}>
                       <Text style={s.actionTxt}>רכוש כרטיסים</Text>
                     </TouchableOpacity>
                   ) : null}
                 </View>
               ) : null}
-              {['attractions','kids','nightlife','transport','casino','abudhabi'].includes(cat) ? (
+              {(['attractions','kids','nightlife','casino','abudhabi'].includes(cat) || (cat === 'transport' && item.subcategory === 'bus' && /sightseeing|big bus|hop on|hop-on/i.test((item.nameEn || item.name || '')))) ? (
                 <TouchableOpacity onPress={() => Linking.openURL('https://tiqets.tpk.lv/53YEgT8s')} style={{ alignSelf: 'flex-end', marginTop: 4, marginBottom: 4, marginRight: 6 }}>
                   <Text style={{ color: '#1A6B8A', fontSize: 11.5, fontWeight: '600', textDecorationLine: 'underline' }}>לא מצאת כרטיס? נסה כאן ←</Text>
                 </TouchableOpacity>
@@ -386,6 +546,11 @@ const s = StyleSheet.create({
   jumpRowTxt: { fontSize: 13, color: Colors.TEXT, textAlign: 'right', writingDirection: 'rtl' },
   topBtn: { position: 'absolute', bottom: 24, left: 16, width: 48, height: 48, borderRadius: 24, backgroundColor: '#E76F51', alignItems: 'center', justifyContent: 'center', shadowColor: '#000', shadowOpacity: 0.3, shadowRadius: 6, shadowOffset: { width: 0, height: 3 }, elevation: 6 },
   topBtnTxt: { color: '#fff', fontSize: 24, fontWeight: '900', lineHeight: 28 },
+  michelinStamp: { position: 'absolute', top: 8, right: 50, backgroundColor: '#C8102E', paddingHorizontal: 8, paddingVertical: 4, borderRadius: 4, alignItems: 'center', shadowColor: '#000', shadowOpacity: 0.35, shadowRadius: 4, shadowOffset: { width: 0, height: 2 } },
+  michelinStampStars: { color: '#FFD700', fontSize: 11, fontWeight: '900', letterSpacing: 1 },
+  michelinStampTxt: { color: '#fff', fontSize: 8, fontWeight: '900', letterSpacing: 0.5, marginTop: 1 },
+  subcatBadge: { position: 'absolute', top: 8, left: 8, paddingHorizontal: 8, paddingVertical: 3, borderRadius: 4, shadowColor: '#000', shadowOpacity: 0.2, shadowRadius: 3, shadowOffset: { width: 0, height: 1 } },
+  subcatBadgeTxt: { color: '#fff', fontSize: 11, fontWeight: '800', letterSpacing: 0.2 },
   addBtn: { position: 'absolute', top: 8, right: 8, width: 36, height: 36, alignItems: 'center', justifyContent: 'center', zIndex: 5 },
   addBtnTxt: { color: '#fff', fontSize: 22, fontWeight: '300', lineHeight: 24 },
 });

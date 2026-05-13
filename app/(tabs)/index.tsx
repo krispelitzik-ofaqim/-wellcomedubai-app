@@ -62,8 +62,8 @@ const QUICK_TOOLS = [
 ];
 
 const LEARN_TILES = [
-  { id: 'why-us',     title: 'כרטיסים לאטרקציות', img: 'https://wellcomedubai.com/images/Yizhak/view-dubai-burj-khalifa-skyline-tallest-building-world-twilight-downtown.jpg', highlight: true },
   { id: 'about-app',  title: 'על האפליקציה',   img: 'https://wellcomedubai.com/images/icon-new.jpg', highlight: true },
+  { id: 'why-us',     title: 'כרטיסים', img: require('../../assets/tickets-tile.jpg'), highlight: true },
   { id: 'welcome',    title: 'ברוכים הבאים',    img: 'https://wellcomedubai.com/images/Yizhak/portrait-woman-visiting-luxurious-city-dubai.jpg' },
   { id: 'tips',       title: 'טיפים',           img: 'https://wellcomedubai.com/images/Yizhak/dubai-mall-dubai-uae.jpg' },
   { id: 'history',    title: 'היסטוריה כללית',  img: 'https://wellcomedubai.com/images/Yizhak/archs-shekh-zayed-grand-mosque-reflect-water-before-it.jpg' },
@@ -71,7 +71,8 @@ const LEARN_TILES = [
   { id: 'economy',    title: 'כלכלה מקומית',    img: 'https://wellcomedubai.com/images/Yizhak/economy-uae-currency.jpg' },
   { id: 'tourism',    title: 'תיירות בדובאי',   img: 'https://wellcomedubai.com/images/Yizhak/tourism-family-dubai.jpg' },
   { id: 'vocabulary', title: 'אוצר מילים בסיסי', img: 'https://wellcomedubai.com/images/Yizhak/vocabulary-translate.jpg' },
-  { id: 'events',     title: 'יומן אירועי דובאי', img: 'https://images.unsplash.com/photo-1606327054629-64c8b0fd6e4f?w=600&q=80', isEvents: true, highlight: true },
+  { id: 'events',     title: 'יומן אירועים', img: require('../../assets/events-calendar.png'), isEvents: true, highlight: true },
+  { id: 'emergency',  title: 'חירום', img: require('../../assets/emergency.jpg'), highlight: true },
 ];
 
 function AnimatedTitle({ fontSize }: { fontSize: number }) {
@@ -192,33 +193,33 @@ export default function Home() {
                 <View style={s.linkRowBig}>
                   {CAT_BIG.map(l => (
                     <TouchableOpacity key={l.id} onPress={() => router.push(`/category/${l.id}` as any)}>
-                      <Text style={[s.linkBig, { color: l.color, fontSize: f(20) }]}>{l.label}</Text>
+                      <Text style={[s.linkBig, { color: l.color, fontSize: f(21) }]}>{l.label}</Text>
                     </TouchableOpacity>
                   ))}
                 </View>
-                <View style={[s.linkRowMed, { gap: 10 }]}>
+                <View style={[s.linkRowMed, { gap: 9 }]}>
                   {CAT_MED.map(l => (
+                    <TouchableOpacity key={l.id} onPress={() => router.push(`/category/${l.id}` as any)}>
+                      <Text style={[s.linkMed, { color: l.color, fontSize: f(19) }]}>{l.label}</Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+                <View style={[s.linkRowMed, { gap: 11 }]}>
+                  {CAT_SM.map(l => (
                     <TouchableOpacity key={l.id} onPress={() => router.push(`/category/${l.id}` as any)}>
                       <Text style={[s.linkMed, { color: l.color, fontSize: f(18) }]}>{l.label}</Text>
                     </TouchableOpacity>
                   ))}
-                </View>
-                <View style={s.linkRowMed}>
-                  {CAT_SM.map(l => (
-                    <TouchableOpacity key={l.id} onPress={() => router.push(`/category/${l.id}` as any)}>
-                      <Text style={[s.linkMed, { color: l.color, fontSize: f(17) }]}>{l.label}</Text>
-                    </TouchableOpacity>
-                  ))}
                   <TouchableOpacity onPress={() => router.push('/itineraries' as any)}>
-                    <Text style={[s.linkMed, { color: Colors.SECONDARY, fontSize: f(17) }]}>מסלולים מוכנים</Text>
+                    <Text style={[s.linkMed, { color: Colors.SECONDARY, fontSize: f(18) }]}>מסלולים מוכנים</Text>
                   </TouchableOpacity>
                   <TouchableOpacity onPress={() => router.push('/category/transport' as any)}>
-                    <Text style={[s.linkMed, { color: '#fff', fontSize: f(17) }]}>תחבורה</Text>
+                    <Text style={[s.linkMed, { color: '#fff', fontSize: f(18) }]}>תחבורה</Text>
                   </TouchableOpacity>
                 </View>
                 <View style={s.nearMeRow}>
                   <TouchableOpacity onPress={() => router.push('/near' as any)}>
-                    <Text style={[s.nearMe, { fontSize: f(14) }]}>📍 הראה לי מה קרוב אליי עכשיו</Text>
+                    <Text style={[s.nearMe, { fontSize: f(15) }]}>📍 הראה לי מה קרוב אליי עכשיו</Text>
                   </TouchableOpacity>
                 </View>
               </View>
@@ -246,6 +247,13 @@ export default function Home() {
                     <View style={{ position: 'relative' }}>
                       <Image source={{ uri: imgUrl(it, cat) }} style={s.cardImg} />
                       {it.kosher ? <View style={s.kosherBadge}><Text style={s.kosherText}>✡ מכבד כשרות</Text></View> : null}
+                      {(() => {
+                        const isHe = /[֐-׿]/.test(it.name || '');
+                        const heName = it.nameHe || (isHe ? it.name : '');
+                        return heName ? (
+                          <Text numberOfLines={1} style={{ position: 'absolute', bottom: 8, right: 10, color: '#fff', fontWeight: '900', fontSize: 14, maxWidth: '90%', writingDirection: 'rtl', textAlign: 'right', textShadowColor: 'rgba(0,0,0,0.85)', textShadowOffset: { width: 0, height: 1 }, textShadowRadius: 5 }}>{heName}</Text>
+                        ) : null;
+                      })()}
                       <FavoriteHeart cat={cat} id={it.id} />
                     </View>
                     <View style={s.cardBody}>
@@ -269,7 +277,7 @@ export default function Home() {
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 14, gap: 8 }}>
           {LEARN_TILES.map(t => (
             <TouchableOpacity key={t.id} activeOpacity={0.85} onPress={() => t.isEvents ? router.push('/events' as any) : router.push(`/learn/${t.id}` as any)}>
-              <ImageBackground source={{ uri: t.img }} style={[s.learnTile, { width: tileW, height: tileW }, (t as any).highlight && { borderWidth: 2, borderColor: '#B8923A' }]} imageStyle={{ borderRadius: 10 }}>
+              <ImageBackground source={typeof t.img === 'string' ? { uri: t.img } : t.img} style={[s.learnTile, { width: tileW, height: tileW }]} imageStyle={{ borderRadius: 10 }}>
                 <View style={s.learnOverlay}>
                   <Text style={s.learnText} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.6}>{t.title}</Text>
                 </View>
@@ -303,9 +311,13 @@ export default function Home() {
                       <TouchableOpacity key={it.id} activeOpacity={0.85} onPress={() => router.push(`/item/${it.id}?cat=${cat}` as any)} style={[s.card, { width: 140 }]}>
                         <View style={{ position: 'relative' }}>
                           <Image source={{ uri: imgUrl(it, cat) }} style={[s.cardImg, { height: 90 }]} />
-                          {cat === 'shopping' && (it.nameHe || it.name) ? (
-                            <Text numberOfLines={1} style={{ position: 'absolute', bottom: 6, right: 8, color: '#fff', fontWeight: '900', fontSize: 13, maxWidth: '90%', writingDirection: 'rtl', textAlign: 'right', textShadowColor: 'rgba(0,0,0,0.85)', textShadowOffset: { width: 0, height: 1 }, textShadowRadius: 5 }}>{it.nameHe || it.name}</Text>
-                          ) : null}
+                          {(() => {
+                            const isHe = /[֐-׿]/.test(it.name || '');
+                            const heName = it.nameHe || (isHe ? it.name : '');
+                            return heName ? (
+                              <Text numberOfLines={1} style={{ position: 'absolute', bottom: 6, right: 8, color: '#fff', fontWeight: '900', fontSize: 13, maxWidth: '90%', writingDirection: 'rtl', textAlign: 'right', textShadowColor: 'rgba(0,0,0,0.85)', textShadowOffset: { width: 0, height: 1 }, textShadowRadius: 5 }}>{heName}</Text>
+                            ) : null;
+                          })()}
                           <FavoriteHeart cat={cat} id={it.id} />
                         </View>
                         <View style={s.cardBody}>
@@ -389,11 +401,11 @@ const s = StyleSheet.create({
   heroTitle: { color: '#fff', fontWeight: '900', letterSpacing: -0.5, textAlign: 'center', writingDirection: 'rtl', textShadowColor: 'rgba(0,0,0,0.85)', textShadowOffset: { width: 0, height: 2 }, textShadowRadius: 5 },
   heroSub: { color: 'rgba(255,255,255,0.95)', fontWeight: '600', textAlign: 'center', marginTop: 4, writingDirection: 'rtl', textShadowColor: 'rgba(0,0,0,0.7)', textShadowOffset: { width: 0, height: 1 }, textShadowRadius: 4 },
   heroBottom: { paddingBottom: 30 },
-  linkRowBig: { flexDirection: 'row-reverse', justifyContent: 'center', gap: 12, marginBottom: 6 },
+  linkRowBig: { flexDirection: 'row-reverse', justifyContent: 'center', gap: 11, marginBottom: 6 },
   linkRowMed: { flexDirection: 'row-reverse', justifyContent: 'center', gap: 12, marginBottom: 4, flexWrap: 'wrap' },
   linkBig: { fontSize: 18, fontWeight: '800', textShadowColor: 'rgba(0,0,0,0.6)', textShadowOffset: { width: 0, height: 1 }, textShadowRadius: 4 },
   linkMed: { fontSize: 13, fontWeight: '700', textShadowColor: 'rgba(0,0,0,0.5)', textShadowOffset: { width: 0, height: 1 }, textShadowRadius: 3 },
-  nearMeRow: { alignItems: 'center', marginTop: 4 },
+  nearMeRow: { alignItems: 'center', marginTop: 6 },
   nearMe: { color: '#fff', fontSize: 14, fontWeight: '700', textShadowColor: 'rgba(0,0,0,0.7)', textShadowOffset: { width: 0, height: 1 }, textShadowRadius: 4 },
   qtRow: { flexDirection: 'row-reverse', gap: 8, paddingHorizontal: 14, marginTop: 14 },
   qtCard: { flex: 1, borderRadius: 12, overflow: 'hidden', backgroundColor: '#fff', borderWidth: 1, borderColor: '#E5E7EB' },
@@ -418,7 +430,7 @@ const s = StyleSheet.create({
   kosherText: { color: Colors.GOLD, fontSize: 9, fontWeight: '900' },
   learnTile: { borderRadius: 10, overflow: 'hidden', justifyContent: 'flex-end' },
   learnOverlay: { padding: 6, backgroundColor: 'rgba(0,0,0,0.4)' },
-  learnText: { color: '#fff', fontSize: 10, fontWeight: '800', textShadowColor: 'rgba(0,0,0,0.85)', textShadowOffset: { width: 0, height: 1 }, textShadowRadius: 3, writingDirection: 'rtl' },
+  learnText: { color: '#fff', fontSize: 10, fontWeight: '800', textShadowColor: 'rgba(0,0,0,0.85)', textShadowOffset: { width: 0, height: 1 }, textShadowRadius: 3, writingDirection: 'rtl', textAlign: 'center' },
   galleryToggle: { alignItems: 'center', marginTop: 22, marginBottom: 6, paddingVertical: 6 },
   galleryToggleText: { color: Colors.TEXT, fontWeight: '700', fontSize: 14 },
   moreToggle: { flexDirection: 'row-reverse', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 18, marginTop: 18 },

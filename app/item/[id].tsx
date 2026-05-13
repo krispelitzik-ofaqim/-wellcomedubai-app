@@ -7,6 +7,7 @@ import { useLocalSearchParams, router } from 'expo-router';
 import { Colors } from '../../constants/colors';
 import { CATALOG } from '../../data/catalog';
 import { isFavorite, toggleFavorite } from '../../utils/favorites';
+import BUS_ROUTES from '../../data/bus-routes.json';
 import HOTEL_PHOTOS from '../../data/hotel-photos.json';
 import ATTRACTION_PHOTOS from '../../data/attraction-photos.json';
 import RESTAURANT_PHOTOS from '../../data/restaurant-places-photos.json';
@@ -104,7 +105,8 @@ export default function ItemDetail() {
   const navUrl = item.lat ? `https://www.google.com/maps/dir/?api=1&destination=${item.lat},${item.lng}` : null;
   const mapUrl = item.lat ? `https://www.google.com/maps?q=${item.lat},${item.lng}` : null;
   const bookUrl = cat === 'hotels' ? `https://search.hotellook.com/hotels?destination=${encodeURIComponent((item.nameEn || item.name) + ' Dubai')}&adults=2&marker=X5SEJjUA` : null;
-  const ticketsUrl = ['attractions','kids','nightlife','casino','abudhabi'].includes(cat || '') ? 'https://klook.tpk.lv/8HSINbXI' : null;
+  const isTourBus = cat === 'transport' && (item.subcategory === 'bus') && /sightseeing|big bus|hop on|hop-on/i.test((item.nameEn || item.name || ''));
+  const ticketsUrl = (['attractions','kids','nightlife','casino','abudhabi'].includes(cat || '') || isTourBus) ? 'https://klook.tpk.lv/8HSINbXI' : null;
 
   return (
     <View style={s.container}>
@@ -200,6 +202,41 @@ export default function ItemDetail() {
               ))}
             </View>
           ) : null}
+
+          {(BUS_ROUTES as any)[String(id)] ? (() => {
+            const data = (BUS_ROUTES as any)[String(id)];
+            const allStops = data.routes.flatMap((r: any) => r.stops.map((s: any) => ({ ...s, color: r.color, routeName: r.nameHe })));
+            const routesJs = data.routes.map((r: any) => `new google.maps.Polyline({path:${JSON.stringify(r.stops.map((s: any) => ({ lat: s.lat, lng: s.lng })))},geodesic:true,strokeColor:'${r.color}',strokeOpacity:0.85,strokeWeight:3.5,map});`).join('');
+            const html = `<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><style>html,body,#m{margin:0;padding:0;height:100%;width:100%;}</style></head><body><div id="m"></div><script>function init(){const map=new google.maps.Map(document.getElementById('m'),{center:{lat:25.18,lng:55.25},zoom:11,mapTypeControl:false,streetViewControl:false,fullscreenControl:false});const bounds=new google.maps.LatLngBounds();const stops=${JSON.stringify(allStops)};stops.forEach((s,i)=>{const pos={lat:s.lat,lng:s.lng};bounds.extend(pos);const m=new google.maps.Marker({position:pos,map,title:s.nameHe,icon:{path:google.maps.SymbolPath.CIRCLE,scale:7,fillColor:s.color,fillOpacity:1,strokeColor:'#fff',strokeWeight:2}});const iw=new google.maps.InfoWindow({content:'<div style="direction:rtl;font-family:-apple-system,sans-serif;"><b>'+s.nameHe+'</b><br><span style="color:#6B7F8D;font-size:11px;">'+s.routeName+'</span></div>'});m.addListener('click',()=>iw.open({anchor:m,map}));});${routesJs}map.fitBounds(bounds,30);}</script><script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDw09Bg7XaH7apEWJBcFtogVfrdUwF_gEM&language=he&callback=init" async defer></script></body></html>`;
+            return (
+              <View>
+                <Text style={{ color: '#1A4A5E', fontWeight: '900', fontSize: 16, marginTop: 12, marginBottom: 8, writingDirection: 'rtl', textAlign: 'right' }}>🚌 מסלולי האוטובוס</Text>
+                <View style={{ height: 280, marginBottom: 12, backgroundColor: '#E5E7EB' }}>
+                  <WebView originWhitelist={['*']} source={{ html }} style={{ flex: 1 }} scrollEnabled={false} />
+                </View>
+                {data.routes.map((r: any, ri: number) => (
+                  <View key={ri} style={{ marginBottom: 14 }}>
+                    <View style={{ flexDirection: 'row-reverse', alignItems: 'center', gap: 8, marginBottom: 6 }}>
+                      <View style={{ width: 14, height: 14, borderRadius: 7, backgroundColor: r.color }} />
+                      <Text style={{ color: '#1A4A5E', fontWeight: '800', fontSize: 14, flex: 1, writingDirection: 'rtl' }}>{r.nameHe}</Text>
+                      <TouchableOpacity onPress={() => Linking.openURL(r.officialUrl)}>
+                        <Text style={{ color: r.color, fontSize: 11.5, fontWeight: '700' }}>מסלול רשמי ←</Text>
+                      </TouchableOpacity>
+                    </View>
+                    {r.stops.map((st: any, si: number) => (
+                      <TouchableOpacity key={si} onPress={() => Linking.openURL(`https://www.google.com/maps?q=${st.lat},${st.lng}&hl=he`)} style={{ flexDirection: 'row-reverse', alignItems: 'center', gap: 10, paddingVertical: 7, paddingHorizontal: 8, borderBottomWidth: 1, borderBottomColor: '#F0E6D2' }}>
+                        <View style={{ width: 22, height: 22, borderRadius: 11, backgroundColor: r.color, alignItems: 'center', justifyContent: 'center' }}>
+                          <Text style={{ color: '#fff', fontSize: 11, fontWeight: '900' }}>{si + 1}</Text>
+                        </View>
+                        <Text style={{ flex: 1, color: '#2C5F6E', fontSize: 13, fontWeight: '700', writingDirection: 'rtl', textAlign: 'right' }}>{st.nameHe}</Text>
+                        <Text style={{ color: Colors.MUTED, fontSize: 11 }}>📍</Text>
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+                ))}
+              </View>
+            );
+          })() : null}
 
           {item.lat ? (
             <View style={s.inlineMapWrap}>

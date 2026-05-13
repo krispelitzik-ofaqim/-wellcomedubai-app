@@ -226,9 +226,15 @@ export default function LearnScreen() {
             ) : null}
             {audioUrl ? <CustomAudioPlayer url={audioUrl} /> : null}
             <View style={{ padding: 20 }}>
-              {(item.text || '').split('\n\n').map((para: string, i: number) => (
-                <Text key={i} style={s.text}>{para}</Text>
-              ))}
+              {(item.text || '').split('\n\n').map((para: string, i: number) => {
+                const isHeader = !para.includes('\n') && para.length < 60 && /[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/u.test(para);
+                if (isHeader) {
+                  return (
+                    <Text key={i} style={[s.text, { color: item.color || Colors.PRIMARY, fontWeight: '900', fontSize: 17, marginTop: 18, marginBottom: 8, lineHeight: 24 }]}>{para}</Text>
+                  );
+                }
+                return <Text key={i} style={s.text}>{para}</Text>;
+              })}
               {item.cta ? (
                 <TouchableOpacity
                   onPress={() => { router.back(); if (item.cta?.page) router.push(`/category/${item.cta.page}` as any); }}

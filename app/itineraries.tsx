@@ -140,6 +140,7 @@ function ItineraryCard({ it, idx }: { it: any; idx: number }) {
   const stops = it.stops || [];
   const [openStop, setOpenStop] = useState<number | null>(null);
   const [mapBig, setMapBig] = useState(false);
+  const [expanded, setExpanded] = useState(false);
 
   const navUrl = (() => {
     const points = stops.filter((s: any) => s.lat && s.lng).map((s: any) => `${s.lat},${s.lng}`);
@@ -155,6 +156,17 @@ function ItineraryCard({ it, idx }: { it: any; idx: number }) {
 
   return (
     <View style={s.card}>
+      <TouchableOpacity onPress={() => setExpanded(e => !e)} activeOpacity={0.85} style={[s.accHead, { backgroundColor: it.color + '1A', borderBottomWidth: expanded ? 1 : 0, borderBottomColor: '#F0E6D2' }]}>
+        <View style={[s.accBadge, { backgroundColor: it.color }]}>
+          <Text style={s.accBadgeIcon}>{it.icon}</Text>
+        </View>
+        <View style={{ flex: 1, paddingHorizontal: 12 }}>
+          <Text style={s.accTitle} numberOfLines={2}>{it.title}</Text>
+          <Text style={s.accMeta}>{it.duration} · {stops.length} תחנות</Text>
+        </View>
+        <Text style={[s.accChev, { color: it.color }]}>{expanded ? '▲' : '▼'}</Text>
+      </TouchableOpacity>
+      {expanded ? (<>
       <FlatList
         ref={ref}
         data={stops}
@@ -239,6 +251,7 @@ function ItineraryCard({ it, idx }: { it: any; idx: number }) {
         <RateRow storageKey={`rate-itin-${idx}`} color={it.color} />
         <AlbumRow storageKey={`album-itin-${idx}`} color={it.color} />
       </View>
+      </>) : null}
     </View>
   );
 }
@@ -246,16 +259,22 @@ function ItineraryCard({ it, idx }: { it: any; idx: number }) {
 function StarHubCard({ h, idx }: { h: StarHub; idx: number }) {
   const [open, setOpen] = useState(false);
   const [big, setBig] = useState(false);
+  const [expanded, setExpanded] = useState(false);
   const navUrl = `https://www.google.com/maps/dir/${h.spokes.map(s => `${s.lat},${s.lng}`).join('/')}`;
   const hubHtml = `<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><style>html,body,#m{margin:0;padding:0;height:100%;width:100%;}</style></head><body><div id="m"></div><script>const center=${JSON.stringify(h.center)};const color=${JSON.stringify(h.color)};const spokes=${JSON.stringify(h.spokes)};function init(){const map=new google.maps.Map(document.getElementById('m'),{center,zoom:13,mapTypeControl:false,streetViewControl:false,fullscreenControl:false});const bounds=new google.maps.LatLngBounds();bounds.extend(center);new google.maps.Marker({position:center,map,label:{text:'★',color:'#fff',fontWeight:'800',fontSize:'14px'},icon:{path:google.maps.SymbolPath.CIRCLE,scale:18,fillColor:color,fillOpacity:1,strokeColor:'#fff',strokeWeight:3}});spokes.forEach((sp,i)=>{const m=new google.maps.Marker({position:{lat:sp.lat,lng:sp.lng},map,label:{text:String(i+1),color:'#fff',fontWeight:'800'},icon:{path:google.maps.SymbolPath.CIRCLE,scale:12,fillColor:color,fillOpacity:1,strokeColor:'#fff',strokeWeight:2}});bounds.extend({lat:sp.lat,lng:sp.lng});const iw=new google.maps.InfoWindow({content:'<div style="direction:rtl;font-family:-apple-system,sans-serif;"><b>'+(i+1)+'. '+sp.name+'</b></div>'});m.addListener('click',()=>iw.open({anchor:m,map}));new google.maps.Polyline({path:[center,{lat:sp.lat,lng:sp.lng}],strokeColor:color,strokeWeight:3,strokeOpacity:0.85,map});});map.fitBounds(bounds,40);}</script><script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDw09Bg7XaH7apEWJBcFtogVfrdUwF_gEM&language=he&callback=init" async defer></script></body></html>`;
   return (
-    <View style={s.card}>
-      <View style={[s.starHead, { backgroundColor: h.color }]}>
-        <Text style={{ fontSize: 28 }}>{h.icon}</Text>
-        <View style={{ flex: 1 }}>
-          <Text style={s.starTitle}>{h.name}</Text>
+    <View style={[s.card, { backgroundColor: '#fff', borderWidth: 2, borderColor: h.color }]}>
+      <TouchableOpacity onPress={() => setExpanded(e => !e)} activeOpacity={0.85} style={[s.accHead, { borderBottomWidth: expanded ? 1 : 0, borderBottomColor: h.color + '33' }]}>
+        <View style={[s.accBadge, { backgroundColor: 'transparent', borderWidth: 2, borderColor: h.color }]}>
+          <Text style={[s.accBadgeIcon, { color: h.color }]}>★</Text>
         </View>
-      </View>
+        <View style={{ flex: 1, paddingHorizontal: 12 }}>
+          <Text style={s.accTitle} numberOfLines={2}>{h.name}</Text>
+          <Text style={[s.accMeta, { color: h.color, fontWeight: '700' }]}>★ {h.spokes.length} חיצים</Text>
+        </View>
+        <Text style={[s.accChev, { color: h.color }]}>{expanded ? '▲' : '▼'}</Text>
+      </TouchableOpacity>
+      {expanded ? (<>
       <View style={{ position: 'relative', height: big ? 440 : 220 }}>
         <WebView originWhitelist={['*']} source={{ html: hubHtml }} style={{ flex: 1 }} />
         <TouchableOpacity onPress={() => setBig(b => !b)} style={s.enlargeBtn}>
@@ -281,6 +300,7 @@ function StarHubCard({ h, idx }: { h: StarHub; idx: number }) {
         <RateRow storageKey={`rate-star-${idx}`} color={h.color} />
         <AlbumRow storageKey={`album-star-${idx}`} color={h.color} />
       </View>
+      </>) : null}
     </View>
   );
 }
@@ -682,16 +702,12 @@ export default function ItinerariesScreen() {
       <ScrollView contentContainerStyle={{ padding: 14, paddingBottom: 60 }}>
         {view === 'day' ? (
           <>
-            <View style={s.tip}>
-              <Text style={s.tipTxt}>💡 לחיצה על "פתח ניווט" תפתח את כל התחנות ב-Google Maps. החליקו בקרוסלת התמונות.</Text>
-            </View>
+            <Text style={{ color: Colors.MUTED, fontSize: 12, fontWeight: '700', letterSpacing: 0.6, textAlign: 'center', marginBottom: 10 }}>{ITINERARIES.length} מסלולים מוכנים</Text>
             {ITINERARIES.map((it: any, i: number) => <ItineraryCard key={i} it={it} idx={i} />)}
           </>
         ) : view === 'star' ? (
           <>
-            <View style={s.tip}>
-              <Text style={s.tipTxt}>💡 כל כוכב = נקודת מרכז עם אטרקציות מסביב. בחרו אזור — תכננו את היום בלי לזוז רחוק.</Text>
-            </View>
+            <Text style={{ color: Colors.MUTED, fontSize: 12, fontWeight: '700', letterSpacing: 0.6, textAlign: 'center', marginBottom: 10 }}>{STAR_HUBS.length} טיולי כוכב</Text>
             {STAR_HUBS.map((h, i) => <StarHubCard key={i} h={h} idx={i} />)}
           </>
         ) : (
@@ -762,4 +778,13 @@ const s = StyleSheet.create({
   chev: { fontSize: 11, color: Colors.MUTED, marginTop: 4 },
   openMap: { paddingVertical: 6, paddingHorizontal: 38, alignItems: 'flex-end' },
   openMapTxt: { fontSize: 12, fontWeight: '700' },
+  accHead: { flexDirection: 'row-reverse', alignItems: 'center', padding: 14 },
+  accBadge: { width: 48, height: 48, borderRadius: 24, alignItems: 'center', justifyContent: 'center' },
+  accBadgeIcon: { fontSize: 24 },
+  accTitle: { color: Colors.TEXT, fontWeight: '900', fontSize: 15, writingDirection: 'rtl', textAlign: 'right', lineHeight: 20 },
+  accMeta: { color: Colors.MUTED, fontSize: 12, marginTop: 3, writingDirection: 'rtl', textAlign: 'right' },
+  accChev: { fontSize: 14, fontWeight: '800' },
+  countHead: { backgroundColor: '#fff', paddingHorizontal: 16, paddingVertical: 14, marginBottom: 10, alignItems: 'center' },
+  countHeadNum: { color: Colors.PRIMARY, fontSize: 36, fontWeight: '300', letterSpacing: -1 },
+  countHeadLabel: { color: Colors.MUTED, fontSize: 12, fontWeight: '700', letterSpacing: 0.8, textTransform: 'uppercase', marginTop: 2 },
 });
