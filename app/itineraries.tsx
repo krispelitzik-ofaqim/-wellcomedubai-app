@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Linking, FlatList, Dimensions, NativeSyntheticEvent, NativeScrollEvent, Alert, Modal, Pressable } from 'react-native';
+import { openMapsChoice } from '../utils/maps';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { WebView } from 'react-native-webview';
 import { router } from 'expo-router';
@@ -142,12 +143,11 @@ function ItineraryCard({ it, idx }: { it: any; idx: number }) {
   const [mapBig, setMapBig] = useState(false);
   const [expanded, setExpanded] = useState(false);
 
-  const navUrl = (() => {
-    const points = stops.filter((s: any) => s.lat && s.lng).map((s: any) => `${s.lat},${s.lng}`);
-    if (!points.length) return '';
-    if (points.length === 1) return `https://www.google.com/maps/dir/?api=1&destination=${points[0]}`;
-    return `https://www.google.com/maps/dir/${points.join('/')}`;
+  const lastStop = (() => {
+    const withCoords = stops.filter((s: any) => s.lat && s.lng);
+    return withCoords.length ? withCoords[withCoords.length - 1] : null;
   })();
+  const navUrl = lastStop ? 'open' : '';
 
   const onScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
     const i = Math.round(e.nativeEvent.contentOffset.x / (SCREEN_W - 28));
@@ -227,7 +227,7 @@ function ItineraryCard({ it, idx }: { it: any; idx: number }) {
       })()}
 
       {navUrl ? (
-        <TouchableOpacity style={[s.navBtn, { backgroundColor: it.color }]} onPress={() => Linking.openURL(navUrl)}>
+        <TouchableOpacity style={[s.navBtn, { backgroundColor: it.color }]} onPress={() => lastStop && openMapsChoice(lastStop.lat, lastStop.lng, lastStop.name || it.title, 'navigate')}>
           <Text style={s.navBtnTxt}>פתח ניווט ב-Google Maps</Text>
         </TouchableOpacity>
       ) : null}
@@ -260,7 +260,7 @@ function StarHubCard({ h, idx }: { h: StarHub; idx: number }) {
   const [open, setOpen] = useState(false);
   const [big, setBig] = useState(false);
   const [expanded, setExpanded] = useState(false);
-  const navUrl = `https://www.google.com/maps/dir/${h.spokes.map(s => `${s.lat},${s.lng}`).join('/')}`;
+  const lastSpoke = h.spokes[h.spokes.length - 1];
   const hubHtml = `<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><style>html,body,#m{margin:0;padding:0;height:100%;width:100%;}</style></head><body><div id="m"></div><script>const center=${JSON.stringify(h.center)};const color=${JSON.stringify(h.color)};const spokes=${JSON.stringify(h.spokes)};function init(){const map=new google.maps.Map(document.getElementById('m'),{center,zoom:13,mapTypeControl:false,streetViewControl:false,fullscreenControl:false});const bounds=new google.maps.LatLngBounds();bounds.extend(center);new google.maps.Marker({position:center,map,label:{text:'★',color:'#fff',fontWeight:'800',fontSize:'14px'},icon:{path:google.maps.SymbolPath.CIRCLE,scale:18,fillColor:color,fillOpacity:1,strokeColor:'#fff',strokeWeight:3}});spokes.forEach((sp,i)=>{const m=new google.maps.Marker({position:{lat:sp.lat,lng:sp.lng},map,label:{text:String(i+1),color:'#fff',fontWeight:'800'},icon:{path:google.maps.SymbolPath.CIRCLE,scale:12,fillColor:color,fillOpacity:1,strokeColor:'#fff',strokeWeight:2}});bounds.extend({lat:sp.lat,lng:sp.lng});const iw=new google.maps.InfoWindow({content:'<div style="direction:rtl;font-family:-apple-system,sans-serif;"><b>'+(i+1)+'. '+sp.name+'</b></div>'});m.addListener('click',()=>iw.open({anchor:m,map}));new google.maps.Polyline({path:[center,{lat:sp.lat,lng:sp.lng}],strokeColor:color,strokeWeight:3,strokeOpacity:0.85,map});});map.fitBounds(bounds,40);}</script><script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDw09Bg7XaH7apEWJBcFtogVfrdUwF_gEM&language=he&callback=init" async defer></script></body></html>`;
   return (
     <View style={[s.card, { backgroundColor: '#fff', borderWidth: 2, borderColor: h.color }]}>
@@ -283,7 +283,7 @@ function StarHubCard({ h, idx }: { h: StarHub; idx: number }) {
       </View>
       <View style={{ padding: 14 }}>
         <Text style={s.starDesc}>{h.desc}</Text>
-        <TouchableOpacity style={[s.navBtn, { backgroundColor: h.color, marginTop: 12, borderRadius: 8 }]} onPress={() => Linking.openURL(navUrl)}>
+        <TouchableOpacity style={[s.navBtn, { backgroundColor: h.color, marginTop: 12, borderRadius: 8 }]} onPress={() => lastSpoke && openMapsChoice(lastSpoke.lat, lastSpoke.lng, lastSpoke.name || h.center?.name || 'יעד', 'navigate')}>
           <Text style={s.navBtnTxt}>פתח ניווט בין כל הזרועות</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => setOpen(o => !o)} style={{ paddingVertical: 10, alignItems: 'center' }}>
@@ -398,7 +398,8 @@ function MyTripView() {
   const mapItems = itemsByDay.filter(it => it.lat && it.lng);
   const mapHtml = mapItems.length > 0 ? `<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><style>html,body,#m{margin:0;padding:0;height:100%;width:100%;}</style></head><body><div id="m"></div><script>function init(){const pts=${JSON.stringify(mapItems.map(it => ({ lat: it.lat, lng: it.lng, name: it.name })))};const map=new google.maps.Map(document.getElementById('m'),{center:pts[0],zoom:12,mapTypeControl:false,streetViewControl:false,fullscreenControl:false});const bounds=new google.maps.LatLngBounds();const path=[];pts.forEach((p,i)=>{const pos={lat:p.lat,lng:p.lng};path.push(pos);bounds.extend(pos);const m=new google.maps.Marker({position:pos,map,label:{text:String(i+1),color:'#fff',fontWeight:'800',fontSize:'13px'},icon:{path:google.maps.SymbolPath.CIRCLE,scale:15,fillColor:'#E76F51',fillOpacity:1,strokeColor:'#fff',strokeWeight:3}});const iw=new google.maps.InfoWindow({content:'<div style="direction:rtl;font-family:-apple-system,sans-serif;"><b>'+(i+1)+'. '+p.name+'</b></div>'});m.addListener('click',()=>iw.open({anchor:m,map}));});if(pts.length>1){new google.maps.Polyline({path,geodesic:true,strokeColor:'#1A6B8A',strokeOpacity:0.8,strokeWeight:3,map});map.fitBounds(bounds,40);}}</script><script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDw09Bg7XaH7apEWJBcFtogVfrdUwF_gEM&language=he&callback=init" async defer></script></body></html>` : '';
 
-  const navAllUrl = mapItems.length > 1 ? `https://www.google.com/maps/dir/?api=1&origin=${mapItems[0].lat},${mapItems[0].lng}&destination=${mapItems[mapItems.length-1].lat},${mapItems[mapItems.length-1].lng}${mapItems.length > 2 ? '&waypoints=' + mapItems.slice(1, -1).map(p => `${p.lat},${p.lng}`).join('|') : ''}&travelmode=driving&hl=he` : null;
+  const navAllLast = mapItems.length > 1 ? mapItems[mapItems.length - 1] : null;
+  const navAllUrl = navAllLast ? 'open' : null;
 
   const dayBg = DAY_BACKGROUNDS[(activeDay - 1) % DAY_BACKGROUNDS.length];
 
@@ -549,7 +550,7 @@ function MyTripView() {
                 <WebView originWhitelist={['*']} source={{ html: mapHtml }} style={{ flex: 1 }} scrollEnabled={false} />
               </View>
               {navAllUrl ? (
-                <TouchableOpacity onPress={() => Linking.openURL(navAllUrl)} style={mt.navAll} activeOpacity={0.6}>
+                <TouchableOpacity onPress={() => navAllLast && openMapsChoice(navAllLast.lat, navAllLast.lng, navAllLast.name || 'יעד אחרון', 'navigate')} style={mt.navAll} activeOpacity={0.6}>
                   <Text style={mt.navAllTxt}>פתח ב-Google Maps ←</Text>
                 </TouchableOpacity>
               ) : null}

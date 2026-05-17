@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Linking } from 'react-native';
+import { openMapsChoice } from '../../utils/maps';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { WebView } from 'react-native-webview';
 import { router } from 'expo-router';
@@ -109,7 +110,7 @@ export default function MapScreen() {
       {areasOn ? (
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 14, gap: 8, paddingBottom: 8 }} style={{ flexGrow: 0 }}>
           {AREAS.map(a => (
-            <TouchableOpacity key={a.num} style={[s.areaCard, { borderColor: a.color }]} onPress={() => Linking.openURL(`https://www.google.com/maps?q=${a.poly[0][0]},${a.poly[0][1]}`)}>
+            <TouchableOpacity key={a.num} style={[s.areaCard, { borderColor: a.color }]} onPress={() => openMapsChoice(a.poly[0][0], a.poly[0][1], a.name || `אזור ${a.num}`, 'show')}>
               <Text style={[s.areaName, { color: a.color }]}>{a.name}</Text>
               <Text style={s.areaDesc} numberOfLines={3}>{a.desc}</Text>
             </TouchableOpacity>

@@ -5,6 +5,7 @@ import { WebView } from 'react-native-webview';
 import { router } from 'expo-router';
 import { Colors } from '../constants/colors';
 import METRO from '../data/metro.json';
+import { openMapsChoice } from '../utils/maps';
 
 type LineId = 'red' | 'green' | 'all';
 
@@ -95,7 +96,7 @@ export default function MetroScreen() {
             <TouchableOpacity
               key={station.id}
               style={s.stationRow}
-              onPress={() => Linking.openURL(`https://www.google.com/maps/dir/?api=1&destination=${station.lat},${station.lng}&travelmode=transit&hl=he`)}
+              onPress={() => openMapsChoice(station.lat, station.lng, station.nameHe, 'navigate')}
             >
               <View style={[s.stationDot, { backgroundColor: primaryColor }]} />
               <View style={{ flex: 1 }}>

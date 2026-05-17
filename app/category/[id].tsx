@@ -13,6 +13,7 @@ import { useLocalSearchParams, router, useFocusEffect } from 'expo-router';
 import { WebView } from 'react-native-webview';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { Colors } from '../../constants/colors';
+import { openMapsChoice } from '../../utils/maps';
 import { CATALOG } from '../../data/catalog';
 import { getFavorites, toggleFavorite } from '../../utils/favorites';
 import METRO from '../../data/metro.json';
@@ -343,7 +344,7 @@ export default function CategoryScreen() {
               <View style={{ backgroundColor: '#E8F2F7', borderRightWidth: 4, borderRightColor: '#1A6B8A', padding: 12, marginBottom: 8 }}>
                 <Text style={{ color: Colors.TEXT, fontWeight: '900', fontSize: 14, writingDirection: 'rtl' }}>🚉 {nearestStation.nameHe}</Text>
                 <Text style={{ color: Colors.MUTED, fontSize: 12, marginTop: 3, writingDirection: 'rtl' }}>{nearestStation.nameEn} · {nearestStation.area} · {nearestStation._dist.toFixed(2)} ק"מ ממך</Text>
-                <TouchableOpacity onPress={() => Linking.openURL(`https://www.google.com/maps/dir/?api=1&destination=${nearestStation.lat},${nearestStation.lng}&travelmode=walking&hl=he`)} style={{ marginTop: 8 }}>
+                <TouchableOpacity onPress={() => openMapsChoice(nearestStation.lat, nearestStation.lng, nearestStation.nameHe, 'navigate')} style={{ marginTop: 8 }}>
                   <Text style={{ color: '#1A6B8A', fontSize: 12.5, fontWeight: '700' }}>נווט אליה ←</Text>
                 </TouchableOpacity>
               </View>
@@ -391,7 +392,7 @@ export default function CategoryScreen() {
                 <Text style={{ fontSize: 12, color: Colors.TEXT, fontWeight: '700' }}>החלפה</Text>
               </View>
             </View>
-            <TouchableOpacity onPress={() => Linking.openURL('https://www.google.com/maps/dir///@25.2048,55.2708,11z/data=!3m1!4b1!4m2!4m1!3e3?hl=he')} style={{ backgroundColor: Colors.PRIMARY, padding: 14, alignItems: 'center', justifyContent: 'center', marginTop: 8 }}>
+            <TouchableOpacity onPress={() => openMapsChoice(25.2048, 55.2708, 'Dubai Public Transit', 'navigate')} style={{ backgroundColor: Colors.PRIMARY, padding: 14, alignItems: 'center', justifyContent: 'center', marginTop: 8 }}>
               <Text style={{ color: '#fff', fontWeight: '800', fontSize: 14, textAlign: 'center' }}>תכנן מסלול בתחבורה ציבורית</Text>
             </TouchableOpacity>
           </View>
@@ -446,12 +447,12 @@ export default function CategoryScreen() {
               {(item.lat || item.phone) ? (
                 <View style={s.actions}>
                   {item.lat ? (
-                    <TouchableOpacity style={[s.actionBtn, { backgroundColor: Colors.PRIMARY }]} onPress={() => Linking.openURL(`https://www.google.com/maps/dir/?api=1&destination=${item.lat},${item.lng}&travelmode=driving&hl=he`)}>
+                    <TouchableOpacity style={[s.actionBtn, { backgroundColor: Colors.PRIMARY }]} onPress={() => openMapsChoice(item.lat, item.lng, item.name, 'navigate')}>
                       <Text style={s.actionTxt}>נווט</Text>
                     </TouchableOpacity>
                   ) : null}
                   {item.lat ? (
-                    <TouchableOpacity style={[s.actionBtn, { backgroundColor: Colors.WARM }]} onPress={() => Linking.openURL(`https://www.google.com/maps?q=${item.lat},${item.lng}&hl=he`)}>
+                    <TouchableOpacity style={[s.actionBtn, { backgroundColor: Colors.WARM }]} onPress={() => openMapsChoice(item.lat, item.lng, item.name, 'show')}>
                       <Text style={s.actionTxt}>איפה זה?</Text>
                     </TouchableOpacity>
                   ) : null}
