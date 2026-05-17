@@ -7,6 +7,7 @@ import { useLocalSearchParams, router } from 'expo-router';
 import { Colors } from '../../constants/colors';
 import { CATALOG } from '../../data/catalog';
 import { isFavorite, toggleFavorite } from '../../utils/favorites';
+import { openMapsChoice } from '../../utils/maps';
 import BUS_ROUTES from '../../data/bus-routes.json';
 import HOTEL_PHOTOS from '../../data/hotel-photos.json';
 import ATTRACTION_PHOTOS from '../../data/attraction-photos.json';
@@ -104,7 +105,14 @@ export default function ItemDetail() {
 
   const navUrl = item.lat ? `https://www.google.com/maps/dir/?api=1&destination=${item.lat},${item.lng}` : null;
   const mapUrl = item.lat ? `https://www.google.com/maps?q=${item.lat},${item.lng}` : null;
-  const bookUrl = cat === 'hotels' ? `https://search.hotellook.com/hotels?destination=${encodeURIComponent((item.nameEn || item.name) + ' Dubai')}&adults=2&marker=X5SEJjUA` : null;
+  const bookUrl = cat === 'hotels' ? (() => {
+    const isoDate = (offsetDays: number) => {
+      const d = new Date();
+      d.setDate(d.getDate() + offsetDays);
+      return d.toISOString().slice(0, 10);
+    };
+    return `https://search.hotellook.com/hotels?destination=${encodeURIComponent((item.nameEn || item.name) + ' Dubai')}&checkIn=${isoDate(30)}&checkOut=${isoDate(32)}&adults=2&marker=X5SEJjUA`;
+  })() : null;
   const isTourBus = cat === 'transport' && (item.subcategory === 'bus') && /sightseeing|big bus|hop on|hop-on/i.test((item.nameEn || item.name || ''));
   const ticketsUrl = (['attractions','kids','nightlife','casino','abudhabi'].includes(cat || '') || isTourBus) ? 'https://klook.tpk.lv/8HSINbXI' : null;
 
@@ -251,18 +259,18 @@ export default function ItemDetail() {
 
           <View style={s.actions}>
             {item.lat ? (
-              <TouchableOpacity style={[s.actionBtn, { backgroundColor: Colors.PRIMARY }]} onPress={() => Linking.openURL(`https://www.google.com/maps/dir/?api=1&destination=${item.lat},${item.lng}&travelmode=driving&hl=he`)}>
+              <TouchableOpacity style={[s.actionBtn, { backgroundColor: Colors.PRIMARY }]} onPress={() => openMapsChoice(item.lat, item.lng, item.name, 'navigate')}>
                 <Text style={s.actionTxt}>נווט אליי</Text>
               </TouchableOpacity>
             ) : null}
             {item.lat ? (
-              <TouchableOpacity style={[s.actionBtn, { backgroundColor: Colors.WARM }]} onPress={() => Linking.openURL(`https://www.google.com/maps?q=${item.lat},${item.lng}&hl=he`)}>
+              <TouchableOpacity style={[s.actionBtn, { backgroundColor: Colors.WARM }]} onPress={() => openMapsChoice(item.lat, item.lng, item.name, 'show')}>
                 <Text style={s.actionTxt}>איפה זה?</Text>
               </TouchableOpacity>
             ) : null}
             {bookUrl ? (
               <TouchableOpacity style={[s.actionBtn, { backgroundColor: Colors.SECONDARY }]} onPress={() => setIframeUrl(bookUrl)}>
-                <Text style={s.actionTxt}>הזמן מלון</Text>
+                <Text style={s.actionTxt}>ראה מחיר וזמינות</Text>
               </TouchableOpacity>
             ) : null}
             {ticketsUrl ? (

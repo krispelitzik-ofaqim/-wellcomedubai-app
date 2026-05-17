@@ -457,8 +457,8 @@ export default function CategoryScreen() {
                     </TouchableOpacity>
                   ) : null}
                   {cat === 'hotels' ? (
-                    <TouchableOpacity style={[s.actionBtn, { backgroundColor: Colors.SECONDARY }]} onPress={() => Linking.openURL(`https://search.hotellook.com/hotels?destination=${encodeURIComponent((item.nameEn || item.name) + ' Dubai')}&adults=2&marker=X5SEJjUA`)}>
-                      <Text style={s.actionTxt}>הזמן</Text>
+                    <TouchableOpacity style={[s.actionBtn, { backgroundColor: Colors.SECONDARY }]} onPress={() => router.push(`/item/${item.id}?cat=${cat}` as any)}>
+                      <Text style={s.actionTxt}>מידע</Text>
                     </TouchableOpacity>
                   ) : null}
                   {(['attractions','kids','nightlife','casino','abudhabi'].includes(cat) || (cat === 'transport' && item.subcategory === 'bus' && /sightseeing|big bus|hop on|hop-on/i.test((item.nameEn || item.name || '')))) ? (
