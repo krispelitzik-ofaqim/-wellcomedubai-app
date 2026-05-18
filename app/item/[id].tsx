@@ -232,7 +232,7 @@ export default function ItemDetail() {
                       </TouchableOpacity>
                     </View>
                     {r.stops.map((st: any, si: number) => (
-                      <TouchableOpacity key={si} onPress={() => Linking.openURL(`https://www.google.com/maps?q=${st.lat},${st.lng}&hl=he`)} style={{ flexDirection: 'row-reverse', alignItems: 'center', gap: 10, paddingVertical: 7, paddingHorizontal: 8, borderBottomWidth: 1, borderBottomColor: '#F0E6D2' }}>
+                      <TouchableOpacity key={si} onPress={() => openMapsChoice(st.lat, st.lng, st.nameHe || '', 'show')} style={{ flexDirection: 'row-reverse', alignItems: 'center', gap: 10, paddingVertical: 7, paddingHorizontal: 8, borderBottomWidth: 1, borderBottomColor: '#F0E6D2' }}>
                         <View style={{ width: 22, height: 22, borderRadius: 11, backgroundColor: r.color, alignItems: 'center', justifyContent: 'center' }}>
                           <Text style={{ color: '#fff', fontSize: 11, fontWeight: '900' }}>{si + 1}</Text>
                         </View>
