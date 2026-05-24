@@ -273,15 +273,38 @@ export default function ItemDetail() {
                 <Text style={s.actionTxt}>ראה מחיר וזמינות</Text>
               </TouchableOpacity>
             ) : null}
-            {ticketsUrl ? (
+            {cat === 'attractions' && item.ticketType && item.ticketType !== 'skip' ? (() => {
+              const cfg: Record<string, { color: string; label: string; clickable: boolean }> = {
+                online: { color: '#f97316', label: 'רכישת כרטיס', clickable: true },
+                onsite: { color: '#64748b', label: 'תשלום בכניסה', clickable: false },
+                free: { color: '#10b981', label: 'חינם', clickable: false },
+                appointment: { color: '#3DA5C4', label: 'בתיאום מראש', clickable: false },
+              };
+              const c = cfg[item.ticketType];
+              if (!c) return null;
+              return c.clickable && item.ticketUrl ? (
+                <TouchableOpacity style={[s.actionBtn, { backgroundColor: c.color }]} onPress={() => Linking.openURL(item.ticketUrl)}>
+                  <Text style={s.actionTxt}>{c.label}</Text>
+                </TouchableOpacity>
+              ) : (
+                <View style={[s.actionBtn, { backgroundColor: c.color, justifyContent: 'center' }]}>
+                  <Text style={s.actionTxt}>{c.label}</Text>
+                </View>
+              );
+            })() : ticketsUrl ? (
               <TouchableOpacity style={[s.actionBtn, { backgroundColor: '#FF5C00' }]} onPress={() => Linking.openURL('https://klook.tpk.lv/8HSINbXI')}>
                 <Text style={s.actionTxt}>רכוש כרטיסים</Text>
               </TouchableOpacity>
             ) : null}
           </View>
-          {ticketsUrl ? (
+          {cat !== 'attractions' && ticketsUrl ? (
             <TouchableOpacity onPress={() => Linking.openURL('https://tiqets.tpk.lv/53YEgT8s')} style={{ marginTop: 8, alignSelf: 'flex-end' }}>
               <Text style={{ color: '#1A6B8A', fontSize: 12.5, fontWeight: '600', textDecorationLine: 'underline' }}>לא מצאת כרטיס? נסה כאן ←</Text>
+            </TouchableOpacity>
+          ) : null}
+          {cat === 'attractions' && item.ticketUrlAlt ? (
+            <TouchableOpacity onPress={() => Linking.openURL(item.ticketUrlAlt)} style={{ marginTop: 8, alignSelf: 'flex-end' }}>
+              <Text style={{ color: '#1A6B8A', fontSize: 12.5, fontWeight: '600', textDecorationLine: 'underline' }}>לא מצאתם? ראו גם כאן ←</Text>
             </TouchableOpacity>
           ) : null}
 

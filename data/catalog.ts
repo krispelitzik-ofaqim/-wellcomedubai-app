@@ -2463,7 +2463,11 @@ export const CATALOG = {
       "address": "Dubai Parks & Resorts, Jebel Ali",
       "lat": 24.6855,
       "lng": 54.9905,
-      "tags": ["משפחתי", "לגו", "פארק"],
+      "tags": [
+        "משפחתי",
+        "לגו",
+        "פארק"
+      ],
       "featured": true
     }
   ],
@@ -4140,7 +4144,11 @@ export const CATALOG = {
       "address": "Dubai",
       "lat": 25.2048,
       "lng": 55.2708,
-      "tags": ["ישראלי", "כשר", "שף"],
+      "tags": [
+        "ישראלי",
+        "כשר",
+        "שף"
+      ],
       "featured": true
     },
     {
@@ -4156,9 +4164,13 @@ export const CATALOG = {
       "price": "$$",
       "priceRange": "AED 70-180",
       "address": "Dubai Marina / JLT",
-      "lat": 25.0760,
+      "lat": 25.076,
       "lng": 55.1394,
-      "tags": ["ישראלי", "איטלקי", "משפחתי"],
+      "tags": [
+        "ישראלי",
+        "איטלקי",
+        "משפחתי"
+      ],
       "featured": false
     },
     {
@@ -4177,7 +4189,11 @@ export const CATALOG = {
       "address": "Dubai",
       "lat": 25.2048,
       "lng": 55.2708,
-      "tags": ["ישראלי", "כשר", "המבורגר"],
+      "tags": [
+        "ישראלי",
+        "כשר",
+        "המבורגר"
+      ],
       "featured": true
     },
     {
@@ -4196,7 +4212,11 @@ export const CATALOG = {
       "address": "Dubai",
       "lat": 25.2048,
       "lng": 55.2708,
-      "tags": ["ישראלי", "כשר מהדרין", "שבת"],
+      "tags": [
+        "ישראלי",
+        "כשר מהדרין",
+        "שבת"
+      ],
       "featured": true
     },
     {
@@ -4213,8 +4233,12 @@ export const CATALOG = {
       "priceRange": "AED 60-150",
       "address": "City Walk + סניפים נוספים",
       "lat": 25.2056,
-      "lng": 55.2580,
-      "tags": ["קפה", "ים-תיכוני", "ברנץ'"],
+      "lng": 55.258,
+      "tags": [
+        "קפה",
+        "ים-תיכוני",
+        "ברנץ'"
+      ],
       "featured": true
     },
     {
@@ -4232,7 +4256,11 @@ export const CATALOG = {
       "address": "Dubai Mall, Emirates Mall, City Walk",
       "lat": 25.1972,
       "lng": 55.2796,
-      "tags": ["קפה", "מאפים", "אינסטגרמי"],
+      "tags": [
+        "קפה",
+        "מאפים",
+        "אינסטגרמי"
+      ],
       "featured": true
     },
     {
@@ -4250,7 +4278,11 @@ export const CATALOG = {
       "address": "Jumeirah + Miracle Garden",
       "lat": 25.2126,
       "lng": 55.2403,
-      "tags": ["קפה", "ברנץ'", "אמריקאי"],
+      "tags": [
+        "קפה",
+        "ברנץ'",
+        "אמריקאי"
+      ],
       "featured": false
     },
     {
@@ -4266,9 +4298,13 @@ export const CATALOG = {
       "price": "$$",
       "priceRange": "AED 60-150",
       "address": "Emirates Mall + JBR + נוספים",
-      "lat": 25.1180,
-      "lng": 55.2000,
-      "tags": ["קפה", "אוסטרלי", "ברנץ'"],
+      "lat": 25.118,
+      "lng": 55.2,
+      "tags": [
+        "קפה",
+        "אוסטרלי",
+        "ברנץ'"
+      ],
       "featured": false
     },
     {
@@ -4284,9 +4320,13 @@ export const CATALOG = {
       "price": "$$",
       "priceRange": "AED 60-180",
       "address": "3 סניפים בדובאי",
-      "lat": 25.2050,
-      "lng": 55.2570,
-      "tags": ["קפה", "ברונץ'", "אינסטגרמי"],
+      "lat": 25.205,
+      "lng": 55.257,
+      "tags": [
+        "קפה",
+        "ברונץ'",
+        "אינסטגרמי"
+      ],
       "featured": false
     },
     {
@@ -4303,8 +4343,12 @@ export const CATALOG = {
       "priceRange": "AED 50-120",
       "address": "Al Quoz + Fit Lab",
       "lat": 25.1495,
-      "lng": 55.2330,
-      "tags": ["קפה", "בריא", "טבעוני"],
+      "lng": 55.233,
+      "tags": [
+        "קפה",
+        "בריא",
+        "טבעוני"
+      ],
       "featured": false
     },
     {
@@ -4323,7 +4367,11 @@ export const CATALOG = {
       "address": "Atlantis The Royal, Palm Jumeirah",
       "lat": 25.1308,
       "lng": 55.1175,
-      "tags": ["מישלין 2", "Tasting", "פרמיום"],
+      "tags": [
+        "מישלין 2",
+        "Tasting",
+        "פרמיום"
+      ],
       "featured": true
     },
     {
@@ -4342,7 +4390,11 @@ export const CATALOG = {
       "address": "Bulgari Resort, Jumeira Bay Island",
       "lat": 25.1922,
       "lng": 55.2238,
-      "tags": ["מישלין 2", "איטלקי", "Niko Romito"],
+      "tags": [
+        "מישלין 2",
+        "איטלקי",
+        "Niko Romito"
+      ],
       "featured": true
     },
     {
@@ -4361,7 +4413,11 @@ export const CATALOG = {
       "address": "Burj Al Arab",
       "lat": 25.1412,
       "lng": 55.1855,
-      "tags": ["מישלין 1", "נוף", "ברג' אל ערב"],
+      "tags": [
+        "מישלין 1",
+        "נוף",
+        "ברג' אל ערב"
+      ],
       "featured": true
     },
     {
@@ -4380,7 +4436,11 @@ export const CATALOG = {
       "address": "Armani Hotel, Burj Khalifa",
       "lat": 25.1972,
       "lng": 55.2744,
-      "tags": ["מישלין 1", "איטלקי", "אופנה"],
+      "tags": [
+        "מישלין 1",
+        "איטלקי",
+        "אופנה"
+      ],
       "featured": true
     },
     {
@@ -4398,8 +4458,12 @@ export const CATALOG = {
       "priceRange": "AED 555 לאדם",
       "address": "Voco Hotel, Al Sufouh",
       "lat": 25.0937,
-      "lng": 55.1690,
-      "tags": ["מישלין 1", "הודי", "טבעוני"],
+      "lng": 55.169,
+      "tags": [
+        "מישלין 1",
+        "הודי",
+        "טבעוני"
+      ],
       "featured": true
     },
     {
@@ -4418,7 +4482,11 @@ export const CATALOG = {
       "address": "Bulgari Resort, Jumeira Bay Island",
       "lat": 25.1922,
       "lng": 55.2238,
-      "tags": ["מישלין 1", "אומקאסה", "סושי"],
+      "tags": [
+        "מישלין 1",
+        "אומקאסה",
+        "סושי"
+      ],
       "featured": true
     },
     {
@@ -4437,7 +4505,11 @@ export const CATALOG = {
       "address": "J1 Beach, Jumeira",
       "lat": 25.1872,
       "lng": 55.2275,
-      "tags": ["מישלין 1", "Tasting", "אסיאתי"],
+      "tags": [
+        "מישלין 1",
+        "Tasting",
+        "אסיאתי"
+      ],
       "featured": true
     },
     {
@@ -4456,7 +4528,11 @@ export const CATALOG = {
       "address": "Wasl 51, Jumeirah",
       "lat": 25.2185,
       "lng": 55.2403,
-      "tags": ["מישלין 1", "לבנטיני", "סורי"],
+      "tags": [
+        "מישלין 1",
+        "לבנטיני",
+        "סורי"
+      ],
       "featured": true
     },
     {
@@ -4473,9 +4549,13 @@ export const CATALOG = {
       "price": "$$$$$",
       "priceRange": "AED 950-1,400",
       "address": "Gate Building 5, DIFC",
-      "lat": 25.2110,
+      "lat": 25.211,
       "lng": 55.2789,
-      "tags": ["מישלין 1", "Tasting", "DIFC"],
+      "tags": [
+        "מישלין 1",
+        "Tasting",
+        "DIFC"
+      ],
       "featured": true
     },
     {
@@ -4494,7 +4574,11 @@ export const CATALOG = {
       "address": "Atlantis The Royal, Palm Jumeirah",
       "lat": 25.1308,
       "lng": 55.1175,
-      "tags": ["מישלין 1", "בשרים", "Tasting"],
+      "tags": [
+        "מישלין 1",
+        "בשרים",
+        "Tasting"
+      ],
       "featured": true
     },
     {
@@ -4513,7 +4597,11 @@ export const CATALOG = {
       "address": "Mandarin Oriental Jumeira",
       "lat": 25.1865,
       "lng": 55.2435,
-      "tags": ["מישלין 1", "פורטוגלי", "דגים"],
+      "tags": [
+        "מישלין 1",
+        "פורטוגלי",
+        "דגים"
+      ],
       "featured": true
     },
     {
@@ -4532,7 +4620,11 @@ export const CATALOG = {
       "address": "Kempinski Marsa Al Arab",
       "lat": 25.1335,
       "lng": 55.1875,
-      "tags": ["מישלין 1", "מצרי", "ערבי"],
+      "tags": [
+        "מישלין 1",
+        "מצרי",
+        "ערבי"
+      ],
       "featured": true
     },
     {
@@ -4549,9 +4641,13 @@ export const CATALOG = {
       "price": "$$$",
       "priceRange": "AED 300-600",
       "address": "Jumeirah Fishing Harbor",
-      "lat": 25.2090,
+      "lat": 25.209,
       "lng": 55.2459,
-      "tags": ["מישלין 1", "אסיאתי", "סושי"],
+      "tags": [
+        "מישלין 1",
+        "אסיאתי",
+        "סושי"
+      ],
       "featured": true
     },
     {
@@ -4569,7 +4665,11 @@ export const CATALOG = {
       "address": "Souk Al Bahar, Downtown",
       "lat": 25.1937,
       "lng": 55.2762,
-      "tags": ["food hall", "מגוון", "מודרני"],
+      "tags": [
+        "food hall",
+        "מגוון",
+        "מודרני"
+      ],
       "featured": true
     }
   ],
@@ -4596,7 +4696,9 @@ export const CATALOG = {
         "חובה"
       ],
       "webcam": "https://www.webcamtaxi.com/en/united-arab-emirates/dubai/burj-khalifa-lake-dubai.html",
-      "featured": true
+      "featured": true,
+      "ticketType": "online",
+      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-burj-khalifa-levels-124-125-entry-ticket-options-t49019/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
     },
     {
       "id": 202,
@@ -4620,7 +4722,8 @@ export const CATALOG = {
         "משפחות"
       ],
       "webcam": "https://www.webcamtaxi.com/en/united-arab-emirates/dubai/burj-khalifa-lake-dubai.html",
-      "featured": true
+      "featured": true,
+      "ticketType": "free"
     },
     {
       "id": 203,
@@ -4643,7 +4746,8 @@ export const CATALOG = {
         "מונורייל"
       ],
       "webcam": "https://www.skylinewebcams.com/en/webcam/united-arab-emirates/dubai/dubai/dubai-marina.html",
-      "featured": true
+      "featured": true,
+      "ticketType": "free"
     },
     {
       "id": 204,
@@ -4666,7 +4770,9 @@ export const CATALOG = {
         "תצפית",
         "צילום"
       ],
-      "featured": true
+      "featured": true,
+      "ticketType": "online",
+      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-entry-ticket-to-the-dubai-frame-with-deck-access-t714548/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
     },
     {
       "id": 205,
@@ -4688,7 +4794,8 @@ export const CATALOG = {
         "פרומנדה",
         "חינם"
       ],
-      "featured": false
+      "featured": false,
+      "ticketType": "free"
     },
     {
       "id": 206,
@@ -4710,7 +4817,9 @@ export const CATALOG = {
         "תצפית",
         "רומנטי"
       ],
-      "featured": true
+      "featured": true,
+      "ticketType": "online",
+      "ticketUrl": "https://www.getyourguide.com/ain-dubai-l165284/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
     },
     {
       "id": 207,
@@ -4732,7 +4841,8 @@ export const CATALOG = {
         "ערבי",
         "תעלות"
       ],
-      "featured": false
+      "featured": false,
+      "ticketType": "onsite"
     },
     {
       "id": 208,
@@ -4754,7 +4864,8 @@ export const CATALOG = {
         "היסטורי",
         "אברה"
       ],
-      "featured": false
+      "featured": false,
+      "ticketType": "free"
     },
     {
       "id": 209,
@@ -4776,7 +4887,9 @@ export const CATALOG = {
         "פרחים",
         "צילום"
       ],
-      "featured": true
+      "featured": true,
+      "ticketType": "online",
+      "ticketUrl": "https://www.getyourguide.com/miracle-garden-l3351/dubai-miracle-garden-skip-the-line-ticket-t405844/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
     },
     {
       "id": 210,
@@ -4799,7 +4912,9 @@ export const CATALOG = {
         "טכנולוגיה",
         "ארכיטקטורה"
       ],
-      "featured": true
+      "featured": true,
+      "ticketType": "online",
+      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-museum-of-the-future-admission-ticket-t411488/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
     },
     {
       "id": 211,
@@ -4821,7 +4936,9 @@ export const CATALOG = {
         "אקוריום",
         "משפחות"
       ],
-      "featured": false
+      "featured": false,
+      "ticketType": "online",
+      "ticketUrl": "https://www.getyourguide.com/dubai-aquarium-underwater-zoo-l3333/dubai-aquarium-and-underwater-zoo-entry-ticket-t123092/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
     },
     {
       "id": 212,
@@ -4843,7 +4960,9 @@ export const CATALOG = {
         "אור",
         "לילה"
       ],
-      "featured": false
+      "featured": false,
+      "ticketType": "online",
+      "ticketUrl": "https://www.getyourguide.com/dubai-garden-glow-l169697/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
     },
     {
       "id": 213,
@@ -4865,7 +4984,8 @@ export const CATALOG = {
         "חינם",
         "משפחות"
       ],
-      "featured": true
+      "featured": true,
+      "ticketType": "free"
     },
     {
       "id": 214,
@@ -4887,7 +5007,8 @@ export const CATALOG = {
         "ספורט",
         "עפיפון"
       ],
-      "featured": false
+      "featured": false,
+      "ticketType": "free"
     },
     {
       "id": 215,
@@ -4909,7 +5030,8 @@ export const CATALOG = {
         "בוהמי",
         "בילוי"
       ],
-      "featured": false
+      "featured": false,
+      "ticketType": "free"
     },
     {
       "id": 216,
@@ -4931,7 +5053,9 @@ export const CATALOG = {
         "מגלשות",
         "משפחות"
       ],
-      "featured": true
+      "featured": true,
+      "ticketType": "online",
+      "ticketUrl": "https://www.getyourguide.com/dubai-l173/aquaventure-world-waterpark-ticket-at-atlantis-dubai-t570397/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
     },
     {
       "id": 217,
@@ -4953,7 +5077,9 @@ export const CATALOG = {
         "גלים",
         "כיף"
       ],
-      "featured": false
+      "featured": false,
+      "ticketType": "online",
+      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-wild-wadi-waterpark-full-day-ticket-t124418/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
     },
     {
       "id": 218,
@@ -4975,7 +5101,9 @@ export const CATALOG = {
         "מקורה",
         "מארוול"
       ],
-      "featured": true
+      "featured": true,
+      "ticketType": "online",
+      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-img-worlds-of-adventure-t121581/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
     },
     {
       "id": 219,
@@ -4997,7 +5125,9 @@ export const CATALOG = {
         "סקי",
         "שלג"
       ],
-      "featured": true
+      "featured": true,
+      "ticketType": "online",
+      "ticketUrl": "https://www.getyourguide.com/dubai-l173/ski-dubai-tickets-full-day-super-pass-t122445/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
     },
     {
       "id": 220,
@@ -5019,7 +5149,9 @@ export const CATALOG = {
         "תרבות",
         "פסטיבל"
       ],
-      "featured": false
+      "featured": false,
+      "ticketType": "online",
+      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-global-village-entry-ticket-t553170/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
     },
     {
       "id": 221,
@@ -5041,7 +5173,9 @@ export const CATALOG = {
         "מדבר",
         "הרפתקה"
       ],
-      "featured": true
+      "featured": true,
+      "ticketType": "online",
+      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-desert-safari-with-bbq-dinner-quad-biking-options-t31103/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
     },
     {
       "id": 222,
@@ -5063,7 +5197,9 @@ export const CATALOG = {
         "הליקופטר",
         "נוף"
       ],
-      "featured": false
+      "featured": false,
+      "ticketType": "online",
+      "ticketUrl": "https://www.getyourguide.com/dubai-l173/15-minute-helicopter-tour-of-dubai-t31156/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
     },
     {
       "id": 223,
@@ -5085,7 +5221,9 @@ export const CATALOG = {
         "סירה",
         "אדרנלין"
       ],
-      "featured": false
+      "featured": false,
+      "ticketType": "online",
+      "ticketUrl": "https://www.getyourguide.com/dubai-marina-l3415/90-minute-palm-burj-al-arab-rib-tour-t90741/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
     },
     {
       "id": 224,
@@ -5107,7 +5245,9 @@ export const CATALOG = {
         "זהב",
         "שוק"
       ],
-      "featured": false
+      "featured": false,
+      "ticketType": "online",
+      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-guided-city-walking-tour-to-spice-and-gold-souk-t427563/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
     },
     {
       "id": 225,
@@ -5129,7 +5269,9 @@ export const CATALOG = {
         "חיות",
         "משפחות"
       ],
-      "featured": false
+      "featured": false,
+      "ticketType": "online",
+      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-1-day-entry-ticket-to-dubai-safari-park-t443463/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
     },
     {
       "id": 243,
@@ -5151,7 +5293,9 @@ export const CATALOG = {
         "צניחה",
         "פאלם"
       ],
-      "featured": true
+      "featured": true,
+      "ticketType": "online",
+      "ticketUrl": "https://www.getyourguide.com/skydive-dubai-l92336/dubai-skydive-over-the-palm-or-the-desert-t298845/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
     },
     {
       "id": 244,
@@ -5173,7 +5317,9 @@ export const CATALOG = {
         "מקורה",
         "צניחה"
       ],
-      "featured": true
+      "featured": true,
+      "ticketType": "online",
+      "ticketUrl": "https://www.getyourguide.com/ifly-dubai-l3322/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
     },
     {
       "id": 245,
@@ -5195,7 +5341,9 @@ export const CATALOG = {
         "כדור פורח",
         "זריחה"
       ],
-      "featured": true
+      "featured": true,
+      "ticketType": "online",
+      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-hot-air-balloon-tour-over-the-dubai-desert-t411207/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
     },
     {
       "id": 246,
@@ -5217,7 +5365,9 @@ export const CATALOG = {
         "הליקופטר",
         "תצפית"
       ],
-      "featured": false
+      "featured": false,
+      "ticketType": "online",
+      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-17-minute-panoramic-helicopter-tour-t56081/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
     },
     {
       "id": 247,
@@ -5239,7 +5389,8 @@ export const CATALOG = {
         "גלריות",
         "עכשווי"
       ],
-      "featured": true
+      "featured": true,
+      "ticketType": "free"
     },
     {
       "id": 248,
@@ -5261,7 +5412,8 @@ export const CATALOG = {
         "מורשת",
         "אדריכלות"
       ],
-      "featured": true
+      "featured": true,
+      "ticketType": "free"
     },
     {
       "id": 249,
@@ -5283,7 +5435,9 @@ export const CATALOG = {
         "היסטוריה",
         "איחוד"
       ],
-      "featured": false
+      "featured": false,
+      "ticketType": "online",
+      "ticketUrl": "https://www.getyourguide.com/etihad-museum-l192837/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
     },
     {
       "id": 250,
@@ -5305,7 +5459,8 @@ export const CATALOG = {
         "קפה",
         "היסטורי"
       ],
-      "featured": false
+      "featured": false,
+      "ticketType": "onsite"
     },
     {
       "id": 251,
@@ -5327,7 +5482,8 @@ export const CATALOG = {
         "גמלים",
         "תרבות"
       ],
-      "featured": false
+      "featured": false,
+      "ticketType": "onsite"
     },
     {
       "id": 252,
@@ -5349,7 +5505,8 @@ export const CATALOG = {
         "מטבעות",
         "היסטוריה"
       ],
-      "featured": false
+      "featured": false,
+      "ticketType": "onsite"
     },
     {
       "id": 253,
@@ -5371,7 +5528,8 @@ export const CATALOG = {
         "עתיקות",
         "היסטוריה"
       ],
-      "featured": false
+      "featured": false,
+      "ticketType": "appointment"
     },
     {
       "id": 254,
@@ -5393,7 +5551,9 @@ export const CATALOG = {
         "סירה",
         "מסורתי"
       ],
-      "featured": true
+      "featured": true,
+      "ticketType": "online",
+      "ticketUrl": "https://www.getyourguide.com/dubai-marina-l3415/dubai-marina-luxury-dhow-dinner-cruise-t199267/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
     },
     {
       "id": 255,
@@ -5415,7 +5575,9 @@ export const CATALOG = {
         "יאכטה",
         "ים"
       ],
-      "featured": true
+      "featured": true,
+      "ticketType": "online",
+      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-marina-1-hour-luxury-sightseeing-speedboat-tour-t559949/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
     },
     {
       "id": 256,
@@ -5437,7 +5599,8 @@ export const CATALOG = {
         "בית כנסת",
         "קהילה"
       ],
-      "featured": true
+      "featured": true,
+      "ticketType": "appointment"
     },
     {
       "id": 274,
@@ -5459,7 +5622,8 @@ export const CATALOG = {
         "חב\"ד",
         "קהילה"
       ],
-      "featured": true
+      "featured": true,
+      "ticketType": "appointment"
     },
     {
       "id": 275,
@@ -5481,7 +5645,8 @@ export const CATALOG = {
         "מקווה",
         "קהילה"
       ],
-      "featured": false
+      "featured": false,
+      "ticketType": "appointment"
     },
     {
       "id": 276,
@@ -5503,7 +5668,8 @@ export const CATALOG = {
         "קהילה",
         "הסכמי אברהם"
       ],
-      "featured": true
+      "featured": true,
+      "ticketType": "appointment"
     },
     {
       "id": 277,
@@ -5525,7 +5691,8 @@ export const CATALOG = {
         "כשר",
         "סופר"
       ],
-      "featured": true
+      "featured": true,
+      "ticketType": "free"
     },
     {
       "id": 278,
@@ -5547,7 +5714,8 @@ export const CATALOG = {
         "כשר",
         "מסעדה"
       ],
-      "featured": true
+      "featured": true,
+      "ticketType": "onsite"
     },
     {
       "id": 279,
@@ -5570,7 +5738,8 @@ export const CATALOG = {
         "חלבי",
         "אבו דאבי"
       ],
-      "featured": false
+      "featured": false,
+      "ticketType": "appointment"
     },
     {
       "id": 258,
@@ -5592,7 +5761,9 @@ export const CATALOG = {
         "פאלם",
         "ציון דרך"
       ],
-      "featured": true
+      "featured": true,
+      "ticketType": "online",
+      "ticketUrl": "https://www.getyourguide.com/the-view-at-the-palm-l167754/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
     },
     {
       "id": 259,
@@ -5615,7 +5786,9 @@ export const CATALOG = {
         "מגלשה"
       ],
       "website": "https://www.visitdubai.com/en/places-to-visit/sky-views-dubai",
-      "featured": true
+      "featured": true,
+      "ticketType": "online",
+      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-sky-views-observatory-tickets-t407711/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
     },
     {
       "id": 260,
@@ -5638,7 +5811,8 @@ export const CATALOG = {
         "תרבות"
       ],
       "website": "https://www.cultures.ae",
-      "featured": true
+      "featured": true,
+      "ticketType": "appointment"
     },
     {
       "id": 262,
@@ -5661,7 +5835,9 @@ export const CATALOG = {
         "אדריכלות"
       ],
       "website": "https://www.dubaiopera.com",
-      "featured": true
+      "featured": true,
+      "ticketType": "online",
+      "ticketUrl": "https://www.getyourguide.com/dubai-opera-l148725/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
     },
     {
       "id": 263,
@@ -5684,7 +5860,9 @@ export const CATALOG = {
         "חדש"
       ],
       "website": "https://ayauniverse.com",
-      "featured": true
+      "featured": true,
+      "ticketType": "online",
+      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-aya-universe-entry-ticket-t513502/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
     },
     {
       "id": 264,
@@ -5707,7 +5885,9 @@ export const CATALOG = {
         "Bluewaters"
       ],
       "website": "https://www.madametussauds.com/dubai/",
-      "featured": true
+      "featured": true,
+      "ticketType": "online",
+      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-madame-tussauds-adult-general-entry-ticket-t501117/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
     },
     {
       "id": 265,
@@ -5730,7 +5910,9 @@ export const CATALOG = {
         "משפחות"
       ],
       "website": "https://www.atlantis.com/dubai/atlantis-the-palm/marine-and-waterpark/the-lost-chambers-aquarium",
-      "featured": true
+      "featured": true,
+      "ticketType": "online",
+      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-the-lost-chambers-aquarium-tickets-t130209/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
     },
     {
       "id": 266,
@@ -5753,7 +5935,9 @@ export const CATALOG = {
         "City Walk"
       ],
       "website": "https://www.thegreenplanetdubai.com",
-      "featured": false
+      "featured": false,
+      "ticketType": "online",
+      "ticketUrl": "https://www.getyourguide.com/dubai-l173/the-green-planet-t105442/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
     },
     {
       "id": 267,
@@ -5776,7 +5960,9 @@ export const CATALOG = {
         "סכר"
       ],
       "website": "https://www.visithatta.com",
-      "featured": true
+      "featured": true,
+      "ticketType": "online",
+      "ticketUrl": "https://www.getyourguide.com/hatta-l2455/hatta-mountain-tour-water-dam-heritage-village-bee-garden-t649583/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
     },
     {
       "id": 268,
@@ -5799,7 +5985,9 @@ export const CATALOG = {
         "משפחות"
       ],
       "website": "https://www.motiongate.com",
-      "featured": true
+      "featured": true,
+      "ticketType": "online",
+      "ticketUrl": "https://www.getyourguide.com/motiongate-dubai-l88333/motiongate-dubai-ticket-at-dubai-parks-and-resorts-t118768/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
     },
     {
       "id": 269,
@@ -5822,7 +6010,9 @@ export const CATALOG = {
         "משפחות"
       ],
       "website": "https://www.legoland.com/dubai/",
-      "featured": true
+      "featured": true,
+      "ticketType": "online",
+      "ticketUrl": "https://www.getyourguide.com/dubai-l173/legolandr-dubai-ticket-at-dubai-parks-and-resorts-1day-1park-t118771/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
     },
     {
       "id": 270,
@@ -5845,7 +6035,9 @@ export const CATALOG = {
         "מופעים"
       ],
       "website": "https://www.bollywoodparksdubai.com",
-      "featured": false
+      "featured": false,
+      "ticketType": "online",
+      "ticketUrl": "https://www.getyourguide.com/bollywood-parks-dubai-l88615/bollywood-parks-1-day-1-park-admission-t118762/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
     },
     {
       "id": 241,
@@ -5868,7 +6060,8 @@ export const CATALOG = {
         "אינסטגרם",
         "חדש"
       ],
-      "featured": true
+      "featured": true,
+      "ticketType": "onsite"
     },
     {
       "id": 231,
@@ -5890,7 +6083,9 @@ export const CATALOG = {
         "פרמיום",
         "שמורה"
       ],
-      "featured": true
+      "featured": true,
+      "ticketType": "online",
+      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-premium-red-dunes-camel-bbq-safari-at-al-khayma-t387428/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
     },
     {
       "id": 232,
@@ -5912,7 +6107,9 @@ export const CATALOG = {
         "ותיק",
         "אמירייטס"
       ],
-      "featured": true
+      "featured": true,
+      "ticketType": "online",
+      "ticketUrl": "https://www.getyourguide.com/dubai-l173/desert-safari-with-bbq-dinner-live-shows-free-quad-biking-t25698/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
     },
     {
       "id": 233,
@@ -5934,7 +6131,9 @@ export const CATALOG = {
         "ערב",
         "מופעים"
       ],
-      "featured": false
+      "featured": false,
+      "ticketType": "online",
+      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-fossil-camel-rocks-extreme-safari-w-bbq-dinner-t121428/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
     },
     {
       "id": 234,
@@ -5956,7 +6155,9 @@ export const CATALOG = {
         "אקסטרים",
         "אופנועים"
       ],
-      "featured": false
+      "featured": false,
+      "ticketType": "online",
+      "ticketUrl": "https://www.getyourguide.com/dubai-l173/red-dunes-desert-safari-with-bbq-buffet-dinner-t56413/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
     },
     {
       "id": 235,
@@ -5978,7 +6179,9 @@ export const CATALOG = {
         "בלון",
         "זריחה"
       ],
-      "featured": true
+      "featured": true,
+      "ticketType": "online",
+      "ticketUrl": "https://www.getyourguide.com/dubai-desert-conservation-reserve-l3312/sunrise-desert-dunes-wildlife-experience-t390592/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
     },
     {
       "id": 280,
@@ -6001,7 +6204,9 @@ export const CATALOG = {
         "חוויה"
       ],
       "website": "https://dinnerinthesky.ae",
-      "featured": true
+      "featured": true,
+      "ticketType": "online",
+      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-dinner-in-the-sky-t102806/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
     },
     {
       "id": 281,
@@ -6024,7 +6229,9 @@ export const CATALOG = {
         "תיאטרון"
       ],
       "website": "https://laperle.com",
-      "featured": true
+      "featured": true,
+      "ticketType": "online",
+      "ticketUrl": "https://www.getyourguide.com/la-perle-by-dragone-l111552/la-perle-by-dragone-al-habtoor-city-t127463/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
     },
     {
       "id": 282,
@@ -6047,7 +6254,9 @@ export const CATALOG = {
         "משפחות"
       ],
       "website": "https://museumofillusions.ae",
-      "featured": false
+      "featured": false,
+      "ticketType": "online",
+      "ticketUrl": "https://www.getyourguide.com/museum-of-illusions-dubai-l135742/dubai-museum-of-illusions-entry-ticket-t302128/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
     },
     {
       "id": 283,
@@ -6069,7 +6278,9 @@ export const CATALOG = {
         "משפחות",
         "חווייתי"
       ],
-      "featured": false
+      "featured": false,
+      "ticketType": "online",
+      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-real-madrid-world-theme-park-entry-ticket-t649072/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
     },
     {
       "id": 284,
@@ -6092,7 +6303,9 @@ export const CATALOG = {
         "חברים"
       ],
       "website": "https://topgolfdubai.com",
-      "featured": false
+      "featured": false,
+      "ticketType": "online",
+      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-1hr-topgolf-game-t738994/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
     },
     {
       "id": 285,
@@ -6115,7 +6328,8 @@ export const CATALOG = {
         "חינם"
       ],
       "website": "https://www.expocitydubai.com",
-      "featured": true
+      "featured": true,
+      "ticketType": "free"
     },
     {
       "id": 286,
@@ -6137,7 +6351,9 @@ export const CATALOG = {
         "טבע",
         "משפחות"
       ],
-      "featured": false
+      "featured": false,
+      "ticketType": "online",
+      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-skip-the-line-ticket-to-butterfly-garden-t404997/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
     },
     {
       "id": 287,
@@ -6160,7 +6376,9 @@ export const CATALOG = {
         "משפחות"
       ],
       "website": "https://www.dubaidolphinarium.ae",
-      "featured": false
+      "featured": false,
+      "ticketType": "online",
+      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-dubai-dolphinarium-dolphin-seal-bird-show-tickets-t564165/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
     },
     {
       "id": 288,
@@ -6182,7 +6400,9 @@ export const CATALOG = {
         "תלת-ממד",
         "משפחות"
       ],
-      "featured": false
+      "featured": false,
+      "ticketType": "online",
+      "ticketUrl": "https://www.getyourguide.com/dubai-l173/3d-world-selfie-museum-dubai-ticket-t286245/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
     },
     {
       "id": 289,
@@ -6205,7 +6425,9 @@ export const CATALOG = {
         "LEGO"
       ],
       "website": "https://www.legoland.com/dubai",
-      "featured": false
+      "featured": false,
+      "ticketType": "online",
+      "ticketUrl": "https://www.getyourguide.com/dubai-l173/1-day-legolandr-water-park-pass-at-dubai-parks-and-resorts-t118774/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
     },
     {
       "id": 290,
@@ -6228,7 +6450,8 @@ export const CATALOG = {
         "קניון"
       ],
       "website": "https://www.dubaiicerink.com",
-      "featured": false
+      "featured": false,
+      "ticketType": "onsite"
     },
     {
       "id": 291,
@@ -6250,7 +6473,9 @@ export const CATALOG = {
         "מזרקות",
         "ערב"
       ],
-      "featured": false
+      "featured": false,
+      "ticketType": "online",
+      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-fountain-show-and-burj-lake-ride-by-traditional-boat-t60095/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
     },
     {
       "id": 295,
@@ -6273,7 +6498,9 @@ export const CATALOG = {
         "פברואר"
       ],
       "website": "https://dubaidutyfreetennischampionships.com",
-      "featured": true
+      "featured": true,
+      "ticketType": "online",
+      "ticketUrl": "https://dubaidutyfreetennischampionships.com/tickets/"
     },
     {
       "id": 296,
@@ -6296,7 +6523,9 @@ export const CATALOG = {
         "ספורט"
       ],
       "website": "https://dubaimarathon.org",
-      "featured": false
+      "featured": false,
+      "ticketType": "online",
+      "ticketUrl": "https://www.dubaimarathon.com/"
     },
     {
       "id": 297,
@@ -6319,7 +6548,9 @@ export const CATALOG = {
         "ינואר"
       ],
       "website": "https://desertclassic.com",
-      "featured": false
+      "featured": false,
+      "ticketType": "online",
+      "ticketUrl": "https://www.dubaidesertclassic.com/"
     },
     {
       "id": 298,
@@ -6335,9 +6566,14 @@ export const CATALOG = {
       "priceRange": "חינם",
       "address": "Al Fahidi, Bur Dubai",
       "lat": 25.2641,
-      "lng": 55.3000,
-      "tags": ["היסטורי", "סמטאות", "מגדלי רוח"],
-      "featured": true
+      "lng": 55.3,
+      "tags": [
+        "היסטורי",
+        "סמטאות",
+        "מגדלי רוח"
+      ],
+      "featured": true,
+      "ticketType": "free"
     },
     {
       "id": 299,
@@ -6353,9 +6589,14 @@ export const CATALOG = {
       "priceRange": "חינם · מסעדות וחנויות",
       "address": "Bur Dubai, על הקריק",
       "lat": 25.2614,
-      "lng": 55.2950,
-      "tags": ["טיילת", "אדריכלות", "אווירה"],
-      "featured": false
+      "lng": 55.295,
+      "tags": [
+        "טיילת",
+        "אדריכלות",
+        "אווירה"
+      ],
+      "featured": false,
+      "ticketType": "free"
     },
     {
       "id": 226,
@@ -6372,8 +6613,14 @@ export const CATALOG = {
       "address": "Al Fahidi Fort, Bur Dubai",
       "lat": 25.2638,
       "lng": 55.2974,
-      "tags": ["מוזיאון", "היסטוריה", "מבצר"],
-      "featured": true
+      "tags": [
+        "מוזיאון",
+        "היסטוריה",
+        "מבצר"
+      ],
+      "featured": true,
+      "ticketType": "online",
+      "ticketUrl": "https://www.getyourguide.com/al-fahidi-fort-l4882/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
     },
     {
       "id": 227,
@@ -6389,9 +6636,15 @@ export const CATALOG = {
       "priceRange": "AED 50",
       "address": "Al Shindagha, Bur Dubai",
       "lat": 25.2685,
-      "lng": 55.2940,
-      "tags": ["מוזיאון", "ימית", "מורשת"],
-      "featured": true
+      "lng": 55.294,
+      "tags": [
+        "מוזיאון",
+        "ימית",
+        "מורשת"
+      ],
+      "featured": true,
+      "ticketType": "online",
+      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-al-shindagha-museum-entry-ticket-t428614/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
     },
     {
       "id": 228,
@@ -6406,10 +6659,15 @@ export const CATALOG = {
       "price": "$",
       "priceRange": "AED 20",
       "address": "Al Fahidi, Bur Dubai",
-      "lat": 25.2640,
+      "lat": 25.264,
       "lng": 55.2997,
-      "tags": ["ארכיאולוגיה", "גיל הברזל", "ממצאים"],
-      "featured": false
+      "tags": [
+        "ארכיאולוגיה",
+        "גיל הברזל",
+        "ממצאים"
+      ],
+      "featured": false,
+      "ticketType": "onsite"
     },
     {
       "id": 229,
@@ -6426,8 +6684,13 @@ export const CATALOG = {
       "address": "Al Fahidi, Bur Dubai",
       "lat": 25.2635,
       "lng": 55.2985,
-      "tags": ["מוזיאון", "שואה", "יהדות"],
-      "featured": true
+      "tags": [
+        "מוזיאון",
+        "שואה",
+        "יהדות"
+      ],
+      "featured": true,
+      "ticketType": "appointment"
     },
     {
       "id": 230,
@@ -6442,10 +6705,15 @@ export const CATALOG = {
       "price": "$$",
       "priceRange": "AED 90-130",
       "address": "Al Fahidi, Bur Dubai",
-      "lat": 25.2640,
+      "lat": 25.264,
       "lng": 55.2982,
-      "tags": ["סיור", "תרבות", "אוכל אמיראתי"],
-      "featured": true
+      "tags": [
+        "סיור",
+        "תרבות",
+        "אוכל אמיראתי"
+      ],
+      "featured": true,
+      "ticketType": "appointment"
     },
     {
       "id": 236,
@@ -6462,8 +6730,13 @@ export const CATALOG = {
       "address": "Al Fahidi, Bur Dubai",
       "lat": 25.2638,
       "lng": 55.2978,
-      "tags": ["אמנות", "גלריה", "עכשווי"],
-      "featured": false
+      "tags": [
+        "אמנות",
+        "גלריה",
+        "עכשווי"
+      ],
+      "featured": false,
+      "ticketType": "free"
     },
     {
       "id": 237,
@@ -6480,8 +6753,13 @@ export const CATALOG = {
       "address": "Bur Dubai, ליד Dubai Creek",
       "lat": 25.2625,
       "lng": 55.3022,
-      "tags": ["מסגד", "היסטורי", "אדריכלות"],
-      "featured": false
+      "tags": [
+        "מסגד",
+        "היסטורי",
+        "אדריכלות"
+      ],
+      "featured": false,
+      "ticketType": "free"
     },
     {
       "id": 238,
@@ -6496,10 +6774,15 @@ export const CATALOG = {
       "price": "$",
       "priceRange": "AED 1",
       "address": "Bur Dubai Abra Station",
-      "lat": 25.2660,
-      "lng": 55.2980,
-      "tags": ["סירה", "מסורתי", "חוצה קריק"],
-      "featured": true
+      "lat": 25.266,
+      "lng": 55.298,
+      "tags": [
+        "סירה",
+        "מסורתי",
+        "חוצה קריק"
+      ],
+      "featured": true,
+      "ticketType": "onsite"
     },
     {
       "id": 521,
@@ -6516,9 +6799,15 @@ export const CATALOG = {
       "address": "תחנה ראשית: Wafi Mall",
       "lat": 25.2278,
       "lng": 55.3219,
-      "tags": ["אוטובוס תיירים", "דו-קומתי", "אודיו עברית"],
+      "tags": [
+        "אוטובוס תיירים",
+        "דו-קומתי",
+        "אודיו עברית"
+      ],
       "website": "https://www.bigbustours.com/en/dubai/blue-marina-route-dubai",
-      "featured": true
+      "featured": true,
+      "ticketType": "online",
+      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-big-bus-hop-on-hop-off-tour-dhow-cruise-t5105/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
     },
     {
       "id": 522,
@@ -6535,9 +6824,15 @@ export const CATALOG = {
       "address": "תחנה ראשית: Deira City Centre",
       "lat": 25.2528,
       "lng": 55.3309,
-      "tags": ["אוטובוס תיירים", "דו-קומתי", "אודיו עברית"],
+      "tags": [
+        "אוטובוס תיירים",
+        "דו-קומתי",
+        "אודיו עברית"
+      ],
       "website": "https://city-sightseeing.com/en/112/dubai/244/hop-on-hop-off-dubai",
-      "featured": false
+      "featured": false,
+      "ticketType": "online",
+      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-city-sightseeing-hoho-bus-tour-sunset-night-tour-t49021/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
     },
     {
       "id": 800,
@@ -6553,9 +6848,15 @@ export const CATALOG = {
       "priceRange": "AED 100-160",
       "address": "Madinat Jumeirah, Souk",
       "lat": 25.1316,
-      "lng": 55.1860,
-      "tags": ["מולטימדיה", "אמנות", "חוויה"],
-      "featured": true
+      "lng": 55.186,
+      "tags": [
+        "מולטימדיה",
+        "אמנות",
+        "חוויה"
+      ],
+      "featured": true,
+      "ticketType": "online",
+      "ticketUrl": "https://www.tiqets.com/en/theatre-of-digital-art-tickets-l187196/"
     },
     {
       "id": 801,
@@ -6570,10 +6871,15 @@ export const CATALOG = {
       "price": "$",
       "priceRange": "חינם",
       "address": "The Pointe, Palm Jumeirah",
-      "lat": 25.1230,
+      "lat": 25.123,
       "lng": 55.1107,
-      "tags": ["מזרקה", "חינם", "מופע"],
-      "featured": true
+      "tags": [
+        "מזרקה",
+        "חינם",
+        "מופע"
+      ],
+      "featured": true,
+      "ticketType": "free"
     },
     {
       "id": 802,
@@ -6590,8 +6896,14 @@ export const CATALOG = {
       "address": "Address Sky View, Downtown",
       "lat": 25.1947,
       "lng": 55.2698,
-      "tags": ["תצפית", "גובה", "אקסטרים"],
-      "featured": true
+      "tags": [
+        "תצפית",
+        "גובה",
+        "אקסטרים"
+      ],
+      "featured": true,
+      "ticketType": "online",
+      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-sky-views-observatory-tickets-t407711/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
     },
     {
       "id": 803,
@@ -6608,8 +6920,14 @@ export const CATALOG = {
       "address": "Mall of the Emirates",
       "lat": 25.1182,
       "lng": 55.2003,
-      "tags": ["VR", "מציאות מדומה", "הרפתקה"],
-      "featured": false
+      "tags": [
+        "VR",
+        "מציאות מדומה",
+        "הרפתקה"
+      ],
+      "featured": false,
+      "ticketType": "online",
+      "ticketUrl": "https://www.getyourguide.com/s/?q=Dreamscape%20Dubai&partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
     },
     {
       "id": 804,
@@ -6624,10 +6942,16 @@ export const CATALOG = {
       "price": "$$",
       "priceRange": "AED 50-200",
       "address": "Hatta, ~2h from Dubai",
-      "lat": 24.8000,
-      "lng": 56.1300,
-      "tags": ["הרפתקה", "הרים", "פעילות"],
-      "featured": true
+      "lat": 24.8,
+      "lng": 56.13,
+      "tags": [
+        "הרפתקה",
+        "הרים",
+        "פעילות"
+      ],
+      "featured": true,
+      "ticketType": "online",
+      "ticketUrl": "https://www.getyourguide.com/wadi-hub-at-hatta-resorts-l261593/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
     },
     {
       "id": 805,
@@ -6644,8 +6968,14 @@ export const CATALOG = {
       "address": "Bluewaters Island",
       "lat": 25.0796,
       "lng": 55.1248,
-      "tags": ["סלבריטאים", "מוזיאון", "בלוווטרס"],
-      "featured": true
+      "tags": [
+        "סלבריטאים",
+        "מוזיאון",
+        "בלוווטרס"
+      ],
+      "featured": true,
+      "ticketType": "online",
+      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-madame-tussauds-adult-general-entry-ticket-t501117/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
     },
     {
       "id": 806,
@@ -6660,10 +6990,15 @@ export const CATALOG = {
       "price": "$$",
       "priceRange": "AED 150-250",
       "address": "Dubai",
-      "lat": 25.0710,
-      "lng": 55.1340,
-      "tags": ["אדרנלין", "אסקייפ רום", "זומבים"],
-      "featured": false
+      "lat": 25.071,
+      "lng": 55.134,
+      "tags": [
+        "אדרנלין",
+        "אסקייפ רום",
+        "זומבים"
+      ],
+      "featured": false,
+      "ticketType": "onsite"
     }
   ],
   "shopping": [
@@ -7054,9 +7389,13 @@ export const CATALOG = {
       "price": "$$-$$$",
       "priceRange": "מחירים בינוניים-גבוהים",
       "address": "Dubai Marina",
-      "lat": 25.0760,
+      "lat": 25.076,
       "lng": 55.1394,
-      "tags": ["קניון", "מרינה", "מסעדות"],
+      "tags": [
+        "קניון",
+        "מרינה",
+        "מסעדות"
+      ],
       "featured": false
     },
     {
@@ -7074,7 +7413,11 @@ export const CATALOG = {
       "address": "Al Ain Road, Dubai Outlet City",
       "lat": 24.9614,
       "lng": 55.4181,
-      "tags": ["אאוטלט", "הנחות", "מותגים"],
+      "tags": [
+        "אאוטלט",
+        "הנחות",
+        "מותגים"
+      ],
       "featured": false
     },
     {
@@ -7092,7 +7435,11 @@ export const CATALOG = {
       "address": "International City",
       "lat": 25.1633,
       "lng": 55.4189,
-      "tags": ["סיני", "זול", "אלקטרוניקה"],
+      "tags": [
+        "סיני",
+        "זול",
+        "אלקטרוניקה"
+      ],
       "featured": false
     },
     {
@@ -7110,7 +7457,11 @@ export const CATALOG = {
       "address": "Bur Dubai",
       "lat": 25.2549,
       "lng": 55.3038,
-      "tags": ["קניון", "יוקרה", "מטרו"],
+      "tags": [
+        "קניון",
+        "יוקרה",
+        "מטרו"
+      ],
       "featured": false
     },
     {
@@ -7128,7 +7479,11 @@ export const CATALOG = {
       "address": "Dubai Mall + Mall of the Emirates",
       "lat": 25.1972,
       "lng": 55.2796,
-      "tags": ["סיגרים", "יוקרה", "מתנות"],
+      "tags": [
+        "סיגרים",
+        "יוקרה",
+        "מתנות"
+      ],
       "featured": false
     },
     {
@@ -7144,9 +7499,13 @@ export const CATALOG = {
       "price": "$$$$",
       "priceRange": "AED 60-700 לסיגר",
       "address": "DIFC + One Central",
-      "lat": 25.2110,
+      "lat": 25.211,
       "lng": 55.2789,
-      "tags": ["סיגרים", "קובני", "פרימיום"],
+      "tags": [
+        "סיגרים",
+        "קובני",
+        "פרימיום"
+      ],
       "featured": false
     },
     {
@@ -7164,7 +7523,11 @@ export const CATALOG = {
       "address": "Downtown Dubai, ליד Dubai Mall",
       "lat": 25.1937,
       "lng": 55.2741,
-      "tags": ["שוק", "מסורתי", "מזרקות"],
+      "tags": [
+        "שוק",
+        "מסורתי",
+        "מזרקות"
+      ],
       "featured": false
     },
     {
@@ -7182,7 +7545,11 @@ export const CATALOG = {
       "address": "Palm Jumeirah",
       "lat": 25.1228,
       "lng": 55.1106,
-      "tags": ["טיילת", "מזרקות", "פאלם"],
+      "tags": [
+        "טיילת",
+        "מזרקות",
+        "פאלם"
+      ],
       "featured": false
     }
   ],
@@ -7667,7 +8034,11 @@ export const CATALOG = {
       "address": "Souk Madinat Jumeirah",
       "lat": 25.1305,
       "lng": 55.1858,
-      "tags": ["בר", "משחקים", "ארקייד"],
+      "tags": [
+        "בר",
+        "משחקים",
+        "ארקייד"
+      ],
       "featured": false
     }
   ],
@@ -8125,7 +8496,7 @@ export const CATALOG = {
       "subcategory": "bus",
       "description": "קווי RTA מומלצים לתיירים: קו 8 (שייח׳ זאיד רוד — Burj Khalifa, Dubai Mall, Mall of the Emirates), X28 (Mall of the Emirates ↔ Gold Souk), 27 (Al Ghubaiba ↔ Mall of the Emirates), C26 (Burjuman ↔ Ibn Battuta), F30 (מטרו אל ריגה ↔ Gold Souk). תשלום ב-NOL Card. תדירות: כל 10-20 דק׳.",
       "image": "images/transport/bus.jpeg",
-      "rating": 4.0,
+      "rating": 4,
       "price": "$",
       "priceRange": "AED 3-7 לנסיעה",
       "address": "בכל רחבי דובאי",
@@ -8674,9 +9045,13 @@ export const CATALOG = {
       "price": "$$",
       "priceRange": "AED 50-150",
       "address": "Zabeel Park",
-      "lat": 25.2280,
-      "lng": 55.3060,
-      "tags": ["קרטינג", "חשמלי", "מקורה"],
+      "lat": 25.228,
+      "lng": 55.306,
+      "tags": [
+        "קרטינג",
+        "חשמלי",
+        "מקורה"
+      ],
       "featured": false
     },
     {
@@ -8692,9 +9067,13 @@ export const CATALOG = {
       "price": "$$",
       "priceRange": "AED 60-200 לשעה",
       "address": "Dubai Hills Mall",
-      "lat": 25.1290,
-      "lng": 55.2430,
-      "tags": ["גיימינג", "eSports", "VR"],
+      "lat": 25.129,
+      "lng": 55.243,
+      "tags": [
+        "גיימינג",
+        "eSports",
+        "VR"
+      ],
       "featured": false
     },
     {
@@ -8711,8 +9090,12 @@ export const CATALOG = {
       "priceRange": "AED 350-700",
       "address": "Address Beach Resort, JBR",
       "lat": 25.0815,
-      "lng": 55.1350,
-      "tags": ["תיאטרון", "אוכל", "מופע"],
+      "lng": 55.135,
+      "tags": [
+        "תיאטרון",
+        "אוכל",
+        "מופע"
+      ],
       "featured": true
     },
     {
@@ -8730,7 +9113,11 @@ export const CATALOG = {
       "address": "Dubai Festival City + נוספים",
       "lat": 25.2228,
       "lng": 55.3534,
-      "tags": ["באולינג", "משפחתי", "ארקייד"],
+      "tags": [
+        "באולינג",
+        "משפחתי",
+        "ארקייד"
+      ],
       "featured": false
     }
   ],
@@ -9009,4 +9396,4 @@ export const CATALOG = {
   ]
 };
 
-export const DB_VERSION = 188;
+export const DB_VERSION = 189;
