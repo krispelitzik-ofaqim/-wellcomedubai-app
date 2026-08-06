@@ -13,6 +13,7 @@ import { useLocalSearchParams, router, useFocusEffect } from 'expo-router';
 import { WebView } from 'react-native-webview';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { Colors } from '../../constants/colors';
+import { useI18n } from '../../constants/i18n';
 import { openMapsChoice } from '../../utils/maps';
 import { CATALOG } from '../../data/catalog';
 import { getFavorites, toggleFavorite } from '../../utils/favorites';
@@ -38,86 +39,86 @@ function placePhotoUrl(name: string) {
   return `https://places.googleapis.com/v1/${name}/media?key=${PLACES_KEY}&maxWidthPx=600`;
 }
 
-const TITLES: Record<string, { he: string; emoji: string; color: string }> = {
-  hotels:      { he: 'מלונות',          emoji: '🏨', color: Colors.GOLD },
-  attractions: { he: 'אטרקציות',      emoji: '🎡', color: Colors.SECONDARY },
-  restaurants: { he: 'מסעדות',         emoji: '🍽️', color: Colors.WARM },
-  shopping:    { he: 'קניות',           emoji: '🛍️', color: Colors.WARM },
-  nightlife:   { he: 'בילויים',         emoji: '🍻', color: Colors.PINK },
-  transport:   { he: 'תחבורה',          emoji: '🚕', color: Colors.PRIMARY },
-  kids:        { he: 'ילדים ומשפחות', emoji: '👨‍👩‍👧', color: Colors.ACCENT },
-  casino:      { he: 'בידור ומשחקים', emoji: '🎰', color: Colors.GOLD },
-  abudhabi:    { he: 'אבו דאבי',        emoji: '🏛', color: Colors.PINK },
+const TITLES: Record<string, { he: string; en: string; emoji: string; color: string }> = {
+  hotels:      { he: 'מלונות',          en: 'Hotels',        emoji: '🏨', color: Colors.GOLD },
+  attractions: { he: 'אטרקציות',      en: 'Attractions',   emoji: '🎡', color: Colors.SECONDARY },
+  restaurants: { he: 'מסעדות',         en: 'Restaurants',   emoji: '🍽️', color: Colors.WARM },
+  shopping:    { he: 'קניות',           en: 'Shopping',      emoji: '🛍️', color: Colors.WARM },
+  nightlife:   { he: 'בילויים',         en: 'Nightlife',     emoji: '🍻', color: Colors.PINK },
+  transport:   { he: 'תחבורה',          en: 'Transport',     emoji: '🚕', color: Colors.PRIMARY },
+  kids:        { he: 'ילדים ומשפחות', en: 'Kids & Families', emoji: '👨‍👩‍👧', color: Colors.ACCENT },
+  casino:      { he: 'בידור ומשחקים', en: 'Games & Fun',   emoji: '🎰', color: Colors.GOLD },
+  abudhabi:    { he: 'אבו דאבי',        en: 'Abu Dhabi',     emoji: '🏛', color: Colors.PINK },
 };
 
-const FILTERS: Record<string, { label: string; key: string }[]> = {
-  hotels:      [{label:'הכל',key:'all'},{label:'יוקרה',key:'7star'},{label:'תקציב גבוה',key:'5star'},{label:'תקציב בינוני',key:'4-5star'},{label:'סביר',key:'3-4star'},{label:'תקציב צנוע',key:'budget'}],
-  attractions: [{label:'הכל',key:'all'},{label:'חובה',key:'landmark'},{label:'מוזיאון',key:'museum'},{label:'אומנות',key:'art'},{label:'אקסטרים',key:'extreme'},{label:'חוף',key:'beach'},{label:'פארק מים',key:'waterpark'},{label:'פארק שעשועים',key:'theme-park'},{label:'סיור',key:'tour'},{label:'גן חיות',key:'zoo'},{label:'ספארי',key:'desert'},{label:'יהדות',key:'judaism'},{label:'ספורט',key:'sport'},{label:'אקווריום',key:'aquarium'},{label:'מופע',key:'show'},{label:'הרפתקה',key:'adventure'}],
-  restaurants: [{label:'הכל',key:'all'},{label:'⭐ מישלין',key:'michelin'},{label:'יוקרה',key:'ultra-luxury'},{label:'ישראלי',key:'israeli'},{label:'בתי קפה',key:'cafe'},{label:'אסיאתי',key:'asian'},{label:'הודי',key:'indian'},{label:'איטלקי',key:'italian'},{label:'טורקי',key:'turkish'},{label:'מקומי',key:'local'},{label:'רחוב',key:'street'},{label:'דגים',key:'seafood'},{label:'סטייקייה',key:'steakhouse'},{label:'טבעוני',key:'vegan'}],
-  shopping:    [{label:'הכל',key:'all'},{label:'קניון',key:'mall'},{label:'שוק',key:'souk'},{label:'אלכוהול וסיגרים',key:'alcohol'}],
-  nightlife:   [{label:'הכל',key:'all'},{label:'בר',key:'bar'},{label:'מועדון',key:'club'},{label:'אלכוהול',key:'alcohol'}],
-  transport:   [{label:'הכל',key:'all'},{label:'מטרו',key:'metro'},{label:'מונית',key:'taxi'},{label:'אפליקציות',key:'app'},{label:'השכרת רכב',key:'car-rental'},{label:'אוטובוס',key:'bus'},{label:'אברה',key:'boat'}],
-  kids:        [{label:'הכל',key:'all'}],
-  casino:      [{label:'הכל',key:'all'},{label:'קזינו',key:'casino'},{label:'מרוצים',key:'racing'},{label:'ספורט',key:'sport'},{label:'הופעות',key:'music-show'}],
-  abudhabi:    [{label:'הכל',key:'all'}],
+const FILTERS: Record<string, { label: string; en: string; key: string }[]> = {
+  hotels:      [{label:'הכל',en:'All',key:'all'},{label:'יוקרה',en:'Luxury',key:'7star'},{label:'תקציב גבוה',en:'High-end',key:'5star'},{label:'תקציב בינוני',en:'Mid-range',key:'4-5star'},{label:'סביר',en:'Affordable',key:'3-4star'},{label:'תקציב צנוע',en:'Budget',key:'budget'}],
+  attractions: [{label:'הכל',en:'All',key:'all'},{label:'חובה',en:'Must-See',key:'landmark'},{label:'מוזיאון',en:'Museum',key:'museum'},{label:'אומנות',en:'Art',key:'art'},{label:'אקסטרים',en:'Extreme',key:'extreme'},{label:'חוף',en:'Beach',key:'beach'},{label:'פארק מים',en:'Water Park',key:'waterpark'},{label:'פארק שעשועים',en:'Theme Park',key:'theme-park'},{label:'סיור',en:'Tour',key:'tour'},{label:'גן חיות',en:'Zoo',key:'zoo'},{label:'ספארי',en:'Safari',key:'desert'},{label:'יהדות',en:'Jewish',key:'judaism'},{label:'ספורט',en:'Sport',key:'sport'},{label:'אקווריום',en:'Aquarium',key:'aquarium'},{label:'מופע',en:'Show',key:'show'},{label:'הרפתקה',en:'Adventure',key:'adventure'}],
+  restaurants: [{label:'הכל',en:'All',key:'all'},{label:'⭐ מישלין',en:'⭐ Michelin',key:'michelin'},{label:'יוקרה',en:'Luxury',key:'ultra-luxury'},{label:'ישראלי',en:'Israeli',key:'israeli'},{label:'בתי קפה',en:'Cafés',key:'cafe'},{label:'אסיאתי',en:'Asian',key:'asian'},{label:'הודי',en:'Indian',key:'indian'},{label:'איטלקי',en:'Italian',key:'italian'},{label:'טורקי',en:'Turkish',key:'turkish'},{label:'מקומי',en:'Local',key:'local'},{label:'רחוב',en:'Street Food',key:'street'},{label:'דגים',en:'Seafood',key:'seafood'},{label:'סטייקייה',en:'Steakhouse',key:'steakhouse'},{label:'טבעוני',en:'Vegan',key:'vegan'}],
+  shopping:    [{label:'הכל',en:'All',key:'all'},{label:'קניון',en:'Mall',key:'mall'},{label:'שוק',en:'Souk',key:'souk'},{label:'אלכוהול וסיגרים',en:'Alcohol & Cigars',key:'alcohol'}],
+  nightlife:   [{label:'הכל',en:'All',key:'all'},{label:'בר',en:'Bar',key:'bar'},{label:'מועדון',en:'Club',key:'club'},{label:'אלכוהול',en:'Alcohol',key:'alcohol'}],
+  transport:   [{label:'הכל',en:'All',key:'all'},{label:'מטרו',en:'Metro',key:'metro'},{label:'מונית',en:'Taxi',key:'taxi'},{label:'אפליקציות',en:'Apps',key:'app'},{label:'השכרת רכב',en:'Car Rental',key:'car-rental'},{label:'אוטובוס',en:'Bus',key:'bus'},{label:'אברה',en:'Abra',key:'boat'}],
+  kids:        [{label:'הכל',en:'All',key:'all'}],
+  casino:      [{label:'הכל',en:'All',key:'all'},{label:'קזינו',en:'Casino',key:'casino'},{label:'מרוצים',en:'Racing',key:'racing'},{label:'ספורט',en:'Sport',key:'sport'},{label:'הופעות',en:'Shows',key:'music-show'}],
+  abudhabi:    [{label:'הכל',en:'All',key:'all'}],
 };
 
-const SUBCAT_LABELS: Record<string, { label: string; color: string }> = {
-  landmark:    { label: 'חובה',          color: '#E76F51' },
-  museum:      { label: 'מוזיאון',       color: '#2A9D8F' },
-  art:         { label: 'אומנות',         color: '#B85C8E' },
-  adventure:   { label: 'הרפתקה',         color: '#F4A261' },
-  extreme:     { label: 'אקסטרים',        color: '#E63946' },
-  beach:       { label: 'חוף',            color: '#5B9DC7' },
-  waterpark:   { label: 'פארק מים',       color: '#5B9DC7' },
-  'theme-park':{ label: 'פארק שעשועים',   color: '#F4A261' },
-  tour:        { label: 'סיור',           color: '#B8923A' },
-  zoo:         { label: 'גן חיות',        color: '#7FA77F' },
-  aquarium:    { label: 'אקווריום',       color: '#5B9DC7' },
-  snow:        { label: 'סקי',            color: '#1A6B8A' },
-  desert:      { label: 'ספארי',          color: '#B8923A' },
-  show:        { label: 'מופע',           color: '#B85C8E' },
-  sport:       { label: 'ספורט',          color: '#2A9D8F' },
-  judaism:     { label: 'יהדות',          color: '#1A4A5E' },
-  'kids-zone': { label: 'ילדים',          color: '#E76F51' },
-  'kids-city': { label: 'עיר הילדים',      color: '#E76F51' },
-  'vr-park':   { label: 'פארק מציאות מדומה', color: '#B85C8E' },
-  trampoline:  { label: 'מתחם טרמפולינה',  color: '#F4A261' },
-  arcade:      { label: 'לונה פארק',       color: '#E63946' },
-  toddlers:    { label: 'פארק משחקים לפעוטות', color: '#5B9DC7' },
-  '7star':     { label: '7★',             color: '#B8923A' },
-  '5star':     { label: '5★',             color: '#B8923A' },
-  '4-5star':   { label: '4-5★',           color: '#B8923A' },
-  '3-4star':   { label: '3-4★',           color: '#7FA77F' },
-  budget:      { label: 'תקציבי',         color: '#7FA77F' },
-  mall:        { label: 'קניון',          color: '#F4A261' },
-  souk:        { label: 'שוק',            color: '#B8923A' },
-  alcohol:     { label: 'אלכוהול',        color: '#E63946' },
-  metro:       { label: 'מטרו',           color: '#E63946' },
-  taxi:        { label: 'מונית',          color: '#B8923A' },
-  bus:         { label: 'אוטובוס',        color: '#F4A261' },
-  app:         { label: 'אפליקציה',       color: '#1A6B8A' },
-  boat:        { label: 'סירה',           color: '#5B9DC7' },
-  'car-rental':{ label: 'השכרת רכב',      color: '#7FA77F' },
-  bar:         { label: 'בר',             color: '#B85C8E' },
-  club:        { label: 'מועדון',          color: '#B85C8E' },
-  entertainment:{ label: 'בידור',         color: '#E76F51' },
-  casino:      { label: 'קזינו',          color: '#B8923A' },
-  racing:      { label: 'מרוצים',         color: '#E63946' },
-  'music-show':{ label: 'מופע',           color: '#B85C8E' },
-  ultraluxury: { label: 'יוקרה',          color: '#B8923A' },
-  'ultra-luxury': { label: 'יוקרה',       color: '#B8923A' },
-  israeli:     { label: 'ישראלי',         color: '#1A6B8A' },
-  cafe:        { label: 'בית קפה',        color: '#B8923A' },
-  asian:       { label: 'אסיאתי',         color: '#E76F51' },
-  indian:      { label: 'הודי',           color: '#F4A261' },
-  italian:     { label: 'איטלקי',         color: '#2A9D8F' },
-  turkish:     { label: 'טורקי',          color: '#E76F51' },
-  local:       { label: 'מקומי',          color: '#B8923A' },
-  street:      { label: 'רחוב',           color: '#F4A261' },
-  seafood:     { label: 'דגים',           color: '#5B9DC7' },
-  steakhouse:  { label: 'סטייקייה',       color: '#E63946' },
-  vegan:       { label: 'טבעוני',         color: '#7FA77F' },
+const SUBCAT_LABELS: Record<string, { label: string; en: string; color: string }> = {
+  landmark:    { label: 'חובה',          en: 'Must-See',      color: '#E76F51' },
+  museum:      { label: 'מוזיאון',       en: 'Museum',        color: '#2A9D8F' },
+  art:         { label: 'אומנות',         en: 'Art',           color: '#B85C8E' },
+  adventure:   { label: 'הרפתקה',         en: 'Adventure',     color: '#F4A261' },
+  extreme:     { label: 'אקסטרים',        en: 'Extreme',       color: '#E63946' },
+  beach:       { label: 'חוף',            en: 'Beach',         color: '#5B9DC7' },
+  waterpark:   { label: 'פארק מים',       en: 'Water Park',    color: '#5B9DC7' },
+  'theme-park':{ label: 'פארק שעשועים',   en: 'Theme Park',    color: '#F4A261' },
+  tour:        { label: 'סיור',           en: 'Tour',          color: '#B8923A' },
+  zoo:         { label: 'גן חיות',        en: 'Zoo',           color: '#7FA77F' },
+  aquarium:    { label: 'אקווריום',       en: 'Aquarium',      color: '#5B9DC7' },
+  snow:        { label: 'סקי',            en: 'Ski',           color: '#1A6B8A' },
+  desert:      { label: 'ספארי',          en: 'Safari',        color: '#B8923A' },
+  show:        { label: 'מופע',           en: 'Show',          color: '#B85C8E' },
+  sport:       { label: 'ספורט',          en: 'Sport',         color: '#2A9D8F' },
+  judaism:     { label: 'יהדות',          en: 'Jewish',        color: '#1A4A5E' },
+  'kids-zone': { label: 'ילדים',          en: 'Kids',          color: '#E76F51' },
+  'kids-city': { label: 'עיר הילדים',      en: 'Kids City',     color: '#E76F51' },
+  'vr-park':   { label: 'פארק מציאות מדומה', en: 'VR Park',    color: '#B85C8E' },
+  trampoline:  { label: 'מתחם טרמפולינה',  en: 'Trampoline',   color: '#F4A261' },
+  arcade:      { label: 'לונה פארק',       en: 'Arcade',       color: '#E63946' },
+  toddlers:    { label: 'פארק משחקים לפעוטות', en: 'Toddlers',  color: '#5B9DC7' },
+  '7star':     { label: '7★',             en: '7★',            color: '#B8923A' },
+  '5star':     { label: '5★',             en: '5★',            color: '#B8923A' },
+  '4-5star':   { label: '4-5★',           en: '4-5★',          color: '#B8923A' },
+  '3-4star':   { label: '3-4★',           en: '3-4★',          color: '#7FA77F' },
+  budget:      { label: 'תקציבי',         en: 'Budget',        color: '#7FA77F' },
+  mall:        { label: 'קניון',          en: 'Mall',          color: '#F4A261' },
+  souk:        { label: 'שוק',            en: 'Souk',          color: '#B8923A' },
+  alcohol:     { label: 'אלכוהול',        en: 'Alcohol',       color: '#E63946' },
+  metro:       { label: 'מטרו',           en: 'Metro',         color: '#E63946' },
+  taxi:        { label: 'מונית',          en: 'Taxi',          color: '#B8923A' },
+  bus:         { label: 'אוטובוס',        en: 'Bus',           color: '#F4A261' },
+  app:         { label: 'אפליקציה',       en: 'App',           color: '#1A6B8A' },
+  boat:        { label: 'סירה',           en: 'Boat',          color: '#5B9DC7' },
+  'car-rental':{ label: 'השכרת רכב',      en: 'Car Rental',    color: '#7FA77F' },
+  bar:         { label: 'בר',             en: 'Bar',           color: '#B85C8E' },
+  club:        { label: 'מועדון',          en: 'Club',          color: '#B85C8E' },
+  entertainment:{ label: 'בידור',         en: 'Entertainment', color: '#E76F51' },
+  casino:      { label: 'קזינו',          en: 'Casino',        color: '#B8923A' },
+  racing:      { label: 'מרוצים',         en: 'Racing',        color: '#E63946' },
+  'music-show':{ label: 'מופע',           en: 'Show',          color: '#B85C8E' },
+  ultraluxury: { label: 'יוקרה',          en: 'Luxury',        color: '#B8923A' },
+  'ultra-luxury': { label: 'יוקרה',       en: 'Luxury',        color: '#B8923A' },
+  israeli:     { label: 'ישראלי',         en: 'Israeli',       color: '#1A6B8A' },
+  cafe:        { label: 'בית קפה',        en: 'Café',          color: '#B8923A' },
+  asian:       { label: 'אסיאתי',         en: 'Asian',         color: '#E76F51' },
+  indian:      { label: 'הודי',           en: 'Indian',        color: '#F4A261' },
+  italian:     { label: 'איטלקי',         en: 'Italian',       color: '#2A9D8F' },
+  turkish:     { label: 'טורקי',          en: 'Turkish',       color: '#E76F51' },
+  local:       { label: 'מקומי',          en: 'Local',         color: '#B8923A' },
+  street:      { label: 'רחוב',           en: 'Street Food',   color: '#F4A261' },
+  seafood:     { label: 'דגים',           en: 'Seafood',       color: '#5B9DC7' },
+  steakhouse:  { label: 'סטייקייה',       en: 'Steakhouse',    color: '#E63946' },
+  vegan:       { label: 'טבעוני',         en: 'Vegan',         color: '#7FA77F' },
 };
 
 function imgUrl(item: any, cat?: string) {
@@ -131,11 +132,13 @@ function imgUrl(item: any, cat?: string) {
 }
 
 export default function CategoryScreen() {
+  const { t, lang } = useI18n();
+  const L = (o: any): string => !o ? '' : (lang === 'en' ? (o.en ?? o.he ?? o.label ?? '') : (o.he ?? o.label ?? ''));
   const { id, id: itemIdParam } = useLocalSearchParams<{ id: string }>();
   const cat = id || '';
-  const meta = TITLES[cat] || { he: 'קטגוריה', emoji: '📂', color: Colors.PRIMARY };
+  const meta = TITLES[cat] || { he: 'קטגוריה', en: 'Category', emoji: '📂', color: Colors.PRIMARY };
   const items: any[] = (CATALOG as any)[cat] || [];
-  const filters = FILTERS[cat] || [{ label: 'הכל', key: 'all' }];
+  const filters = FILTERS[cat] || [{ label: 'הכל', en: 'All', key: 'all' }];
   const firstFilter = filters.find(f => f.key !== 'all')?.key || 'all';
   const [active, setActive] = useState(firstFilter);
 
@@ -171,7 +174,7 @@ export default function CategoryScreen() {
     try {
       const { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
-        Alert.alert('הרשאת מיקום', 'יש לאשר הרשאת מיקום בהגדרות.');
+        Alert.alert(t('loc.permTitle'), t('loc.permMsg'));
         return;
       }
       const pos = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.High });
@@ -186,14 +189,14 @@ export default function CategoryScreen() {
         setNearestStation(nearest);
       }
     } catch {
-      Alert.alert('שגיאה', 'לא הצלחנו לאתר את המיקום.');
+      Alert.alert(t('loc.errTitle'), t('loc.errMsg'));
     }
   };
   const metroMapHtml = useMemo(() => {
-    const userJs = userCoords ? `const u={lat:${userCoords.lat},lng:${userCoords.lng}};new google.maps.Marker({position:u,map,title:'אני כאן',icon:{path:google.maps.SymbolPath.CIRCLE,scale:11,fillColor:'#1A6B8A',fillOpacity:1,strokeColor:'#fff',strokeWeight:3}});bounds.extend(u);` : '';
+    const userJs = userCoords ? `const u={lat:${userCoords.lat},lng:${userCoords.lng}};new google.maps.Marker({position:u,map,title:'${t('map.youAreHere')}',icon:{path:google.maps.SymbolPath.CIRCLE,scale:11,fillColor:'#1A6B8A',fillOpacity:1,strokeColor:'#fff',strokeWeight:3}});bounds.extend(u);` : '';
     const nearestJs = nearestStation ? `new google.maps.Marker({position:{lat:${nearestStation.lat},lng:${nearestStation.lng}},map,icon:{path:google.maps.SymbolPath.CIRCLE,scale:16,fillColor:'transparent',fillOpacity:0,strokeColor:'#1A6B8A',strokeWeight:3}});` : '';
     const fitJs = (userCoords || nearestStation) ? `if(bounds.isEmpty()===false)map.fitBounds(bounds,60);` : '';
-    return `<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><style>html,body,#m{margin:0;padding:0;height:100%;width:100%;}</style></head><body><div id="m"></div><script>function init(){const map=new google.maps.Map(document.getElementById('m'),{center:{lat:25.18,lng:55.25},zoom:11,mapTypeControl:false,streetViewControl:false,fullscreenControl:false});const bounds=new google.maps.LatLngBounds();const stations=${JSON.stringify(METRO.stations)};const redPath=[];const greenPath=[];stations.forEach(s=>{const pos={lat:s.lat,lng:s.lng};const isRed=s.lines.includes('red');const isGreen=s.lines.includes('green');const isInter=s.lines.length>1;const color=isInter?'#B8923A':(isRed?'#E63946':'#2A9D8F');const m=new google.maps.Marker({position:pos,map,title:s.nameHe,icon:{path:google.maps.SymbolPath.CIRCLE,scale:isInter?9:6,fillColor:color,fillOpacity:1,strokeColor:'#fff',strokeWeight:2}});if(isRed)redPath.push(pos);if(isGreen)greenPath.push(pos);const iw=new google.maps.InfoWindow({content:'<div style="direction:rtl;font-family:-apple-system,sans-serif;"><b>'+s.nameHe+'</b><br><span style="color:#6B7F8D;font-size:11px;">'+s.nameEn+' · '+s.area+'</span></div>'});m.addListener('click',()=>iw.open({anchor:m,map}));});if(redPath.length>1)new google.maps.Polyline({path:redPath,geodesic:true,strokeColor:'#E63946',strokeOpacity:0.85,strokeWeight:3.5,map});if(greenPath.length>1)new google.maps.Polyline({path:greenPath,geodesic:true,strokeColor:'#2A9D8F',strokeOpacity:0.85,strokeWeight:3.5,map});${userJs}${nearestJs}${fitJs}}</script><script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDw09Bg7XaH7apEWJBcFtogVfrdUwF_gEM&language=he&callback=init" async defer></script></body></html>`;
+    return `<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><style>html,body,#m{margin:0;padding:0;height:100%;width:100%;}</style></head><body><div id="m"></div><script>function init(){const map=new google.maps.Map(document.getElementById('m'),{center:{lat:25.18,lng:55.25},zoom:11,mapTypeControl:false,streetViewControl:false,fullscreenControl:false});const bounds=new google.maps.LatLngBounds();const stations=${JSON.stringify(METRO.stations)};const redPath=[];const greenPath=[];stations.forEach(s=>{const pos={lat:s.lat,lng:s.lng};const isRed=s.lines.includes('red');const isGreen=s.lines.includes('green');const isInter=s.lines.length>1;const color=isInter?'#B8923A':(isRed?'#E63946':'#2A9D8F');const m=new google.maps.Marker({position:pos,map,title:s.nameHe,icon:{path:google.maps.SymbolPath.CIRCLE,scale:isInter?9:6,fillColor:color,fillOpacity:1,strokeColor:'#fff',strokeWeight:2}});if(isRed)redPath.push(pos);if(isGreen)greenPath.push(pos);const iw=new google.maps.InfoWindow({content:'<div style="direction:rtl;font-family:-apple-system,sans-serif;"><b>'+s.nameHe+'</b><br><span style="color:#6B7F8D;font-size:11px;">'+s.nameEn+' · '+s.area+'</span></div>'});m.addListener('click',()=>iw.open({anchor:m,map}));});if(redPath.length>1)new google.maps.Polyline({path:redPath,geodesic:true,strokeColor:'#E63946',strokeOpacity:0.85,strokeWeight:3.5,map});if(greenPath.length>1)new google.maps.Polyline({path:greenPath,geodesic:true,strokeColor:'#2A9D8F',strokeOpacity:0.85,strokeWeight:3.5,map});${userJs}${nearestJs}${fitJs}}</script><script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDw09Bg7XaH7apEWJBcFtogVfrdUwF_gEM&language=${lang}&callback=init" async defer></script></body></html>`;
   }, [userCoords, nearestStation]);
 
   const mapHtml = useMemo(() => {
@@ -204,16 +207,16 @@ export default function CategoryScreen() {
       color: meta.color,
     }));
     const areas = [
-      { num:1, name:'דאון טאון & ביזנס ביי', color:'#E76F51', poly:[[25.2080,55.2620],[25.2070,55.2790],[25.1850,55.2880],[25.1700,55.2820],[25.1690,55.2680],[25.1830,55.2570],[25.2000,55.2570]] },
-      { num:2, name:'מרינה & JBR', color:'#2A9D8F', poly:[[25.0980,55.1300],[25.0950,55.1480],[25.0820,55.1560],[25.0680,55.1500],[25.0660,55.1380],[25.0780,55.1280],[25.0900,55.1260]] },
-      { num:3, name:'פאלם ג׳ומיירה', color:'#B8923A', poly:[[25.1430,55.1350],[25.1430,55.1640],[25.1340,55.1720],[25.1170,55.1720],[25.1020,55.1640],[25.0980,55.1500],[25.1020,55.1360],[25.1170,55.1280],[25.1340,55.1280]] },
-      { num:4, name:'אל ברשה', color:'#7FA77F', poly:[[25.1180,55.1880],[25.1190,55.2080],[25.1100,55.2200],[25.0980,55.2200],[25.0890,55.2120],[25.0900,55.1960],[25.1020,55.1880]] },
-      { num:5, name:'ג׳ומיירה ביץ׳', color:'#A86F8E', poly:[[25.2280,55.2280],[25.2230,55.2400],[25.2050,55.2510],[25.1830,55.2370],[25.1610,55.2200],[25.1400,55.2010],[25.1300,55.1900],[25.1380,55.1830],[25.1620,55.2010],[25.1860,55.2200],[25.2080,55.2330]] },
-      { num:6, name:'אל וואסל', color:'#5B9DC7', poly:[[25.2030,55.2360],[25.2030,55.2510],[25.1940,55.2560],[25.1850,55.2520],[25.1850,55.2400],[25.1940,55.2340]] },
-      { num:7, name:'טרייד סנטר', color:'#C9A961', poly:[[25.2300,55.2620],[25.2290,55.2800],[25.2200,55.2820],[25.2110,55.2800],[25.2100,55.2640],[25.2200,55.2600]] },
-      { num:8, name:'אל ג׳דאף', color:'#6B8E5A', poly:[[25.2280,55.3110],[25.2270,55.3300],[25.2170,55.3340],[25.2050,55.3300],[25.2050,55.3140],[25.2160,55.3080]] },
-      { num:9, name:'בור דובאי', color:'#F4A261', poly:[[25.2620,55.2880],[25.2620,55.3080],[25.2530,55.3160],[25.2410,55.3140],[25.2360,55.3050],[25.2390,55.2920],[25.2490,55.2860]] },
-      { num:10, name:'דיירה', color:'#B85C8E', poly:[[25.2820,55.3160],[25.2820,55.3360],[25.2710,55.3420],[25.2620,55.3380],[25.2590,55.3260],[25.2660,55.3170],[25.2760,55.3140]] },
+      { num:1, name: lang === 'en' ? 'Downtown & Business Bay' : 'דאון טאון & ביזנס ביי', color:'#E76F51', poly:[[25.2080,55.2620],[25.2070,55.2790],[25.1850,55.2880],[25.1700,55.2820],[25.1690,55.2680],[25.1830,55.2570],[25.2000,55.2570]] },
+      { num:2, name: lang === 'en' ? 'Marina & JBR' : 'מרינה & JBR', color:'#2A9D8F', poly:[[25.0980,55.1300],[25.0950,55.1480],[25.0820,55.1560],[25.0680,55.1500],[25.0660,55.1380],[25.0780,55.1280],[25.0900,55.1260]] },
+      { num:3, name: lang === 'en' ? 'Palm Jumeirah' : 'פאלם ג׳ומיירה', color:'#B8923A', poly:[[25.1430,55.1350],[25.1430,55.1640],[25.1340,55.1720],[25.1170,55.1720],[25.1020,55.1640],[25.0980,55.1500],[25.1020,55.1360],[25.1170,55.1280],[25.1340,55.1280]] },
+      { num:4, name: lang === 'en' ? 'Al Barsha' : 'אל ברשה', color:'#7FA77F', poly:[[25.1180,55.1880],[25.1190,55.2080],[25.1100,55.2200],[25.0980,55.2200],[25.0890,55.2120],[25.0900,55.1960],[25.1020,55.1880]] },
+      { num:5, name: lang === 'en' ? 'Jumeirah Beach' : 'ג׳ומיירה ביץ׳', color:'#A86F8E', poly:[[25.2280,55.2280],[25.2230,55.2400],[25.2050,55.2510],[25.1830,55.2370],[25.1610,55.2200],[25.1400,55.2010],[25.1300,55.1900],[25.1380,55.1830],[25.1620,55.2010],[25.1860,55.2200],[25.2080,55.2330]] },
+      { num:6, name: lang === 'en' ? 'Al Wasl' : 'אל וואסל', color:'#5B9DC7', poly:[[25.2030,55.2360],[25.2030,55.2510],[25.1940,55.2560],[25.1850,55.2520],[25.1850,55.2400],[25.1940,55.2340]] },
+      { num:7, name: lang === 'en' ? 'Trade Centre' : 'טרייד סנטר', color:'#C9A961', poly:[[25.2300,55.2620],[25.2290,55.2800],[25.2200,55.2820],[25.2110,55.2800],[25.2100,55.2640],[25.2200,55.2600]] },
+      { num:8, name: lang === 'en' ? 'Al Jaddaf' : 'אל ג׳דאף', color:'#6B8E5A', poly:[[25.2280,55.3110],[25.2270,55.3300],[25.2170,55.3340],[25.2050,55.3300],[25.2050,55.3140],[25.2160,55.3080]] },
+      { num:9, name: lang === 'en' ? 'Bur Dubai' : 'בור דובאי', color:'#F4A261', poly:[[25.2620,55.2880],[25.2620,55.3080],[25.2530,55.3160],[25.2410,55.3140],[25.2360,55.3050],[25.2390,55.2920],[25.2490,55.2860]] },
+      { num:10, name: lang === 'en' ? 'Deira' : 'דיירה', color:'#B85C8E', poly:[[25.2820,55.3160],[25.2820,55.3360],[25.2710,55.3420],[25.2620,55.3380],[25.2590,55.3260],[25.2660,55.3170],[25.2760,55.3140]] },
     ];
     return `<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><style>html,body,#map{margin:0;padding:0;height:100%;width:100%;}.gm-style-iw{direction:rtl;font-family:-apple-system,sans-serif;}.popup-img{width:100%;height:120px;object-fit:cover;border-radius:6px;margin-bottom:6px;}.popup-name{font-weight:800;color:#2C5F6E;font-size:14px;}.popup-en{color:#6B7F8D;font-size:11px;margin-top:2px;}.popup-addr{font-size:11px;color:#6B7F8D;margin-top:4px;}.popup-meta{margin-top:5px;display:flex;gap:8px;font-size:12px;font-weight:700;}.popup-rating{color:#92400e;}.popup-price{color:#E76F51;}.popup-actions{display:flex;gap:6px;margin-top:8px;}.popup-btn{flex:1;padding:6px 8px;border-radius:5px;text-align:center;font-size:11px;font-weight:700;text-decoration:none;color:#fff;}</style></head><body><div id="map"></div><script>
       const pts = ${JSON.stringify(pts)};
@@ -242,23 +245,23 @@ export default function CategoryScreen() {
           const rating = p.rating ? '<span class="popup-rating">⭐ '+p.rating+'</span>' : '';
           const price = p.price ? '<span class="popup-price">'+p.price+'</span>' : '';
           const meta = (rating || price) ? '<div class="popup-meta">'+rating+price+'</div>' : '';
-          const navBtn = '<a class="popup-btn" style="background:#E76F51;" href="https://www.google.com/maps/dir/?api=1&destination='+p.lat+','+p.lng+'" target="_blank">🧭 נווט</a>';
-          const whereBtn = '<a class="popup-btn" style="background:#C4922F;" href="https://www.google.com/maps?q='+p.lat+','+p.lng+'" target="_blank">📍 איפה</a>';
-          const phoneBtn = p.phone ? '<a class="popup-btn" style="background:#2A9D8F;" href="tel:'+p.phone+'">📞 חייג</a>' : '';
+          const navBtn = '<a class="popup-btn" style="background:#E76F51;" href="https://www.google.com/maps/dir/?api=1&destination='+p.lat+','+p.lng+'" target="_blank">🧭 ${lang === 'en' ? 'Navigate' : 'נווט'}</a>';
+          const whereBtn = '<a class="popup-btn" style="background:#C4922F;" href="https://www.google.com/maps?q='+p.lat+','+p.lng+'" target="_blank">📍 ${lang === 'en' ? 'Where' : 'איפה'}</a>';
+          const phoneBtn = p.phone ? '<a class="popup-btn" style="background:#2A9D8F;" href="tel:'+p.phone+'">📞 ${lang === 'en' ? 'Call' : 'חייג'}</a>' : '';
           const html = '<div style="min-width:200px;max-width:240px;direction:rtl;">'+img+'<div class="popup-name">'+p.name+'</div>'+en+addr+meta+'<div class="popup-actions">'+navBtn+whereBtn+phoneBtn+'</div></div>';
           const iw = new google.maps.InfoWindow({ content: html });
           m.addListener('click', () => iw.open({ anchor: m, map }));
         });
         if (pts.length > 1) map.fitBounds(bounds, 30);
       }
-    </script><script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDw09Bg7XaH7apEWJBcFtogVfrdUwF_gEM&language=he&callback=initMap" async defer></script></body></html>`;
+    </script><script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDw09Bg7XaH7apEWJBcFtogVfrdUwF_gEM&language=${lang}&callback=initMap" async defer></script></body></html>`;
   }, [itemsWithCoords, meta.color, focusItem, areasOn]);
 
   return (
     <View style={s.container}>
       <SafeAreaView edges={['top']} style={{ backgroundColor: meta.color }} />
       <View style={[s.header, { backgroundColor: meta.color }]}>
-        <Text style={[s.title, { flex: 1 }]}>{meta.he}</Text>
+        <Text style={[s.title, { flex: 1 }]}>{L(meta)}</Text>
         <View style={s.countBadge}><Text style={[s.countTxt, { color: meta.color }]}>{list.length}</Text></View>
         <TouchableOpacity onPress={() => router.back()} style={s.headerClose}>
           <Text style={{ color: '#fff', fontSize: 16, fontWeight: '700' }}>✕</Text>
@@ -271,7 +274,7 @@ export default function CategoryScreen() {
           <ScrollView ref={filterScrollRef} horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 16, alignItems: 'center' }} onContentSizeChange={(w) => { if (!I18nManager.isRTL) filterScrollRef.current?.scrollToEnd({ animated: false }); }}>
             {cat !== 'abudhabi' && !I18nManager.isRTL && (
               <TouchableOpacity onPress={() => router.push('/category/abudhabi' as any)} style={s.filterTab}>
-                <Text style={[s.filterText, { color: '#B85C8E', fontWeight: '700' }]} numberOfLines={1}>🏛 אבו דאבי</Text>
+                <Text style={[s.filterText, { color: '#B85C8E', fontWeight: '700' }]} numberOfLines={1}>{'🏛 ' + t('cat.abudhabi')}</Text>
               </TouchableOpacity>
             )}
             {(() => {
@@ -283,13 +286,13 @@ export default function CategoryScreen() {
               const isActive = active === f.key;
               return (
                 <TouchableOpacity key={f.key} onPress={() => setActive(f.key)} style={[s.filterTab, isActive && { borderBottomColor: Colors.GOLD, backgroundColor: '#F5E6CB' }]}>
-                  <Text style={[s.filterText, isActive && s.filterActive]} numberOfLines={1}>{f.label}</Text>
+                  <Text style={[s.filterText, isActive && s.filterActive]} numberOfLines={1}>{L(f)}</Text>
                 </TouchableOpacity>
               );
             })}
             {cat !== 'abudhabi' && I18nManager.isRTL && (
               <TouchableOpacity onPress={() => router.push('/category/abudhabi' as any)} style={s.filterTab}>
-                <Text style={[s.filterText, { color: '#B85C8E', fontWeight: '700' }]} numberOfLines={1}>🏛 אבו דאבי</Text>
+                <Text style={[s.filterText, { color: '#B85C8E', fontWeight: '700' }]} numberOfLines={1}>{'🏛 ' + t('cat.abudhabi')}</Text>
               </TouchableOpacity>
             )}
           </ScrollView>
@@ -307,15 +310,15 @@ export default function CategoryScreen() {
                 scrollEnabled={false}
               />
               <TouchableOpacity style={s.expandBtn} onPress={() => setMapBig(true)}>
-                <Text style={s.expandBtnTxt}>⛶ הגדל מפה</Text>
+                <Text style={s.expandBtnTxt}>{t('map.enlarge')}</Text>
               </TouchableOpacity>
             </View>
             <Modal visible={mapBig} animationType="fade" transparent={false} onRequestClose={() => setMapBig(false)} statusBarTranslucent>
               <View style={{ flex: 1, backgroundColor: '#000' }}>
                 <View style={{ paddingTop: 50, height: 100, backgroundColor: '#000', flexDirection: 'row-reverse', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 14 }}>
-                  <Text style={{ color: '#fff', fontSize: 16, fontWeight: '800' }}>{meta.he}{active && active !== 'all' ? '-' + (filters.find(f => f.key === active)?.label || '') : ''}</Text>
+                  <Text style={{ color: '#fff', fontSize: 16, fontWeight: '800' }}>{L(meta)}{active && active !== 'all' ? '-' + L(filters.find(f => f.key === active)) : ''}</Text>
                   <TouchableOpacity onPress={() => setMapBig(false)} style={s.mapModalCloseInline} hitSlop={{ top: 16, bottom: 16, left: 16, right: 16 }}>
-                    <Text style={{ color: '#fff', fontSize: 14, fontWeight: '800' }}>סגור ✕</Text>
+                    <Text style={{ color: '#fff', fontSize: 14, fontWeight: '800' }}>{t('act.close')}</Text>
                   </TouchableOpacity>
                 </View>
                 <WebView originWhitelist={['*']} source={{ html: (cat === 'transport' && (active === 'all' || active === 'metro')) ? metroMapHtml : mapHtml }} style={{ flex: 1 }} />
@@ -324,35 +327,35 @@ export default function CategoryScreen() {
             {cat === 'transport' && (active === 'all' || active === 'metro') ? (
               <View style={{ flexDirection: 'row-reverse', gap: 8, marginVertical: 8 }}>
                 <TouchableOpacity onPress={() => askLocation(false)} style={{ flex: 1, paddingVertical: 12, backgroundColor: '#1A6B8A', alignItems: 'center', justifyContent: 'center' }}>
-                  <Text style={{ color: '#fff', fontWeight: '800', fontSize: 13, textAlign: 'center' }}>איפה אני?</Text>
+                  <Text style={{ color: '#fff', fontWeight: '800', fontSize: 13, textAlign: 'center' }}>{t('map.whereAmI')}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => askLocation(true)} style={{ flex: 1, paddingVertical: 12, backgroundColor: '#E76F51', alignItems: 'center', justifyContent: 'center' }}>
-                  <Text style={{ color: '#fff', fontWeight: '800', fontSize: 13, textAlign: 'center' }}>התחנה הקרובה</Text>
+                  <Text style={{ color: '#fff', fontWeight: '800', fontSize: 13, textAlign: 'center' }}>{t('map.nearest')}</Text>
                 </TouchableOpacity>
               </View>
             ) : (
               <View style={s.mapToolsRow}>
                 <TouchableOpacity style={s.jumpBtn} onPress={() => setJumpOpen(true)}>
-                  <Text style={s.jumpBtnTxt} numberOfLines={1}>📍 קפוץ למיקום על המפה...</Text>
+                  <Text style={s.jumpBtnTxt} numberOfLines={1}>{t('map.jumpTo')}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={[s.areasBtn, areasOn && s.areasBtnOn]} onPress={() => setAreasOn(o => !o)}>
-                  <Text style={[s.areasBtnTxt, areasOn && s.areasBtnTxtOn]}>{areasOn ? '✓ אזורים' : 'אזורים'}</Text>
+                  <Text style={[s.areasBtnTxt, areasOn && s.areasBtnTxtOn]}>{areasOn ? t('map.areasOn') : t('map.areas')}</Text>
                 </TouchableOpacity>
               </View>
             )}
             {cat === 'transport' && nearestStation ? (
               <View style={{ backgroundColor: '#E8F2F7', borderRightWidth: 4, borderRightColor: '#1A6B8A', padding: 12, marginBottom: 8 }}>
-                <Text style={{ color: Colors.TEXT, fontWeight: '900', fontSize: 14, writingDirection: 'rtl' }}>🚉 {nearestStation.nameHe}</Text>
-                <Text style={{ color: Colors.MUTED, fontSize: 12, marginTop: 3, writingDirection: 'rtl' }}>{nearestStation.nameEn} · {nearestStation.area} · {nearestStation._dist.toFixed(2)} ק"מ ממך</Text>
+                <Text style={{ color: Colors.TEXT, fontWeight: '900', fontSize: 14, writingDirection: lang === 'en' ? 'ltr' : 'rtl' }}>🚉 {lang === 'en' ? nearestStation.nameEn : nearestStation.nameHe}</Text>
+                <Text style={{ color: Colors.MUTED, fontSize: 12, marginTop: 3, writingDirection: lang === 'en' ? 'ltr' : 'rtl' }}>{lang === 'en' ? nearestStation.nameHe : nearestStation.nameEn} · {nearestStation.area} · {nearestStation._dist.toFixed(2)} {t('map.kmAway')}</Text>
                 <TouchableOpacity onPress={() => openMapsChoice(nearestStation.lat, nearestStation.lng, nearestStation.nameHe, 'navigate')} style={{ marginTop: 8 }}>
-                  <Text style={{ color: '#1A6B8A', fontSize: 12.5, fontWeight: '700' }}>נווט אליה ←</Text>
+                  <Text style={{ color: '#1A6B8A', fontSize: 12.5, fontWeight: '700' }}>{t('act.navigateTo')}</Text>
                 </TouchableOpacity>
               </View>
             ) : null}
             <Modal visible={jumpOpen} transparent animationType="fade" onRequestClose={() => setJumpOpen(false)}>
               <TouchableOpacity activeOpacity={1} style={s.jumpBackdrop} onPress={() => setJumpOpen(false)}>
                 <View style={s.jumpSheet}>
-                  <Text style={s.jumpHead}>בחר מיקום על המפה</Text>
+                  <Text style={s.jumpHead}>{t('map.pickLocation')}</Text>
                   <FlatList
                     data={itemsWithCoords}
                     keyExtractor={(it) => String(it.id)}
@@ -370,7 +373,7 @@ export default function CategoryScreen() {
         {cat === 'transport' && (active === 'all' || active === 'metro') ? (
           <View style={{ marginBottom: 10 }}>
             <View style={{ backgroundColor: '#FAF6EE', paddingHorizontal: 16, paddingVertical: 12 }}>
-              <Text style={{ color: Colors.MUTED, fontSize: 11, fontWeight: '700', letterSpacing: 0.8, marginBottom: 6, textTransform: 'uppercase', writingDirection: 'rtl', textAlign: 'right' }}>שעות פעילות מטרו</Text>
+              <Text style={{ color: Colors.MUTED, fontSize: 11, fontWeight: '700', letterSpacing: 0.8, marginBottom: 6, textTransform: 'uppercase', writingDirection: lang === 'en' ? 'ltr' : 'rtl', textAlign: lang === 'en' ? 'left' : 'right' }}>{t('metro.hours')}</Text>
               {METRO.hours.map((h: any, i: number) => (
                 <View key={i} style={{ flexDirection: 'row-reverse', justifyContent: 'space-between', paddingVertical: 3 }}>
                   <Text style={{ color: Colors.TEXT, fontSize: 13, fontWeight: '700', writingDirection: 'rtl' }}>{h.day}</Text>
@@ -381,24 +384,24 @@ export default function CategoryScreen() {
             <View style={{ flexDirection: 'row-reverse', gap: 8, marginTop: 8 }}>
               <View style={{ flexDirection: 'row-reverse', alignItems: 'center', gap: 6 }}>
                 <View style={{ width: 12, height: 12, borderRadius: 6, backgroundColor: '#E63946' }} />
-                <Text style={{ fontSize: 12, color: Colors.TEXT, fontWeight: '700' }}>הקו האדום</Text>
+                <Text style={{ fontSize: 12, color: Colors.TEXT, fontWeight: '700' }}>{t('metro.redLine')}</Text>
               </View>
               <View style={{ flexDirection: 'row-reverse', alignItems: 'center', gap: 6 }}>
                 <View style={{ width: 12, height: 12, borderRadius: 6, backgroundColor: '#2A9D8F' }} />
-                <Text style={{ fontSize: 12, color: Colors.TEXT, fontWeight: '700' }}>הקו הירוק</Text>
+                <Text style={{ fontSize: 12, color: Colors.TEXT, fontWeight: '700' }}>{t('metro.greenLine')}</Text>
               </View>
               <View style={{ flexDirection: 'row-reverse', alignItems: 'center', gap: 6 }}>
                 <View style={{ width: 12, height: 12, borderRadius: 6, backgroundColor: '#B8923A' }} />
-                <Text style={{ fontSize: 12, color: Colors.TEXT, fontWeight: '700' }}>החלפה</Text>
+                <Text style={{ fontSize: 12, color: Colors.TEXT, fontWeight: '700' }}>{t('metro.interchange')}</Text>
               </View>
             </View>
             <TouchableOpacity onPress={() => openMapsChoice(25.2048, 55.2708, 'Dubai Public Transit', 'navigate')} style={{ backgroundColor: Colors.PRIMARY, padding: 14, alignItems: 'center', justifyContent: 'center', marginTop: 8 }}>
-              <Text style={{ color: '#fff', fontWeight: '800', fontSize: 14, textAlign: 'center' }}>תכנן מסלול בתחבורה ציבורית</Text>
+              <Text style={{ color: '#fff', fontWeight: '800', fontSize: 14, textAlign: 'center' }}>{t('metro.plan')}</Text>
             </TouchableOpacity>
           </View>
         ) : null}
         {list.length === 0 ? (
-          <Text style={{ textAlign: 'center', color: Colors.MUTED, marginTop: 20 }}>אין פריטים בקטגוריה זו</Text>
+          <Text style={{ textAlign: 'center', color: Colors.MUTED, marginTop: 20 }}>{t('cat.empty')}</Text>
         ) : list.map(item => (
           <TouchableOpacity key={item.id} activeOpacity={0.85} style={s.card} onPress={() => router.push(`/item/${item.id}?cat=${cat}` as any)}>
             <View style={{ position: 'relative' }}>
@@ -411,7 +414,7 @@ export default function CategoryScreen() {
               )}
               {item.kosher ? (
                 <View style={s.kosherBadge}>
-                  <Text style={s.kosherText}>✡ מכבד כשרות</Text>
+                  <Text style={s.kosherText}>{t('act.kosher')}</Text>
                 </View>
               ) : null}
               {item.michelinStars > 0 ? (
@@ -422,13 +425,15 @@ export default function CategoryScreen() {
               ) : null}
               {item.subcategory && SUBCAT_LABELS[item.subcategory] ? (
                 <View style={[s.subcatBadge, { backgroundColor: SUBCAT_LABELS[item.subcategory].color }]}>
-                  <Text style={s.subcatBadgeTxt}>{SUBCAT_LABELS[item.subcategory].label}</Text>
+                  <Text style={s.subcatBadgeTxt}>{L(SUBCAT_LABELS[item.subcategory])}</Text>
                 </View>
               ) : null}
               {(() => {
                 const isHe = /[֐-׿]/.test(item.name || '');
                 const heName = item.nameHe || (isHe ? item.name : '');
-                return heName ? <Text style={s.imgNameTxt} numberOfLines={1}>{heName}</Text> : null;
+                const enName = item.nameEn || (!isHe ? item.name : '');
+                const dispName = lang === 'en' ? (enName || heName) : heName;
+                return dispName ? <Text style={[s.imgNameTxt, { writingDirection: lang === 'en' ? 'ltr' : 'rtl' }]} numberOfLines={1}>{dispName}</Text> : null;
               })()}
               <TouchableOpacity style={s.addBtn} onPress={(e) => onToggle(e, item.id)}>
                 <FontAwesome5 name="heart" solid={favIds.has(String(item.id))} size={20} color="#E76F51" style={{ textShadowColor: 'rgba(0,0,0,0.7)', textShadowOffset: { width: 0, height: 1 }, textShadowRadius: 4 }} />
@@ -439,34 +444,34 @@ export default function CategoryScreen() {
                 <Text style={s.cardTitle} numberOfLines={1}>{(cat === 'abudhabi' || cat === 'shopping' || cat === 'casino' || cat === 'nightlife') ? (item.nameEn || item.name) : item.name}</Text>
                 {item.rating ? <View style={s.ratingBadge}><Text style={s.ratingTxt}>⭐ {item.rating}</Text></View> : null}
               </View>
-              {item.description ? <Text style={s.cardDesc} numberOfLines={2}>{item.description}</Text> : null}
+              {item.description ? <Text style={[s.cardDesc, { writingDirection: lang === 'en' ? 'ltr' : 'rtl' }]} numberOfLines={2}>{lang === 'en' && item.descriptionEn ? item.descriptionEn : item.description}</Text> : null}
               <View style={s.cardFooter}>
-                {item.priceRange ? <Text style={s.priceTxt}>{item.priceRange}</Text> : null}
+                {item.priceRange ? <Text style={s.priceTxt}>{lang === 'en' && item.priceRangeEn ? item.priceRangeEn : item.priceRange}</Text> : null}
                 {item.address ? <Text style={s.addrTxt} numberOfLines={1}>📍 {item.address}</Text> : null}
               </View>
               {(item.lat || item.phone) ? (
                 <View style={s.actions}>
                   {item.lat ? (
                     <TouchableOpacity style={[s.actionBtn, { backgroundColor: Colors.PRIMARY }]} onPress={() => openMapsChoice(item.lat, item.lng, item.name, 'navigate')}>
-                      <Text style={s.actionTxt}>נווט</Text>
+                      <Text style={s.actionTxt}>{t('act.navigate')}</Text>
                     </TouchableOpacity>
                   ) : null}
                   {item.lat ? (
                     <TouchableOpacity style={[s.actionBtn, { backgroundColor: Colors.WARM }]} onPress={() => openMapsChoice(item.lat, item.lng, item.name, 'show')}>
-                      <Text style={s.actionTxt}>איפה זה?</Text>
+                      <Text style={s.actionTxt}>{t('act.where')}</Text>
                     </TouchableOpacity>
                   ) : null}
                   {cat === 'hotels' ? (
                     <TouchableOpacity style={[s.actionBtn, { backgroundColor: Colors.SECONDARY }]} onPress={() => router.push(`/item/${item.id}?cat=${cat}` as any)}>
-                      <Text style={s.actionTxt}>מידע</Text>
+                      <Text style={s.actionTxt}>{t('act.info')}</Text>
                     </TouchableOpacity>
                   ) : null}
                   {cat === 'attractions' && item.ticketType && item.ticketType !== 'skip' ? (() => {
                     const cfg: Record<string, { color: string; label: string; clickable: boolean }> = {
-                      online: { color: '#f97316', label: 'רכישת כרטיס', clickable: true },
-                      onsite: { color: '#64748b', label: 'תשלום בכניסה', clickable: false },
-                      free: { color: '#10b981', label: 'חינם', clickable: false },
-                      appointment: { color: '#3DA5C4', label: 'בתיאום מראש', clickable: false },
+                      online: { color: '#f97316', label: t('ticket.online'), clickable: true },
+                      onsite: { color: '#64748b', label: t('ticket.onsite'), clickable: false },
+                      free: { color: '#10b981', label: t('ticket.free'), clickable: false },
+                      appointment: { color: '#3DA5C4', label: t('ticket.appointment'), clickable: false },
                     };
                     const c = cfg[item.ticketType];
                     if (!c) return null;
@@ -481,19 +486,19 @@ export default function CategoryScreen() {
                     );
                   })() : (['kids','nightlife','casino','abudhabi'].includes(cat) || (cat === 'transport' && item.subcategory === 'bus' && /sightseeing|big bus|hop on|hop-on/i.test((item.nameEn || item.name || '')))) ? (
                     <TouchableOpacity style={[s.actionBtn, { backgroundColor: '#FF5C00' }]} onPress={() => Linking.openURL('https://klook.tpk.lv/8HSINbXI')}>
-                      <Text style={s.actionTxt}>רכוש כרטיסים</Text>
+                      <Text style={s.actionTxt}>{t('act.buyTickets')}</Text>
                     </TouchableOpacity>
                   ) : null}
                 </View>
               ) : null}
               {cat !== 'attractions' && (['kids','nightlife','casino','abudhabi'].includes(cat) || (cat === 'transport' && item.subcategory === 'bus' && /sightseeing|big bus|hop on|hop-on/i.test((item.nameEn || item.name || '')))) ? (
                 <TouchableOpacity onPress={() => Linking.openURL('https://tiqets.tpk.lv/53YEgT8s')} style={{ alignSelf: 'flex-end', marginTop: 4, marginBottom: 4, marginRight: 6 }}>
-                  <Text style={{ color: '#1A6B8A', fontSize: 11.5, fontWeight: '600', textDecorationLine: 'underline' }}>לא מצאת כרטיס? נסה כאן ←</Text>
+                  <Text style={{ color: '#1A6B8A', fontSize: 11.5, fontWeight: '600', textDecorationLine: 'underline' }}>{t('ticket.notFound')}</Text>
                 </TouchableOpacity>
               ) : null}
               {cat === 'attractions' && item.ticketUrlAlt ? (
                 <TouchableOpacity onPress={() => Linking.openURL(item.ticketUrlAlt)} style={{ alignSelf: 'flex-end', marginTop: 4, marginBottom: 4, marginRight: 6 }}>
-                  <Text style={{ color: '#1A6B8A', fontSize: 11.5, fontWeight: '600', textDecorationLine: 'underline' }}>לא מצאתם? ראו גם כאן ←</Text>
+                  <Text style={{ color: '#1A6B8A', fontSize: 11.5, fontWeight: '600', textDecorationLine: 'underline' }}>{t('ticket.seeAlso')}</Text>
                 </TouchableOpacity>
               ) : null}
             </View>
@@ -508,9 +513,9 @@ export default function CategoryScreen() {
       <Modal visible={!!iframeUrl} animationType="fade" transparent={false} onRequestClose={() => setIframeUrl(null)} statusBarTranslucent>
         <View style={{ flex: 1, backgroundColor: '#000' }}>
           <View style={{ paddingTop: 50, height: 100, backgroundColor: '#000', flexDirection: 'row-reverse', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 14 }}>
-            <Text style={{ color: '#fff', fontSize: 16, fontWeight: '800' }}>מפה</Text>
+            <Text style={{ color: '#fff', fontSize: 16, fontWeight: '800' }}>{t('map.title')}</Text>
             <TouchableOpacity onPress={() => setIframeUrl(null)} style={s.mapModalCloseInline} hitSlop={{ top: 16, bottom: 16, left: 16, right: 16 }}>
-              <Text style={{ color: '#fff', fontSize: 14, fontWeight: '800' }}>סגור ✕</Text>
+              <Text style={{ color: '#fff', fontSize: 14, fontWeight: '800' }}>{t('act.close')}</Text>
             </TouchableOpacity>
           </View>
           {iframeUrl ? <WebView originWhitelist={['*']} source={{ uri: iframeUrl }} style={{ flex: 1 }} /> : null}

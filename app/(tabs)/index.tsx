@@ -4,6 +4,7 @@ import { router } from 'expo-router';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { Colors } from '../../constants/colors';
+import { useI18n } from '../../constants/i18n';
 import { toggleFavorite, isFavorite } from '../../utils/favorites';
 
 function FavoriteHeart({ cat, id }: { cat: string; id: any }) {
@@ -75,12 +76,10 @@ const LEARN_TILES = [
   { id: 'emergency',  title: 'חירום', img: require('../../assets/emergency.jpg'), highlight: true },
 ];
 
-function AnimatedTitle({ fontSize }: { fontSize: number }) {
-  const PART1 = 'ברוכים הבאים ל';
-  const PART2 = 'דובאי';
+function AnimatedTitle({ fontSize, part1, part2, isRTL }: { fontSize: number; part1: string; part2: string; isRTL: boolean }) {
   const letters = [
-    ...PART1.split('').map(c => ({ c, finalColor: '#E76F51' })),
-    ...PART2.split('').map(c => ({ c, finalColor: '#B8923A' })),
+    ...part1.split('').map(c => ({ c, finalColor: '#E76F51' })),
+    ...part2.split('').map(c => ({ c, finalColor: '#B8923A' })),
   ];
   const opacities = useRef(letters.map(() => new Animated.Value(0))).current;
   const colorMix = useRef(new Animated.Value(0)).current;
@@ -92,7 +91,7 @@ function AnimatedTitle({ fontSize }: { fontSize: number }) {
     Animated.timing(colorMix, { toValue: 1, duration: 800, delay: 5000, useNativeDriver: false }).start();
   }, []);
   return (
-    <Text style={[styles.heroTitle, { fontSize }]}>
+    <Text style={[styles.heroTitle, { fontSize, writingDirection: isRTL ? 'rtl' : 'ltr' }]}>
       {letters.map((l, i) => {
         const color = colorMix.interpolate({ inputRange: [0, 1], outputRange: ['#FFFFFF', l.finalColor] });
         return (
@@ -103,13 +102,13 @@ function AnimatedTitle({ fontSize }: { fontSize: number }) {
   );
 }
 
-function AnimatedSubtitle({ fontSize }: { fontSize: number }) {
+function AnimatedSubtitle({ fontSize, text, isRTL }: { fontSize: number; text: string; isRTL: boolean }) {
   const opacity = useRef(new Animated.Value(0)).current;
   useEffect(() => {
     Animated.timing(opacity, { toValue: 1, duration: 800, delay: 5000, useNativeDriver: true }).start();
   }, []);
   return (
-    <Animated.Text style={[styles.heroSub, { fontSize, opacity }]}>המדריך המלא לתייר הישראלי</Animated.Text>
+    <Animated.Text style={[styles.heroSub, { fontSize, opacity, writingDirection: isRTL ? 'rtl' : 'ltr' }]}>{text}</Animated.Text>
   );
 }
 
@@ -155,6 +154,8 @@ function imgUrl(item: any, cat?: string) {
 }
 
 export default function Home() {
+  const { t, lang, toggle, isRTL } = useI18n();
+  const catT = (l: any) => { const v = t('cat.' + l.id); return v.startsWith('cat.') ? l.label : v; };
   const { width, height } = useWindowDimensions();
   const insets = useSafeAreaInsets();
   const heroHeight = height - insets.top - insets.bottom - 28;
@@ -181,11 +182,17 @@ export default function Home() {
         <SafeAreaView edges={[]} style={{ backgroundColor: Colors.PRIMARY }}>
           <ImageBackground source={{ uri: HERO_IMAGES[heroIdx] }} style={[s.hero, { height: heroHeight }]}>
             <View style={s.heroOverlay}>
+              {/* Language toggle */}
+              <TouchableOpacity onPress={toggle} style={s.langBtn} activeOpacity={0.8}>
+                <Text style={[s.langTxt, lang === 'he' && s.langOn]}>עב</Text>
+                <Text style={s.langSep}>|</Text>
+                <Text style={[s.langTxt, lang === 'en' && s.langOn]}>EN</Text>
+              </TouchableOpacity>
               {/* Center: title (no block) */}
               <View style={s.heroTop}>
-                <AnimatedTitle fontSize={f(26)} />
+                <AnimatedTitle key={'t-' + lang} fontSize={f(26)} part1={t('home.welcomeTo')} part2={t('home.dubai')} isRTL={isRTL} />
 
-                <AnimatedSubtitle fontSize={f(15)} />
+                <AnimatedSubtitle key={'s-' + lang} fontSize={f(15)} text={t('home.subtitle')} isRTL={isRTL} />
 
               </View>
               {/* Bottom: category links + near me */}
@@ -193,33 +200,33 @@ export default function Home() {
                 <View style={s.linkRowBig}>
                   {CAT_BIG.map(l => (
                     <TouchableOpacity key={l.id} onPress={() => router.push(`/category/${l.id}` as any)}>
-                      <Text style={[s.linkBig, { color: l.color, fontSize: f(21) }]}>{l.label}</Text>
+                      <Text style={[s.linkBig, { color: l.color, fontSize: f(21) }]}>{catT(l)}</Text>
                     </TouchableOpacity>
                   ))}
                 </View>
                 <View style={[s.linkRowMed, { gap: 9 }]}>
                   {CAT_MED.map(l => (
                     <TouchableOpacity key={l.id} onPress={() => router.push(`/category/${l.id}` as any)}>
-                      <Text style={[s.linkMed, { color: l.color, fontSize: f(19) }]}>{l.label}</Text>
+                      <Text style={[s.linkMed, { color: l.color, fontSize: f(19) }]}>{catT(l)}</Text>
                     </TouchableOpacity>
                   ))}
                 </View>
                 <View style={[s.linkRowMed, { gap: 11 }]}>
                   {CAT_SM.map(l => (
                     <TouchableOpacity key={l.id} onPress={() => router.push(`/category/${l.id}` as any)}>
-                      <Text style={[s.linkMed, { color: l.color, fontSize: f(18) }]}>{l.label}</Text>
+                      <Text style={[s.linkMed, { color: l.color, fontSize: f(18) }]}>{catT(l)}</Text>
                     </TouchableOpacity>
                   ))}
                   <TouchableOpacity onPress={() => router.push('/itineraries' as any)}>
-                    <Text style={[s.linkMed, { color: Colors.SECONDARY, fontSize: f(18) }]}>מסלולים מוכנים</Text>
+                    <Text style={[s.linkMed, { color: Colors.SECONDARY, fontSize: f(18) }]}>{t('home.itineraries')}</Text>
                   </TouchableOpacity>
                   <TouchableOpacity onPress={() => router.push('/category/transport' as any)}>
-                    <Text style={[s.linkMed, { color: '#fff', fontSize: f(18) }]}>תחבורה</Text>
+                    <Text style={[s.linkMed, { color: '#fff', fontSize: f(18) }]}>{t('home.transport')}</Text>
                   </TouchableOpacity>
                 </View>
                 <View style={s.nearMeRow}>
                   <TouchableOpacity onPress={() => router.push('/near' as any)}>
-                    <Text style={[s.nearMe, { fontSize: f(15) }]}>📍 הראה לי מה קרוב אליי עכשיו</Text>
+                    <Text style={[s.nearMe, { fontSize: f(15) }]}>{t('home.nearMe')}</Text>
                   </TouchableOpacity>
                 </View>
               </View>
@@ -231,14 +238,14 @@ export default function Home() {
         {(['hotels','attractions','restaurants'] as const).map(cat => {
           const items = topItems(cat, 6);
           if (!items.length) return null;
-          const titleMap: Record<string,string> = { hotels:'מלונות מובילים', attractions:'אטרקציות חובה', restaurants:'מסעדות' };
+          const titleMap: Record<string,string> = { hotels:t('home.topHotels'), attractions:t('home.mustAttractions'), restaurants:t('home.restaurants') };
           const colorMap: Record<string,string> = { hotels:'#B8923A', attractions:'#2A9D8F', restaurants:'#F4A261' };
           return (
             <View key={cat} style={{ marginTop: 18 }}>
               <View style={s.sectionHead}>
-                <Text style={[s.sectionTitle, { color: colorMap[cat] }]}>{titleMap[cat]}</Text>
+                <Text style={[s.sectionTitle, { color: colorMap[cat], writingDirection: isRTL ? 'rtl' : 'ltr' }]}>{titleMap[cat]}</Text>
                 <TouchableOpacity onPress={() => router.push(`/category/${cat}` as any)}>
-                  <Text style={s.seeAll}>הכל ←</Text>
+                  <Text style={s.seeAll}>{t('home.seeAll')}</Text>
                 </TouchableOpacity>
               </View>
               <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 14, gap: 10 }}>
@@ -246,7 +253,7 @@ export default function Home() {
                   <TouchableOpacity key={it.id} activeOpacity={0.85} onPress={() => router.push(`/item/${it.id}?cat=${cat}` as any)} style={[s.card, { width: cardW }]}>
                     <View style={{ position: 'relative' }}>
                       <Image source={{ uri: imgUrl(it, cat) }} style={s.cardImg} />
-                      {it.kosher ? <View style={s.kosherBadge}><Text style={s.kosherText}>✡ מכבד כשרות</Text></View> : null}
+                      {it.kosher ? <View style={s.kosherBadge}><Text style={s.kosherText}>{t('home.kosher')}</Text></View> : null}
                       {(() => {
                         const isHe = /[֐-׿]/.test(it.name || '');
                         const heName = it.nameHe || (isHe ? it.name : '');
@@ -272,23 +279,26 @@ export default function Home() {
 
         {/* Learn tiles */}
         <View style={s.sectionHead}>
-          <Text style={[s.sectionTitle, { color: Colors.SECONDARY, fontSize: 16 }]}>להכיר את דובאי</Text>
+          <Text style={[s.sectionTitle, { color: Colors.SECONDARY, fontSize: 16, writingDirection: isRTL ? 'rtl' : 'ltr' }]}>{t('home.learnDubai')}</Text>
         </View>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 14, gap: 8 }}>
-          {LEARN_TILES.map(t => (
-            <TouchableOpacity key={t.id} activeOpacity={0.85} onPress={() => t.isEvents ? router.push('/events' as any) : router.push(`/learn/${t.id}` as any)}>
-              <ImageBackground source={typeof t.img === 'string' ? { uri: t.img } : t.img} style={[s.learnTile, { width: tileW, height: tileW }]} imageStyle={{ borderRadius: 10 }}>
+          {LEARN_TILES.map(tile => {
+            const label = t('learn.' + tile.id);
+            return (
+            <TouchableOpacity key={tile.id} activeOpacity={0.85} onPress={() => tile.isEvents ? router.push('/events' as any) : router.push(`/learn/${tile.id}` as any)}>
+              <ImageBackground source={typeof tile.img === 'string' ? { uri: tile.img } : tile.img} style={[s.learnTile, { width: tileW, height: tileW }]} imageStyle={{ borderRadius: 10 }}>
                 <View style={s.learnOverlay}>
-                  <Text style={s.learnText} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.6}>{t.title}</Text>
+                  <Text style={[s.learnText, { writingDirection: isRTL ? 'rtl' : 'ltr' }]} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.6}>{label.startsWith('learn.') ? tile.title : label}</Text>
                 </View>
               </ImageBackground>
             </TouchableOpacity>
-          ))}
+            );
+          })}
         </ScrollView>
 
         {/* More categories — collapsible */}
         <TouchableOpacity onPress={() => setMoreOpen(o => !o)} style={s.moreToggle}>
-          <Text style={s.moreToggleText}>קטגוריות נוספות</Text>
+          <Text style={s.moreToggleText}>{t('home.moreCategories')}</Text>
           <Text style={s.moreToggleArrow}>{moreOpen ? '▲' : '▼'}</Text>
         </TouchableOpacity>
         {moreOpen && (
@@ -296,14 +306,14 @@ export default function Home() {
             {(['shopping','nightlife','kids'] as const).map(cat => {
               const items = topItems(cat, 6);
               if (!items.length) return null;
-              const titleMap: Record<string,string> = { shopping:'קניות', nightlife:'בילויים', kids:'ילדים ומשפחות' };
+              const titleMap: Record<string,string> = { shopping:t('cat.shopping'), nightlife:t('cat.nightlife'), kids:t('home.kidsFamilies') };
               const colorMap: Record<string,string> = { shopping:'#F4A261', nightlife:'#B85C8E', kids:'#E76F51' };
               return (
                 <View key={cat} style={{ marginTop: 14 }}>
                   <View style={s.sectionHead}>
-                    <Text style={[s.sectionTitle, { color: colorMap[cat], fontSize: 16 }]}>{titleMap[cat]}</Text>
+                    <Text style={[s.sectionTitle, { color: colorMap[cat], fontSize: 16, writingDirection: isRTL ? 'rtl' : 'ltr' }]}>{titleMap[cat]}</Text>
                     <TouchableOpacity onPress={() => router.push(`/category/${cat}` as any)}>
-                      <Text style={s.seeAll}>הכל ←</Text>
+                      <Text style={s.seeAll}>{t('home.seeAll')}</Text>
                     </TouchableOpacity>
                   </View>
                   <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 14, gap: 10 }}>
@@ -337,31 +347,35 @@ export default function Home() {
           <ImageBackground source={{ uri: 'https://wellcomedubai.com/images/wellcomedubai.stamp/skyscrapers-looking-up-sky-modern-metropolis-modern-city.jpg' }} style={{ flex: 1 }} imageStyle={{ borderRadius: 16 }}>
             <View style={s.reOverlay}>
               <Text style={s.reKicker}>DUBAI REAL ESTATE</Text>
-              <Text style={s.reTitle}>פורטל הנדל"ן והעסקים של דובאי</Text>
-              <Text style={s.reSub}>מאמרים · מודעות · מתווכים · השקעות</Text>
+              <Text style={[s.reTitle, { writingDirection: isRTL ? 'rtl' : 'ltr' }]}>{t('home.reTitle')}</Text>
+              <Text style={[s.reSub, { writingDirection: isRTL ? 'rtl' : 'ltr' }]}>{t('home.reSub')}</Text>
             </View>
           </ImageBackground>
         </TouchableOpacity>
 
         {/* Quick Tools — image header + colored stripe + label/desc */}
         <View style={s.qtRow}>
-          {QUICK_TOOLS.map(t => (
-            <TouchableOpacity key={t.id} activeOpacity={0.85} style={s.qtCard} onPress={() => router.push(`/tools/${t.id}` as any)}>
+          {QUICK_TOOLS.map(tool => {
+            const lbl = t('cat.' + tool.id);
+            const dsc = t('tool.' + tool.id + '.desc');
+            return (
+            <TouchableOpacity key={tool.id} activeOpacity={0.85} style={s.qtCard} onPress={() => router.push(`/tools/${tool.id}` as any)}>
               <View style={s.qtImgWrap}>
-                <Image source={{ uri: t.img }} style={s.qtImg} />
-                <View style={[s.qtIconBadge, { backgroundColor: t.color + 'cc' }]}><Text style={{ fontSize: 12 }}>{t.icon}</Text></View>
+                <Image source={{ uri: tool.img }} style={s.qtImg} />
+                <View style={[s.qtIconBadge, { backgroundColor: tool.color + 'cc' }]}><Text style={{ fontSize: 12 }}>{tool.icon}</Text></View>
               </View>
-              <View style={[s.qtBody, { borderTopColor: t.color, backgroundColor: (t as any).bg ?? '#fff' }]}>
-                <Text style={s.qtLabel}>{t.label}</Text>
-                <Text style={s.qtDesc}>{t.desc}</Text>
+              <View style={[s.qtBody, { borderTopColor: tool.color, backgroundColor: (tool as any).bg ?? '#fff' }]}>
+                <Text style={s.qtLabel}>{lbl.startsWith('cat.') ? tool.label : lbl}</Text>
+                <Text style={s.qtDesc}>{dsc.startsWith('tool.') ? tool.desc : dsc}</Text>
               </View>
             </TouchableOpacity>
-          ))}
+            );
+          })}
         </View>
 
         {/* Gallery preview — collapsed by default, at bottom */}
         <TouchableOpacity onPress={() => setGalleryOpen(o => !o)} style={s.galleryToggle}>
-          <Text style={s.galleryToggleText}>הגלרייה שלנו {galleryOpen ? '▲' : '▼'}</Text>
+          <Text style={s.galleryToggleText}>{t('home.gallery')} {galleryOpen ? '▲' : '▼'}</Text>
         </TouchableOpacity>
         {galleryOpen && (
           <>
@@ -373,7 +387,7 @@ export default function Home() {
               ))}
             </ScrollView>
             <TouchableOpacity onPress={() => router.push('/gallery' as any)} style={{ alignItems: 'center', paddingVertical: 8 }}>
-              <Text style={{ color: Colors.ACCENT, fontWeight: '700', fontSize: 12 }}>לתצוגה מלאה ←</Text>
+              <Text style={{ color: Colors.ACCENT, fontWeight: '700', fontSize: 12 }}>{t('home.fullView')}</Text>
             </TouchableOpacity>
           </>
         )}
@@ -393,6 +407,10 @@ const s = StyleSheet.create({
   brandTxt: { fontSize: 22, fontWeight: '900', letterSpacing: -0.3 },
   hero: { backgroundColor: Colors.PRIMARY },
   heroOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.15)', justifyContent: 'space-between', padding: 18 },
+  langBtn: { position: 'absolute', top: 12, alignSelf: 'center', zIndex: 10, flexDirection: 'row', alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.45)', borderRadius: 999, paddingHorizontal: 12, paddingVertical: 6, borderWidth: 1, borderColor: 'rgba(255,255,255,0.35)' },
+  langTxt: { color: 'rgba(255,255,255,0.65)', fontWeight: '800', fontSize: 13 },
+  langOn: { color: '#F4A261' },
+  langSep: { color: 'rgba(255,255,255,0.4)', marginHorizontal: 6, fontSize: 12 },
   heroTop: { alignItems: 'center', marginTop: 24 },
   appIcon: { width: 72, height: 72, borderRadius: 18, borderWidth: 2, borderColor: Colors.GOLD, shadowColor: '#000', shadowOpacity: 0.4, shadowRadius: 6, shadowOffset: { width: 0, height: 3 } },
   searchCorner: { position: 'absolute', top: 8, left: 8, zIndex: 5 },

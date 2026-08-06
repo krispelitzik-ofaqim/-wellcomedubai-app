@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'rea
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFocusEffect, router } from 'expo-router';
 import { Colors } from '../../constants/colors';
+import { useI18n } from '../../constants/i18n';
 import { CATALOG } from '../../data/catalog';
 import { getFavorites, type Favorite } from '../../utils/favorites';
 
@@ -24,6 +25,7 @@ const CAT_COLOR: Record<string, string> = {
 };
 
 export default function FavoritesScreen() {
+  const { t } = useI18n();
   const [items, setItems] = useState<{ fav: Favorite; data: any }[]>([]);
 
   const load = useCallback(async () => {
@@ -48,22 +50,22 @@ export default function FavoritesScreen() {
         </Text>
       </View>
       <View style={s.header}>
-        <Text style={s.title}>המועדפים שלי</Text>
-        <Text style={s.subtitle}>{items.length} פריטים</Text>
+        <Text style={s.title}>{t('fav.title')}</Text>
+        <Text style={s.subtitle}>{items.length} {t('fav.items')}</Text>
       </View>
       <ScrollView contentContainerStyle={{ padding: 12, paddingBottom: 60 }}>
         {items.length === 0 ? (
           <View style={s.empty}>
             <Text style={{ fontSize: 56 }}>🤍</Text>
-            <Text style={s.emptyTitle}>עדיין לא שמרת מועדפים</Text>
-            <Text style={s.emptySub}>לחץ על הלב בכל פריט כדי לשמור אותו כאן</Text>
+            <Text style={s.emptyTitle}>{t('fav.emptyTitle')}</Text>
+            <Text style={s.emptySub}>{t('fav.emptySub')}</Text>
           </View>
         ) : items.map(({ fav, data }) => (
           <TouchableOpacity key={fav.cat + fav.id} activeOpacity={0.85} style={s.card} onPress={() => router.push(`/item/${fav.id}?cat=${fav.cat}` as any)}>
             <Image source={{ uri: imgUrl(data.image) }} style={s.cardImg} />
             <View style={s.cardBody}>
               <View style={[s.catChip, { backgroundColor: CAT_COLOR[fav.cat] || Colors.PRIMARY }]}>
-                <Text style={s.catChipTxt}>{CAT_NAME[fav.cat] || fav.cat}</Text>
+                <Text style={s.catChipTxt}>{t('cat.' + fav.cat).startsWith('cat.') ? (CAT_NAME[fav.cat] || fav.cat) : t('cat.' + fav.cat)}</Text>
               </View>
               <Text style={s.cardName} numberOfLines={2}>{data.name}</Text>
               <View style={{ flexDirection: 'row-reverse', justifyContent: 'space-between', marginTop: 4 }}>

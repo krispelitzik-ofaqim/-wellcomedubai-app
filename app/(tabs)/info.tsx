@@ -2,6 +2,7 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-nati
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { Colors } from '../../constants/colors';
+import { useI18n } from '../../constants/i18n';
 
 const ITEMS = [
   { key: 'about',    title: 'אודותינו',         color: '#2A9D8F', icon: 'i' },
@@ -11,12 +12,13 @@ const ITEMS = [
 ];
 
 export default function InfoScreen() {
+  const { t, lang } = useI18n();
   return (
     <View style={s.container}>
       <SafeAreaView edges={['top']} style={{ backgroundColor: '#000' }} />
       <View style={s.header}>
         <View style={{ width: 32 }} />
-        <Text style={s.title}>מידע</Text>
+        <Text style={s.title}>{t('info.title')}</Text>
         <TouchableOpacity onPress={() => router.push('/(tabs)/' as any)} style={s.closeBtn}>
           <Text style={s.closeBtnTxt}>✕</Text>
         </TouchableOpacity>
@@ -27,11 +29,11 @@ export default function InfoScreen() {
             <View style={[s.icon, { backgroundColor: it.color }]}>
               <Text style={{ color: '#fff', fontSize: 18, fontWeight: '900' }}>{it.icon}</Text>
             </View>
-            <Text style={s.rowTitle}>{it.title}</Text>
+            <Text style={[s.rowTitle, { writingDirection: lang === 'en' ? 'ltr' : 'rtl', textAlign: lang === 'en' ? 'left' : 'right' }]}>{t('info.' + it.key)}</Text>
             <Text style={[s.chev, { color: it.color }]}>‹</Text>
           </TouchableOpacity>
         ))}
-        <Text style={s.footer}>© 2026 WellCome Dubai · גרסה 1.0</Text>
+        <Text style={s.footer}>© 2026 WellCome Dubai · {t('info.version')} 1.0</Text>
       </ScrollView>
     </View>
   );

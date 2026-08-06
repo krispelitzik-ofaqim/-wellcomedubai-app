@@ -3,24 +3,28 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Linking } from 'r
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { Colors } from '../constants/colors';
+import { useI18n } from '../constants/i18n';
 
 const EVENTS = [
-  { month: 1, day: '7-8.1',    name: 'Dubai Marathon',                 cat: 'sport',   desc: 'מרתון בינלאומי 42K — אחד המהירים בעולם.' },
-  { month: 1, day: '16-19.1',  name: 'Dubai Desert Classic',           cat: 'sport',   desc: 'טורניר גולף DP World Tour ב-Emirates GC.' },
-  { month: 1, day: '1-31.1',   name: 'Dubai Shopping Festival',        cat: 'culture', desc: 'ענק קניות, מבצעים, מופעים ולייזר ברחבי העיר.' },
-  { month: 2, day: '22-29.2',  name: 'Dubai Tennis Championships',     cat: 'sport',   desc: 'טורניר טניס בינלאומי — אורחים מובילים.' },
-  { month: 3, day: '28.3',     name: 'Dubai World Cup',                cat: 'sport',   desc: 'גביע מרוצי הסוסים הגדול בעולם — Meydan.' },
-  { month: 3, day: '5-9.3',    name: 'Art Dubai',                      cat: 'culture', desc: 'יריד אמנות בינלאומי — Madinat Jumeirah.' },
-  { month: 5, day: '27-31.5',  name: 'Eid al-Adha Festival',           cat: 'culture', desc: 'חג מוסלמי — אירועים ומבצעים בכל העיר.' },
-  { month: 7, day: '1.7-31.8', name: 'Dubai Summer Surprises',         cat: 'culture', desc: 'פסטיבל קניות קיץ — מבצעים עצומים.' },
-  { month: 11, day: '28-30.11',name: 'F1 Abu Dhabi GP',                cat: 'sport',   desc: 'גרנד פרי פורמולה 1 ב-Yas Marina (~1.5 שעה מדובאי).' },
-  { month: 12, day: '2.12',    name: 'UAE National Day',               cat: 'culture', desc: 'יום העצמאות — מצעדים, זיקוקים, חגיגות בכל העיר.' },
-  { month: 12, day: '31.12',   name: 'NYE Dubai Fireworks',            cat: 'culture', desc: 'מופע זיקוקים בערב ראש השנה — Burj Khalifa & Atlantis.' },
+  { month: 1, day: '7-8.1',    name: 'Dubai Marathon',                 cat: 'sport',   desc: 'מרתון בינלאומי 42K — אחד המהירים בעולם.', descEn: 'International 42K marathon — one of the fastest in the world.' },
+  { month: 1, day: '16-19.1',  name: 'Dubai Desert Classic',           cat: 'sport',   desc: 'טורניר גולף DP World Tour ב-Emirates GC.', descEn: 'DP World Tour golf tournament at Emirates GC.' },
+  { month: 1, day: '1-31.1',   name: 'Dubai Shopping Festival',        cat: 'culture', desc: 'ענק קניות, מבצעים, מופעים ולייזר ברחבי העיר.', descEn: 'Huge shopping, deals, shows and laser displays across the city.' },
+  { month: 2, day: '22-29.2',  name: 'Dubai Tennis Championships',     cat: 'sport',   desc: 'טורניר טניס בינלאומי — אורחים מובילים.', descEn: 'International tennis tournament — top players.' },
+  { month: 3, day: '28.3',     name: 'Dubai World Cup',                cat: 'sport',   desc: 'גביע מרוצי הסוסים הגדול בעולם — Meydan.', descEn: "The world's richest horse race — Meydan." },
+  { month: 3, day: '5-9.3',    name: 'Art Dubai',                      cat: 'culture', desc: 'יריד אמנות בינלאומי — Madinat Jumeirah.', descEn: 'International art fair — Madinat Jumeirah.' },
+  { month: 5, day: '27-31.5',  name: 'Eid al-Adha Festival',           cat: 'culture', desc: 'חג מוסלמי — אירועים ומבצעים בכל העיר.', descEn: 'Muslim holiday — events and deals across the city.' },
+  { month: 7, day: '1.7-31.8', name: 'Dubai Summer Surprises',         cat: 'culture', desc: 'פסטיבל קניות קיץ — מבצעים עצומים.', descEn: 'Summer shopping festival — massive deals.' },
+  { month: 11, day: '28-30.11',name: 'F1 Abu Dhabi GP',                cat: 'sport',   desc: 'גרנד פרי פורמולה 1 ב-Yas Marina (~1.5 שעה מדובאי).', descEn: 'Formula 1 Grand Prix at Yas Marina (~1.5h from Dubai).' },
+  { month: 12, day: '2.12',    name: 'UAE National Day',               cat: 'culture', desc: 'יום העצמאות — מצעדים, זיקוקים, חגיגות בכל העיר.', descEn: 'National Day — parades, fireworks, celebrations across the city.' },
+  { month: 12, day: '31.12',   name: 'NYE Dubai Fireworks',            cat: 'culture', desc: 'מופע זיקוקים בערב ראש השנה — Burj Khalifa & Atlantis.', descEn: "New Year's Eve fireworks — Burj Khalifa & Atlantis." },
 ];
 
 const HEB_MONTHS = ['','ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'];
+const EN_MONTHS = ['','January','February','March','April','May','June','July','August','September','October','November','December'];
 
 export default function EventsScreen() {
+  const { t, lang } = useI18n();
+  const MONTHS = lang === 'en' ? EN_MONTHS : HEB_MONTHS;
   const currentYear = new Date().getFullYear();
   const currentMonth = new Date().getMonth() + 1;
   const [activeYear, setActiveYear] = useState(currentYear);
@@ -47,7 +51,7 @@ export default function EventsScreen() {
         </TouchableOpacity>
       </View>
       <View style={s.header}>
-        <Text style={[s.title, { flex: 1 }]}>לוח אירועים</Text>
+        <Text style={[s.title, { flex: 1 }]}>{t('events.title')}</Text>
       </View>
 
       <ScrollView contentContainerStyle={{ padding: 18, paddingBottom: 60, backgroundColor: yearBg[activeYear] || '#FAF6EE' }}>
@@ -64,7 +68,7 @@ export default function EventsScreen() {
         </ScrollView>
 
         {/* Months */}
-        {HEB_MONTHS.slice(1).map((m, i) => {
+        {MONTHS.slice(1).map((m, i) => {
           const monthNum = i + 1;
           const events = futureYear ? [] : EVENTS.filter(e => e.month === monthNum);
           const isCurrent = (activeYear === currentYear) && (monthNum === currentMonth);
@@ -74,13 +78,13 @@ export default function EventsScreen() {
               <View style={{ flexDirection: 'row-reverse', alignItems: 'baseline', gap: 12, marginBottom: 12 }}>
                 <Text style={{ fontWeight: '300', fontSize: 28, color: isCurrent ? Colors.ACCENT : Colors.TEXT, letterSpacing: -1 }}>{m}</Text>
                 <Text style={{ color: '#9CA3AF', fontSize: 12, fontWeight: '500' }}>
-                  {events.length ? `${events.length} אירועים` : 'אין אירועים'}{isCurrent ? ' · החודש' : ''}
+                  {events.length ? `${events.length} ${t('events.count')}` : t('events.none')}{isCurrent ? t('events.thisMonth') : ''}
                 </Text>
               </View>
               {events.map((ev, idx) => {
                 const dayParts = String(ev.day).split('.');
                 const dayNum = dayParts[0] || ev.day;
-                const monShort = HEB_MONTHS[parseInt(dayParts[1]) || monthNum]?.slice(0, 3) || HEB_MONTHS[monthNum].slice(0, 3);
+                const monShort = MONTHS[parseInt(dayParts[1]) || monthNum]?.slice(0, 3) || MONTHS[monthNum].slice(0, 3);
                 return (
                   <View key={idx} style={s.eventRow}>
                     <View style={s.dayCol}>
@@ -89,9 +93,9 @@ export default function EventsScreen() {
                     </View>
                     <View style={{ flex: 1, minWidth: 0 }}>
                       <Text style={s.eventName}>{ev.name}</Text>
-                      <Text style={s.eventDesc}>{ev.desc}</Text>
+                      <Text style={[s.eventDesc, { writingDirection: lang === 'en' ? 'ltr' : 'rtl', textAlign: lang === 'en' ? 'left' : 'right' }]}>{lang === 'en' ? ev.descEn : ev.desc}</Text>
                       <TouchableOpacity onPress={() => Linking.openURL('https://klook.tpk.lv/8HSINbXI')}>
-                        <Text style={s.ticketLink}>רכישת כרטיסים ←</Text>
+                        <Text style={s.ticketLink}>{t('events.buyTickets')}</Text>
                       </TouchableOpacity>
                     </View>
                   </View>
@@ -103,7 +107,7 @@ export default function EventsScreen() {
         {futureYear ? (
           <View style={{ alignItems: 'center', padding: 40 }}>
             <Text style={{ fontSize: 48 }}>📆</Text>
-            <Text style={{ color: Colors.MUTED, marginTop: 10, textAlign: 'center' }}>נתוני {activeYear} יפורסמו קרוב לתאריך</Text>
+            <Text style={{ color: Colors.MUTED, marginTop: 10, textAlign: 'center' }}>{t('events.pendingPre')}{activeYear}{t('events.pendingPost')}</Text>
           </View>
         ) : null}
       </ScrollView>

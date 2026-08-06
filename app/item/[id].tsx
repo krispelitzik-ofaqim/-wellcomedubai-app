@@ -5,6 +5,7 @@ import { WebView } from 'react-native-webview';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useLocalSearchParams, router } from 'expo-router';
 import { Colors } from '../../constants/colors';
+import { useI18n } from '../../constants/i18n';
 import { CATALOG } from '../../data/catalog';
 import { isFavorite, toggleFavorite } from '../../utils/favorites';
 import { openMapsChoice } from '../../utils/maps';
@@ -83,6 +84,7 @@ const CAT_NAME: Record<string, string> = {
 };
 
 export default function ItemDetail() {
+  const { t, lang } = useI18n();
   const { id, cat } = useLocalSearchParams<{ id: string; cat: string }>();
   const list: any[] = (CATALOG as any)[cat || ''] || [];
   const item = list.find(i => String(i.id) === String(id));
@@ -93,7 +95,7 @@ export default function ItemDetail() {
   if (!item) {
     return (
       <SafeAreaView edges={['top']} style={s.container}>
-        <View style={s.header}><Text style={s.title}>הפריט לא נמצא</Text></View>
+        <View style={s.header}><Text style={s.title}>{t('item.notFound')}</Text></View>
       </SafeAreaView>
     );
   }
@@ -140,7 +142,7 @@ export default function ItemDetail() {
         </View>
         {item.kosher ? (
           <View style={s.kosherBadge}>
-            <Text style={s.kosherText}>✡ מכבד כשרות</Text>
+            <Text style={s.kosherText}>{t('act.kosher')}</Text>
           </View>
         ) : null}
 
@@ -171,9 +173,9 @@ export default function ItemDetail() {
               <Text style={s.phoneNum}>{item.phone}</Text>
             </TouchableOpacity>
           ) : null}
-          {item.priceRange ? <Text style={s.priceRange}>{item.priceRange}</Text> : null}
+          {item.priceRange ? <Text style={[s.priceRange, { writingDirection: lang === 'en' ? 'ltr' : 'rtl' }]}>{lang === 'en' && item.priceRangeEn ? item.priceRangeEn : item.priceRange}</Text> : null}
 
-          {item.description ? <Text style={s.desc}>{item.description}</Text> : null}
+          {item.description ? <Text style={[s.desc, { writingDirection: lang === 'en' ? 'ltr' : 'rtl', textAlign: lang === 'en' ? 'left' : 'right' }]}>{lang === 'en' && item.descriptionEn ? item.descriptionEn : item.description}</Text> : null}
 
           <View style={s.contactRow}>
             {item.phone ? (
@@ -185,22 +187,22 @@ export default function ItemDetail() {
             {item.website && (cat === 'hotels' || cat === 'restaurants') ? (
               <TouchableOpacity onPress={() => setIframeUrl(item.website)} style={s.contactItem}>
                 <FontAwesome5 name="globe" size={12} color={Colors.PRIMARY} />
-                <Text style={s.contactTxt}>{cat === 'hotels' ? 'לאתר המלון' : 'לאתר המסעדה'}</Text>
+                <Text style={s.contactTxt}>{cat === 'hotels' ? t('item.hotelSite') : t('item.restaurantSite')}</Text>
               </TouchableOpacity>
             ) : null}
           </View>
 
           {item.tags && item.tags.length ? (
             <View style={s.tagsRow}>
-              {item.tags.map((t: string, i: number) => (
-                <View key={i} style={s.tag}><Text style={s.tagTxt}>{t}</Text></View>
+              {((lang === 'en' && item.tagsEn ? item.tagsEn : item.tags) as string[]).map((tg: string, i: number) => (
+                <View key={i} style={s.tag}><Text style={s.tagTxt}>{tg}</Text></View>
               ))}
             </View>
           ) : null}
 
           {item.hours && item.hours.length ? (
             <TouchableOpacity onPress={() => setHoursOpen(o => !o)} style={s.hoursToggle}>
-              <Text style={s.hoursToggleTxt}>🕐 שעות פתיחה {hoursOpen ? '▲' : '▼'}</Text>
+              <Text style={s.hoursToggleTxt}>{t('item.openingHours')} {hoursOpen ? '▲' : '▼'}</Text>
             </TouchableOpacity>
           ) : null}
           {hoursOpen && item.hours ? (
@@ -215,10 +217,10 @@ export default function ItemDetail() {
             const data = (BUS_ROUTES as any)[String(id)];
             const allStops = data.routes.flatMap((r: any) => r.stops.map((s: any) => ({ ...s, color: r.color, routeName: r.nameHe })));
             const routesJs = data.routes.map((r: any) => `new google.maps.Polyline({path:${JSON.stringify(r.stops.map((s: any) => ({ lat: s.lat, lng: s.lng })))},geodesic:true,strokeColor:'${r.color}',strokeOpacity:0.85,strokeWeight:3.5,map});`).join('');
-            const html = `<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><style>html,body,#m{margin:0;padding:0;height:100%;width:100%;}</style></head><body><div id="m"></div><script>function init(){const map=new google.maps.Map(document.getElementById('m'),{center:{lat:25.18,lng:55.25},zoom:11,mapTypeControl:false,streetViewControl:false,fullscreenControl:false});const bounds=new google.maps.LatLngBounds();const stops=${JSON.stringify(allStops)};stops.forEach((s,i)=>{const pos={lat:s.lat,lng:s.lng};bounds.extend(pos);const m=new google.maps.Marker({position:pos,map,title:s.nameHe,icon:{path:google.maps.SymbolPath.CIRCLE,scale:7,fillColor:s.color,fillOpacity:1,strokeColor:'#fff',strokeWeight:2}});const iw=new google.maps.InfoWindow({content:'<div style="direction:rtl;font-family:-apple-system,sans-serif;"><b>'+s.nameHe+'</b><br><span style="color:#6B7F8D;font-size:11px;">'+s.routeName+'</span></div>'});m.addListener('click',()=>iw.open({anchor:m,map}));});${routesJs}map.fitBounds(bounds,30);}</script><script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDw09Bg7XaH7apEWJBcFtogVfrdUwF_gEM&language=he&callback=init" async defer></script></body></html>`;
+            const html = `<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><style>html,body,#m{margin:0;padding:0;height:100%;width:100%;}</style></head><body><div id="m"></div><script>function init(){const map=new google.maps.Map(document.getElementById('m'),{center:{lat:25.18,lng:55.25},zoom:11,mapTypeControl:false,streetViewControl:false,fullscreenControl:false});const bounds=new google.maps.LatLngBounds();const stops=${JSON.stringify(allStops)};stops.forEach((s,i)=>{const pos={lat:s.lat,lng:s.lng};bounds.extend(pos);const m=new google.maps.Marker({position:pos,map,title:s.nameHe,icon:{path:google.maps.SymbolPath.CIRCLE,scale:7,fillColor:s.color,fillOpacity:1,strokeColor:'#fff',strokeWeight:2}});const iw=new google.maps.InfoWindow({content:'<div style="direction:rtl;font-family:-apple-system,sans-serif;"><b>'+s.nameHe+'</b><br><span style="color:#6B7F8D;font-size:11px;">'+s.routeName+'</span></div>'});m.addListener('click',()=>iw.open({anchor:m,map}));});${routesJs}map.fitBounds(bounds,30);}</script><script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDw09Bg7XaH7apEWJBcFtogVfrdUwF_gEM&language=${lang}&callback=init" async defer></script></body></html>`;
             return (
               <View>
-                <Text style={{ color: '#1A4A5E', fontWeight: '900', fontSize: 16, marginTop: 12, marginBottom: 8, writingDirection: 'rtl', textAlign: 'right' }}>🚌 מסלולי האוטובוס</Text>
+                <Text style={{ color: '#1A4A5E', fontWeight: '900', fontSize: 16, marginTop: 12, marginBottom: 8, writingDirection: lang === 'en' ? 'ltr' : 'rtl', textAlign: lang === 'en' ? 'left' : 'right' }}>{t('item.busRoutes')}</Text>
                 <View style={{ height: 280, marginBottom: 12, backgroundColor: '#E5E7EB' }}>
                   <WebView originWhitelist={['*']} source={{ html }} style={{ flex: 1 }} scrollEnabled={false} />
                 </View>
@@ -228,7 +230,7 @@ export default function ItemDetail() {
                       <View style={{ width: 14, height: 14, borderRadius: 7, backgroundColor: r.color }} />
                       <Text style={{ color: '#1A4A5E', fontWeight: '800', fontSize: 14, flex: 1, writingDirection: 'rtl' }}>{r.nameHe}</Text>
                       <TouchableOpacity onPress={() => Linking.openURL(r.officialUrl)}>
-                        <Text style={{ color: r.color, fontSize: 11.5, fontWeight: '700' }}>מסלול רשמי ←</Text>
+                        <Text style={{ color: r.color, fontSize: 11.5, fontWeight: '700' }}>{t('item.officialRoute')}</Text>
                       </TouchableOpacity>
                     </View>
                     {r.stops.map((st: any, si: number) => (
@@ -250,7 +252,7 @@ export default function ItemDetail() {
             <View style={s.inlineMapWrap}>
               <WebView
                 originWhitelist={['*']}
-                source={{ html: `<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><style>html,body,#m{margin:0;padding:0;height:100%;width:100%;}</style></head><body><div id="m"></div><script>function init(){const m=new google.maps.Map(document.getElementById('m'),{center:{lat:${item.lat},lng:${item.lng}},zoom:16,mapTypeControl:false,streetViewControl:false,fullscreenControl:false});new google.maps.Marker({position:{lat:${item.lat},lng:${item.lng}},map:m,title:${JSON.stringify(item.name)},icon:{path:google.maps.SymbolPath.CIRCLE,scale:12,fillColor:'#E76F51',fillOpacity:1,strokeColor:'#fff',strokeWeight:3}});}</script><script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDw09Bg7XaH7apEWJBcFtogVfrdUwF_gEM&language=he&callback=init" async defer></script></body></html>` }}
+                source={{ html: `<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><style>html,body,#m{margin:0;padding:0;height:100%;width:100%;}</style></head><body><div id="m"></div><script>function init(){const m=new google.maps.Map(document.getElementById('m'),{center:{lat:${item.lat},lng:${item.lng}},zoom:16,mapTypeControl:false,streetViewControl:false,fullscreenControl:false});new google.maps.Marker({position:{lat:${item.lat},lng:${item.lng}},map:m,title:${JSON.stringify(item.name)},icon:{path:google.maps.SymbolPath.CIRCLE,scale:12,fillColor:'#E76F51',fillOpacity:1,strokeColor:'#fff',strokeWeight:3}});}</script><script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDw09Bg7XaH7apEWJBcFtogVfrdUwF_gEM&language=${lang}&callback=init" async defer></script></body></html>` }}
                 style={{ flex: 1 }}
                 scrollEnabled={false}
               />
@@ -260,25 +262,25 @@ export default function ItemDetail() {
           <View style={s.actions}>
             {item.lat ? (
               <TouchableOpacity style={[s.actionBtn, { backgroundColor: Colors.PRIMARY }]} onPress={() => openMapsChoice(item.lat, item.lng, item.name, 'navigate')}>
-                <Text style={s.actionTxt}>נווט אליי</Text>
+                <Text style={s.actionTxt}>{t('act.navigateMe')}</Text>
               </TouchableOpacity>
             ) : null}
             {item.lat ? (
               <TouchableOpacity style={[s.actionBtn, { backgroundColor: Colors.WARM }]} onPress={() => openMapsChoice(item.lat, item.lng, item.name, 'show')}>
-                <Text style={s.actionTxt}>איפה זה?</Text>
+                <Text style={s.actionTxt}>{t('act.where')}</Text>
               </TouchableOpacity>
             ) : null}
             {bookUrl ? (
               <TouchableOpacity style={[s.actionBtn, { backgroundColor: Colors.SECONDARY }]} onPress={() => setIframeUrl(bookUrl)}>
-                <Text style={s.actionTxt}>ראה מחיר וזמינות</Text>
+                <Text style={s.actionTxt}>{t('item.priceAvail')}</Text>
               </TouchableOpacity>
             ) : null}
             {cat === 'attractions' && item.ticketType && item.ticketType !== 'skip' ? (() => {
               const cfg: Record<string, { color: string; label: string; clickable: boolean }> = {
-                online: { color: '#f97316', label: 'רכישת כרטיס', clickable: true },
-                onsite: { color: '#64748b', label: 'תשלום בכניסה', clickable: false },
-                free: { color: '#10b981', label: 'חינם', clickable: false },
-                appointment: { color: '#3DA5C4', label: 'בתיאום מראש', clickable: false },
+                online: { color: '#f97316', label: t('ticket.online'), clickable: true },
+                onsite: { color: '#64748b', label: t('ticket.onsite'), clickable: false },
+                free: { color: '#10b981', label: t('ticket.free'), clickable: false },
+                appointment: { color: '#3DA5C4', label: t('ticket.appointment'), clickable: false },
               };
               const c = cfg[item.ticketType];
               if (!c) return null;
@@ -293,24 +295,24 @@ export default function ItemDetail() {
               );
             })() : ticketsUrl ? (
               <TouchableOpacity style={[s.actionBtn, { backgroundColor: '#FF5C00' }]} onPress={() => Linking.openURL('https://klook.tpk.lv/8HSINbXI')}>
-                <Text style={s.actionTxt}>רכוש כרטיסים</Text>
+                <Text style={s.actionTxt}>{t('act.buyTickets')}</Text>
               </TouchableOpacity>
             ) : null}
           </View>
           {cat !== 'attractions' && ticketsUrl ? (
             <TouchableOpacity onPress={() => Linking.openURL('https://tiqets.tpk.lv/53YEgT8s')} style={{ marginTop: 8, alignSelf: 'flex-end' }}>
-              <Text style={{ color: '#1A6B8A', fontSize: 12.5, fontWeight: '600', textDecorationLine: 'underline' }}>לא מצאת כרטיס? נסה כאן ←</Text>
+              <Text style={{ color: '#1A6B8A', fontSize: 12.5, fontWeight: '600', textDecorationLine: 'underline' }}>{t('ticket.notFound')}</Text>
             </TouchableOpacity>
           ) : null}
           {cat === 'attractions' && item.ticketUrlAlt ? (
             <TouchableOpacity onPress={() => Linking.openURL(item.ticketUrlAlt)} style={{ marginTop: 8, alignSelf: 'flex-end' }}>
-              <Text style={{ color: '#1A6B8A', fontSize: 12.5, fontWeight: '600', textDecorationLine: 'underline' }}>לא מצאתם? ראו גם כאן ←</Text>
+              <Text style={{ color: '#1A6B8A', fontSize: 12.5, fontWeight: '600', textDecorationLine: 'underline' }}>{t('ticket.seeAlso')}</Text>
             </TouchableOpacity>
           ) : null}
 
           {item.website && (cat === 'hotels' || cat === 'restaurants') ? (
             <TouchableOpacity style={s.websiteBtn} onPress={() => setIframeUrl(item.website)}>
-              <Text style={s.websiteTxt}>{cat === 'hotels' ? 'לאתר המלון' : 'לאתר המסעדה'}</Text>
+              <Text style={s.websiteTxt}>{cat === 'hotels' ? t('item.hotelSite') : t('item.restaurantSite')}</Text>
             </TouchableOpacity>
           ) : null}
         </View>
@@ -325,7 +327,7 @@ export default function ItemDetail() {
           <View style={{ paddingTop: 50, height: 100, backgroundColor: '#000', flexDirection: 'row-reverse', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 14 }}>
             <Text style={{ color: '#fff', fontSize: 16, fontWeight: '800' }}>{item.name}</Text>
             <TouchableOpacity onPress={() => setIframeUrl(null)} hitSlop={{ top: 16, bottom: 16, left: 16, right: 16 }} style={{ paddingHorizontal: 14, paddingVertical: 8, borderRadius: 18, backgroundColor: '#E76F51' }}>
-              <Text style={{ color: '#fff', fontSize: 14, fontWeight: '800' }}>סגור ✕</Text>
+              <Text style={{ color: '#fff', fontSize: 14, fontWeight: '800' }}>{t('act.close')}</Text>
             </TouchableOpacity>
           </View>
           {iframeUrl ? <WebView originWhitelist={['*']} source={{ uri: iframeUrl }} style={{ flex: 1 }} /> : null}

@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Linkin
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, router } from 'expo-router';
 import { Colors } from '../../constants/colors';
+import { useI18n } from '../../constants/i18n';
 
 export default function ToolScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -37,6 +38,8 @@ const CUR_NAMES: Record<CurCode, string> = { ILS: 'שקל', AED: 'דירהם', U
 const CUR_ORDER: CurCode[] = ['EUR', 'USD', 'AED', 'ILS'];
 
 function Currency() {
+  const { t } = useI18n();
+  const curName = (c: CurCode) => t('cur.' + c);
   const [rates, setRates] = useState<Record<CurCode, number> | null>(null);
   const [lastUpdate, setLastUpdate] = useState<string>('');
   const [loading, setLoading] = useState(false);
@@ -75,18 +78,18 @@ function Currency() {
   return (
     <View style={s.curWrap}>
       <View style={{ alignItems: 'center', marginTop: 4 }}>
-        <Text style={s.curTitle}>המרת מטבעות</Text>
-        <Text style={s.curSub}>שערים מתעדכנים בזמן אמת</Text>
-        <Text style={s.curUpdated}>{loading ? 'טוען...' : (lastUpdate ? `עודכן: ${lastUpdate}` : '')}</Text>
+        <Text style={s.curTitle}>{t('cur.title')}</Text>
+        <Text style={s.curSub}>{t('cur.sub')}</Text>
+        <Text style={s.curUpdated}>{loading ? t('cur.loading') : (lastUpdate ? `${t('cur.updated')}: ${lastUpdate}` : '')}</Text>
       </View>
 
       <TouchableOpacity onPress={load} style={s.curRefresh}>
         <Text style={{ color: '#fff', fontSize: 14 }}>🔄</Text>
-        <Text style={{ color: '#fff', fontWeight: '700', fontSize: 13 }}>רענן נתונים</Text>
+        <Text style={{ color: '#fff', fontWeight: '700', fontSize: 13 }}>{t('cur.refresh')}</Text>
       </TouchableOpacity>
 
       {!rates ? (
-        <Text style={{ color: '#fff', textAlign: 'center', opacity: 0.85, marginTop: 30 }}>⏳ טוען שערי מטבע...</Text>
+        <Text style={{ color: '#fff', textAlign: 'center', opacity: 0.85, marginTop: 30 }}>{t('cur.loadingRates')}</Text>
       ) : (
         <>
           <View style={s.curFromRow}>
@@ -95,7 +98,7 @@ function Currency() {
               return (
                 <TouchableOpacity key={c} onPress={() => setFrom(c)} style={[s.curFromBtn, active && s.curFromBtnOn]}>
                   <Text style={{ fontSize: 18 }}>{CUR_FLAGS[c]}</Text>
-                  <Text style={[s.curFromTxt, active && s.curFromTxtOn]}>{CUR_NAMES[c]}</Text>
+                  <Text style={[s.curFromTxt, active && s.curFromTxtOn]}>{curName(c)}</Text>
                 </TouchableOpacity>
               );
             })}
@@ -107,7 +110,7 @@ function Currency() {
               value={amount}
               onChangeText={setAmount}
               keyboardType="decimal-pad"
-              placeholder={`הקלד סכום ב${CUR_NAMES[from]}`}
+              placeholder={`${t('cur.enterAmount')}${curName(from)}`}
               placeholderTextColor="rgba(255,255,255,0.7)"
             />
             {!!amount && (
@@ -122,21 +125,21 @@ function Currency() {
               <View style={{ flexDirection: 'row-reverse', alignItems: 'baseline', justifyContent: 'center', gap: 8 }}>
                 <Text style={{ fontSize: 24 }}>{CUR_FLAGS[c]}</Text>
                 <Text style={s.curResultVal}>{convert(c)}</Text>
-                <Text style={s.curResultName}>{CUR_NAMES[c]}</Text>
+                <Text style={s.curResultName}>{curName(c)}</Text>
               </View>
-              <Text style={s.curResultRate}>1 {CUR_NAMES[from]} = {(rates[c] / rates[from]).toFixed(4)} {CUR_NAMES[c]}</Text>
+              <Text style={s.curResultRate}>1 {curName(from)} = {(rates[c] / rates[from]).toFixed(4)} {curName(c)}</Text>
             </View>
           ))}
 
-          <Text style={s.curSource}>מקור: open.er-api.com (שערים גלובליים, מתעדכנים יומית)</Text>
+          <Text style={s.curSource}>{t('cur.source')}</Text>
         </>
       )}
     </View>
   );
 }
 
-function wmoCondition(code: number): string {
-  const m: Record<number, string> = {
+function wmoCondition(code: number, lang: string = 'he'): string {
+  const he: Record<number, string> = {
     0: 'בהיר', 1: 'כמעט בהיר', 2: 'מעונן חלקית', 3: 'מעונן',
     45: 'ערפל', 48: 'ערפל מקפיא',
     51: 'טפטוף קל', 53: 'טפטוף', 55: 'טפטוף חזק',
@@ -145,7 +148,17 @@ function wmoCondition(code: number): string {
     80: 'ממטרים', 81: 'ממטרים', 82: 'ממטרים חזקים',
     95: 'סופת רעמים', 96: 'סופת ברד', 99: 'סופת ברד חזקה',
   };
-  return m[code] || 'לא ידוע';
+  const en: Record<number, string> = {
+    0: 'Clear', 1: 'Mostly clear', 2: 'Partly cloudy', 3: 'Cloudy',
+    45: 'Fog', 48: 'Freezing fog',
+    51: 'Light drizzle', 53: 'Drizzle', 55: 'Heavy drizzle',
+    61: 'Light rain', 63: 'Rain', 65: 'Heavy rain',
+    71: 'Light snow', 73: 'Snow', 75: 'Heavy snow',
+    80: 'Showers', 81: 'Showers', 82: 'Heavy showers',
+    95: 'Thunderstorm', 96: 'Hailstorm', 99: 'Heavy hailstorm',
+  };
+  const m = lang === 'en' ? en : he;
+  return m[code] || (lang === 'en' ? 'Unknown' : 'לא ידוע');
 }
 function wmoEmoji(code: number): string {
   if (code === 0 || code === 1) return '☀️';
@@ -160,8 +173,11 @@ function wmoEmoji(code: number): string {
 }
 
 function Weather() {
+  const { t, lang } = useI18n();
   const [w, setW] = useState<any>(null);
-  const dayNames = ['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
+  const dayNames = lang === 'en'
+    ? ['Sun','Mon','Tue','Wed','Thu','Fri','Sat']
+    : ['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
 
   useEffect(() => {
     fetch('https://api.open-meteo.com/v1/forecast?latitude=25.2048&longitude=55.2708&current=temperature_2m,relative_humidity_2m,apparent_temperature,wind_speed_10m,weather_code,uv_index&daily=temperature_2m_max,temperature_2m_min,weather_code&timezone=auto&forecast_days=7')
@@ -170,7 +186,7 @@ function Weather() {
       .catch(() => {});
   }, []);
 
-  if (!w) return <View style={s.center}><Text style={s.muted}>⏳ טוען מזג אוויר...</Text></View>;
+  if (!w) return <View style={s.center}><Text style={s.muted}>{t('wthr.loading')}</Text></View>;
 
   const c = w.current || {};
   const code = c.weather_code;
@@ -179,20 +195,20 @@ function Weather() {
   return (
     <View>
       <View style={s.wCurrent}>
-        <Text style={s.wNow}>דובאי עכשיו</Text>
+        <Text style={s.wNow}>{t('wthr.now')}</Text>
         <Text style={s.wIconBig}>{wmoEmoji(code)}</Text>
         <Text style={s.wTempBig}>{Math.round(c.temperature_2m)}°C</Text>
-        <Text style={s.wCondBig}>{wmoCondition(code)}</Text>
+        <Text style={s.wCondBig}>{wmoCondition(code, lang)}</Text>
         <View style={s.wStatsRow}>
-          <Text style={s.wStat}>🌡️ מרגיש {Math.round(c.apparent_temperature)}°</Text>
-          <Text style={s.wStat}>💧 לחות {Math.round(c.relative_humidity_2m)}%</Text>
-          <Text style={s.wStat}>🌬️ {Math.round(c.wind_speed_10m)} קמ"ש</Text>
+          <Text style={s.wStat}>🌡️ {t('wthr.feels')} {Math.round(c.apparent_temperature)}°</Text>
+          <Text style={s.wStat}>💧 {t('wthr.humidity')} {Math.round(c.relative_humidity_2m)}%</Text>
+          <Text style={s.wStat}>🌬️ {Math.round(c.wind_speed_10m)} {t('wthr.wind')}</Text>
           <Text style={s.wStat}>☀️ UV {Math.round((c.uv_index || 0) * 10) / 10}</Text>
         </View>
       </View>
 
       <View style={s.wForecastBox}>
-        <Text style={s.wForecastTitle}>תחזית שבועית</Text>
+        <Text style={s.wForecastTitle}>{t('wthr.forecast')}</Text>
         {days.map((d: string, i: number) => {
           const dn = new Date(d).getDay();
           const dt = new Date(d);
@@ -202,7 +218,7 @@ function Weather() {
               <Text style={s.wFcDayName}>{dayNames[dn]}</Text>
               <Text style={s.wFcDate}>{dateStr}</Text>
               <Text style={s.wFcIcon}>{wmoEmoji(w.daily.weather_code[i])}</Text>
-              <Text style={s.wFcCond} numberOfLines={1}>{wmoCondition(w.daily.weather_code[i])}</Text>
+              <Text style={s.wFcCond} numberOfLines={1}>{wmoCondition(w.daily.weather_code[i], lang)}</Text>
               <Text style={s.wFcMax}>{Math.round(w.daily.temperature_2m_max[i])}°</Text>
               <Text style={s.wFcMin}>{Math.round(w.daily.temperature_2m_min[i])}°</Text>
             </View>
@@ -246,26 +262,33 @@ function statusColor(status: string) {
   return '#2C5F6E';
 }
 
-function statusHe(status: string) {
+function statusHe(status: string, lang: string = 'he') {
   const x = (status || '').toLowerCase();
-  if (x.includes('landed')) return 'נחת';
-  if (x.includes('arrived')) return 'הגיע';
-  if (x.includes('departed')) return 'המריא';
-  if (x.includes('en route')) return 'בדרך';
-  if (x.includes('cancelled')) return 'בוטל';
-  if (x.includes('delayed')) return 'מאחר';
-  if (x.includes('scheduled')) return 'מתוכנן';
-  if (x.includes('expected')) return 'צפוי';
-  if (x.includes('boarding')) return 'עולים';
-  if (x.includes('gate')) return 'שער';
+  const en = lang === 'en';
+  if (x.includes('landed')) return en ? 'Landed' : 'נחת';
+  if (x.includes('arrived')) return en ? 'Arrived' : 'הגיע';
+  if (x.includes('departed')) return en ? 'Departed' : 'המריא';
+  if (x.includes('en route')) return en ? 'En route' : 'בדרך';
+  if (x.includes('cancelled')) return en ? 'Cancelled' : 'בוטל';
+  if (x.includes('delayed')) return en ? 'Delayed' : 'מאחר';
+  if (x.includes('scheduled')) return en ? 'Scheduled' : 'מתוכנן';
+  if (x.includes('expected')) return en ? 'Expected' : 'צפוי';
+  if (x.includes('boarding')) return en ? 'Boarding' : 'עולים';
+  if (x.includes('gate')) return en ? 'Gate' : 'שער';
   return status || '';
 }
 
+const AIRPORTS = { DXB: { icao: 'OMDB', code: 'DXB' }, AUH: { icao: 'OMAA', code: 'AUH' } } as const;
+
 function Flights() {
+  const { t, lang } = useI18n();
+  const locale = lang === 'en' ? 'en-US' : 'he-IL';
+  const [airport, setAirport] = useState<'DXB' | 'AUH'>('DXB');
   const [direction, setDirection] = useState<'Departure' | 'Arrival'>('Departure');
   const [flights, setFlights] = useState<Flight[] | null>(null);
   const [loading, setLoading] = useState(false);
   const [now, setNow] = useState(new Date());
+  const apCode = AIRPORTS[airport].code;
 
   useEffect(() => {
     const t = setInterval(() => setNow(new Date()), 30000);
@@ -279,7 +302,9 @@ function Flights() {
     const from = dt.toISOString().split('.')[0];
     const to = new Date(dt.getTime() + 12 * 60 * 60 * 1000).toISOString().split('.')[0];
 
-    fetch(`https://aerodatabox.p.rapidapi.com/flights/airports/icao/OMDB/${from}/${to}?direction=${direction}&withCancelled=false&withCodeshared=false&withLocation=false`,
+    const icao = AIRPORTS[airport].icao;
+    const code = AIRPORTS[airport].code;
+    fetch(`https://aerodatabox.p.rapidapi.com/flights/airports/icao/${icao}/${from}/${to}?direction=${direction}&withCancelled=false&withCodeshared=false&withLocation=false`,
       { headers: { 'x-rapidapi-key': RAPID_KEY, 'x-rapidapi-host': AERO_HOST } })
       .then(r => r.json())
       .then(data => {
@@ -295,10 +320,10 @@ function Flights() {
           return {
             flight: f.number || '',
             airline: f.airline?.name || '',
-            origin: isDep ? 'DXB' : (ap.name || ap.icao || ''),
-            originCode: isDep ? 'DXB' : (ap.iata || ''),
-            destination: isDep ? (ap.name || ap.icao || '') : 'DXB',
-            destinationCode: isDep ? (ap.iata || '') : 'DXB',
+            origin: isDep ? code : (ap.name || ap.icao || ''),
+            originCode: isDep ? code : (ap.iata || ''),
+            destination: isDep ? (ap.name || ap.icao || '') : code,
+            destinationCode: isDep ? (ap.iata || '') : code,
             scheduled: m.scheduledTime?.local || m.scheduledTimeLocal || '',
             actual: m.actualTime?.local || m.revisedTime?.local || m.predictedTime?.local || '',
             terminal: m.terminal || '',
@@ -306,48 +331,57 @@ function Flights() {
             isTLV,
           };
         });
+        // Hebrew edition prioritizes Tel Aviv flights; the international edition shows all flights.
         const tlv = result.filter(f => f.isTLV);
-        setFlights(tlv.length > 0 ? tlv : result);
+        setFlights(lang !== 'en' && tlv.length > 0 ? tlv : result);
       })
       .catch(() => setFlights([]))
       .finally(() => setLoading(false));
-  }, [direction]);
+  }, [direction, airport, lang]);
 
-  const dubaiTime = now.toLocaleTimeString('he-IL', { timeZone: 'Asia/Dubai', hour: '2-digit', minute: '2-digit' });
+  const dubaiTime = now.toLocaleTimeString(locale, { timeZone: 'Asia/Dubai', hour: '2-digit', minute: '2-digit' });
   const isDep = direction === 'Departure';
 
   return (
     <View>
       <View style={s.fbHeader}>
         <View style={{ flexDirection: 'row-reverse', alignItems: 'center', gap: 8 }}>
-          <Text style={{ color: '#fff', fontWeight: '700', fontSize: 14 }}>נמל התעופה דובאי (DXB)</Text>
+          <Text style={{ color: '#fff', fontWeight: '700', fontSize: 14 }}>{airport === 'DXB' ? t('flt.dxb') : t('flt.auh')}</Text>
         </View>
-        <Text style={{ color: 'rgba(255,255,255,0.75)', fontSize: 12, marginTop: 4 }}>
-          {now.toLocaleDateString('he-IL', { weekday: 'long', day: 'numeric', month: 'long' })}
+        <View style={{ flexDirection: 'row-reverse', alignItems: 'center', gap: 6, marginTop: 8 }}>
+          <TouchableOpacity onPress={() => setAirport('DXB')} style={[s.fbTab, airport === 'DXB' && s.fbTabOn]}>
+            <Text style={[s.fbTabTxt, airport === 'DXB' && s.fbTabTxtOn]}>✈️ {t('flt.dxbShort')}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => setAirport('AUH')} style={[s.fbTab, airport === 'AUH' && s.fbTabOn]}>
+            <Text style={[s.fbTabTxt, airport === 'AUH' && s.fbTabTxtOn]}>✈️ {t('flt.auhShort')}</Text>
+          </TouchableOpacity>
+        </View>
+        <Text style={{ color: 'rgba(255,255,255,0.75)', fontSize: 12, marginTop: 6 }}>
+          {now.toLocaleDateString(locale, { weekday: 'long', day: 'numeric', month: 'long' })}
         </Text>
         <View style={{ flexDirection: 'row-reverse', alignItems: 'center', gap: 6, marginTop: 10 }}>
           <TouchableOpacity onPress={() => setDirection('Departure')} style={[s.fbTab, isDep && s.fbTabOn]}>
-            <Text style={[s.fbTabTxt, isDep && s.fbTabTxtOn]}>↑ המראות</Text>
+            <Text style={[s.fbTabTxt, isDep && s.fbTabTxtOn]}>{t('flt.departures')}</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => setDirection('Arrival')} style={[s.fbTab, !isDep && s.fbTabOn]}>
-            <Text style={[s.fbTabTxt, !isDep && s.fbTabTxtOn]}>↓ נחיתות</Text>
+            <Text style={[s.fbTabTxt, !isDep && s.fbTabTxtOn]}>{t('flt.arrivals')}</Text>
           </TouchableOpacity>
           <Text style={{ color: '#B8923A', fontWeight: '700', fontSize: 13, marginLeft: 'auto' }}>{dubaiTime} 🇦🇪</Text>
         </View>
       </View>
 
       <View style={s.fbBody}>
-        {loading && <Text style={[s.muted, { textAlign: 'center', padding: 20 }]}>⏳ טוען לוח טיסות...</Text>}
+        {loading && <Text style={[s.muted, { textAlign: 'center', padding: 20 }]}>{t('flt.loading')}</Text>}
         {!loading && flights && flights.length === 0 && (
-          <Text style={[s.muted, { textAlign: 'center', padding: 20 }]}>לא ניתן לטעון נתוני טיסות כרגע.</Text>
+          <Text style={[s.muted, { textAlign: 'center', padding: 20 }]}>{t('flt.error')}</Text>
         )}
         {!loading && flights && flights.length > 0 && (
           <>
             <View style={s.fbRowHead}>
-              <Text style={s.fbColFlight}>טיסה</Text>
-              <Text style={s.fbColCode}>{isDep ? 'יעד' : 'מוצא'}</Text>
-              <Text style={s.fbColAirline}>חברה</Text>
-              <Text style={s.fbColStatus}>סטטוס</Text>
+              <Text style={s.fbColFlight}>{t('flt.colFlight')}</Text>
+              <Text style={s.fbColCode}>{isDep ? t('flt.colDest') : t('flt.colOrigin')}</Text>
+              <Text style={s.fbColAirline}>{t('flt.colAirline')}</Text>
+              <Text style={s.fbColStatus}>{t('flt.colStatus')}</Text>
             </View>
             {flights.map((f, i) => (
               <View key={i} style={[s.fbRow, f.isTLV && { backgroundColor: '#FFF8E7' }]}>
@@ -355,17 +389,17 @@ function Flights() {
                 <Text style={[s.fbColCode, { color: '#2A9D8F', fontWeight: '800' }]}>{(isDep ? f.destinationCode : f.originCode) || '—'}</Text>
                 <Text style={[s.fbColAirline, { color: Colors.TEXT }]} numberOfLines={1}>{f.airline}</Text>
                 <View style={[s.fbColStatusBox, { backgroundColor: statusBg(f.status) }]}>
-                  <Text style={{ color: statusColor(f.status), fontSize: 10, fontWeight: '700' }}>{statusHe(f.status)}</Text>
+                  <Text style={{ color: statusColor(f.status), fontSize: 10, fontWeight: '700' }}>{statusHe(f.status, lang)}</Text>
                 </View>
               </View>
             ))}
-            <Text style={s.timestamp}>עודכן: {now.toLocaleTimeString('he-IL')} · DXB</Text>
+            <Text style={s.timestamp}>{t('flt.updated')} {now.toLocaleTimeString(locale)} · DXB</Text>
           </>
         )}
       </View>
 
       <TouchableOpacity style={[s.tapBtn, { backgroundColor: Colors.SECONDARY, marginTop: 12 }]} onPress={async () => { const url = 'https://www.aviasales.com/search/TLV01DXB01?marker=X5SEJjUA'; const ok = await Linking.canOpenURL(url); if (ok) await Linking.openURL(url); }}>
-        <Text style={s.tapBtnTxt}>חפש טיסות באוויאסיילס</Text>
+        <Text style={s.tapBtnTxt}>{t('flt.search')}</Text>
       </TouchableOpacity>
     </View>
   );

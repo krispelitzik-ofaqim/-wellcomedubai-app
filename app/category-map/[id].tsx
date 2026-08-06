@@ -3,6 +3,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { WebView } from 'react-native-webview';
 import { useLocalSearchParams, router } from 'expo-router';
 import { Colors } from '../../constants/colors';
+import { useI18n } from '../../constants/i18n';
 import { CATALOG } from '../../data/catalog';
 
 const TITLES: Record<string, { he: string; color: string }> = {
@@ -18,9 +19,11 @@ const TITLES: Record<string, { he: string; color: string }> = {
 };
 
 export default function CategoryMap() {
+  const { t, lang } = useI18n();
   const { id } = useLocalSearchParams<{ id: string }>();
   const cat = id || '';
   const meta = TITLES[cat] || { he: 'מפה', color: Colors.PRIMARY };
+  const catTitle = t('cat.' + cat).startsWith('cat.') ? (meta.he === 'מפה' ? t('catmap.map') : meta.he) : t('cat.' + cat);
   const items: any[] = (CATALOG as any)[cat] || [];
   const withCoords = items.filter(i => i.lat && i.lng);
 
@@ -44,15 +47,15 @@ export default function CategoryMap() {
         const rating = p.rating ? '<span class="popup-rating">⭐ '+p.rating+'</span>' : '';
         const price = p.price ? '<span class="popup-price">'+p.price+'</span>' : '';
         const meta = (rating || price) ? '<div class="popup-meta">'+rating+price+'</div>' : '';
-        const navBtn = '<a class="popup-btn" style="background:#E76F51;" href="https://www.google.com/maps/dir/?api=1&destination='+p.lat+','+p.lng+'" target="_blank">נווט</a>';
-        const whereBtn = '<a class="popup-btn" style="background:#C4922F;" href="https://www.google.com/maps?q='+p.lat+','+p.lng+'" target="_blank">איפה</a>';
+        const navBtn = '<a class="popup-btn" style="background:#E76F51;" href="https://www.google.com/maps/dir/?api=1&destination='+p.lat+','+p.lng+'" target="_blank">${t('catmap.navigate')}</a>';
+        const whereBtn = '<a class="popup-btn" style="background:#C4922F;" href="https://www.google.com/maps?q='+p.lat+','+p.lng+'" target="_blank">${t('catmap.where')}</a>';
         const html = '<div style="min-width:200px;max-width:240px;direction:rtl;">'+img+'<div class="popup-name">'+p.name+'</div>'+addr+meta+'<div class="popup-actions">'+navBtn+whereBtn+'</div></div>';
         const iw = new google.maps.InfoWindow({ content: html, maxWidth: 260 });
         m.addListener('click', () => iw.open({ anchor: m, map }));
       });
       if (pts.length > 1) map.fitBounds(bounds, 30);
     }
-  </script><script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDw09Bg7XaH7apEWJBcFtogVfrdUwF_gEM&language=he&callback=initMap" async defer></script></body></html>`;
+  </script><script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDw09Bg7XaH7apEWJBcFtogVfrdUwF_gEM&language=${lang}&callback=initMap" async defer></script></body></html>`;
 
   return (
     <View style={s.container}>
@@ -67,7 +70,7 @@ export default function CategoryMap() {
         </TouchableOpacity>
       </View>
       <View style={[s.header, { backgroundColor: meta.color }]}>
-        <Text style={[s.title, { flex: 1 }]}>{meta.he} — {withCoords.length} נקודות</Text>
+        <Text style={[s.title, { flex: 1 }]}>{catTitle} — {withCoords.length} {t('catmap.points')}</Text>
       </View>
       <WebView originWhitelist={['*']} source={{ html }} style={{ flex: 1 }} />
     </View>

@@ -1,27 +1,31 @@
-export type StarSpoke = { name: string; lat: number; lng: number };
+export type StarSpoke = { name: string; nameEn?: string; lat: number; lng: number };
 export type StarHub = {
   name: string;
+  nameEn?: string;
   icon: string;
   color: string;
   center: { lat: number; lng: number };
   desc: string;
+  descEn?: string;
   spokes: StarSpoke[];
 };
 
 export const STAR_HUBS: StarHub[] = [
-  { name: 'דובאי מרינה', icon: '⛵', color: '#5B9DC7', center: { lat: 25.0820, lng: 55.1410 },
+  { name: 'דובאי מרינה', nameEn: 'Dubai Marina', icon: '⛵', color: '#5B9DC7', center: { lat: 25.0820, lng: 55.1410 },
     desc: 'נמל מודרני עם פרומנדה, יאכטות, מועדוני חוף וגורדי שחקים.',
+    descEn: 'A modern harbor with a promenade, yachts, beach clubs and skyscrapers.',
     spokes: [
-      { name: 'פרומנדה Marina Walk', lat: 25.0820, lng: 55.1410 },
+      { name: 'פרומנדה Marina Walk', nameEn: 'Marina Walk Promenade', lat: 25.0820, lng: 55.1410 },
       { name: 'JBR + The Beach', lat: 25.0795, lng: 55.1340 },
       { name: 'Ain Dubai (Bluewaters)', lat: 25.0786, lng: 55.1255 },
       { name: 'Skydive Dubai', lat: 25.0890, lng: 55.1370 },
-      { name: 'יאכטה / סירת מנוע', lat: 25.0820, lng: 55.1410 },
+      { name: 'יאכטה / סירת מנוע', nameEn: 'Yacht / Speedboat', lat: 25.0820, lng: 55.1410 },
       { name: 'Zero Gravity Beach Club', lat: 25.0930, lng: 55.1397 },
     ],
   },
   { name: 'Downtown Dubai', icon: '🏙️', color: '#E76F51', center: { lat: 25.1972, lng: 55.2744 },
     desc: 'לב העיר — מגדל בורג׳ ח׳ליפה, דובאי מול ומופע המזרקות.',
+    descEn: 'The heart of the city — Burj Khalifa, Dubai Mall and the fountain show.',
     spokes: [
       { name: 'Burj Khalifa', lat: 25.1972, lng: 55.2744 },
       { name: 'Dubai Mall', lat: 25.1972, lng: 55.2796 },
@@ -33,6 +37,7 @@ export const STAR_HUBS: StarHub[] = [
   },
   { name: 'Palm Jumeirah', icon: '🌴', color: '#F4A261', center: { lat: 25.1124, lng: 55.1390 },
     desc: 'אי דקל עם מלונות יוקרה, פארקי מים, מסעדות מישלן וביץ׳ קלאבים.',
+    descEn: 'A palm island with luxury hotels, water parks, Michelin restaurants and beach clubs.',
     spokes: [
       { name: 'Atlantis The Palm', lat: 25.1305, lng: 55.1175 },
       { name: 'Aquaventure Waterpark', lat: 25.1295, lng: 55.1183 },
@@ -44,6 +49,7 @@ export const STAR_HUBS: StarHub[] = [
   },
   { name: 'Old Dubai (Deira)', icon: '🕌', color: '#2A9D8F', center: { lat: 25.2655, lng: 55.2962 },
     desc: 'דובאי הישנה — שוקי הזהב והתבלינים, סירות ה-Abra והמחוז ההיסטורי.',
+    descEn: 'Old Dubai — the gold and spice souks, the Abra boats and the historic district.',
     spokes: [
       { name: 'Gold Souk', lat: 25.2697, lng: 55.2967 },
       { name: 'Spice Souk', lat: 25.2680, lng: 55.2960 },
@@ -55,9 +61,10 @@ export const STAR_HUBS: StarHub[] = [
   },
   { name: 'Al Barsha (Mall of Emirates)', icon: '❄️', color: '#B85C8E', center: { lat: 25.1183, lng: 55.2002 },
     desc: 'אזור Al Barsha סביב Mall of Emirates — קניון ענק עם Ski Dubai, מלונות, מסעדות ותחנת מטרו.',
+    descEn: 'The Al Barsha area around Mall of the Emirates — a huge mall with Ski Dubai, hotels, restaurants and a metro station.',
     spokes: [
       { name: 'Mall of Emirates', lat: 25.1183, lng: 55.2002 },
-      { name: 'Ski Dubai (בקניון)', lat: 25.1175, lng: 55.1986 },
+      { name: 'Ski Dubai (בקניון)', nameEn: 'Ski Dubai (in the mall)', lat: 25.1175, lng: 55.1986 },
       { name: 'Mall of Emirates Metro', lat: 25.1184, lng: 55.2050 },
       { name: 'Sheraton Mall of Emirates', lat: 25.1160, lng: 55.2030 },
       { name: 'Holiday Inn Al Barsha', lat: 25.1102, lng: 55.1980 },

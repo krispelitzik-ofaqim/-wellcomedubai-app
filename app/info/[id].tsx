@@ -4,10 +4,11 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, router } from 'expo-router';
 import * as DocumentPicker from 'expo-document-picker';
 import { Colors } from '../../constants/colors';
+import { useI18n } from '../../constants/i18n';
 
-const SECTIONS: Record<string, { title: string; color: string; body: string }> = {
+const SECTIONS: Record<string, { title: string; titleEn: string; color: string; body: string; bodyEn: string }> = {
   about: {
-    title: 'אודותינו', color: '#2A9D8F',
+    title: 'אודותינו', titleEn: 'About Us', color: '#2A9D8F',
     body: `WellCome Dubai — המדריך הישראלי המלא לדובאי.
 
 החזון שלנו
@@ -26,9 +27,27 @@ const SECTIONS: Record<string, { title: string; color: string; body: string }> =
 
 ישראלים בדובאי
 מאז הסכמי אברהם (2020), דובאי הפכה ליעד פופולרי לישראלים. האפליקציה נבנתה תוך הבנה של הצרכים הייחודיים של המטייל הישראלי — כשרות, שפה, מנהגים מקומיים וביטחון.`,
+    bodyEn: `WellCome Dubai — your complete guide to Dubai.
+
+Our Vision
+To be the first go-to address for a traveler planning a visit to the Emirates. We believe a smart trip starts with reliable, accessible and up-to-date information — with sensitivity to local customs.
+
+What You'll Find Here
+• Hotels — ranked by stars and luxury level
+• Restaurants — with an emphasis on kosher and Mediterranean dining
+• Attractions — must-sees, water activities, theme parks, desert safaris
+• Transport — metro, taxis, car rental, ride-hailing apps
+• Nightlife, shopping, kids — all on a single map
+• Ready-made day itineraries, live weather, currency conversion, live flight boards
+
+Our Sources
+Data is gathered from open sources (Google Maps, provider websites, Wikipedia), maintained by our users and updated regularly. We receive no payment from any provider — the rankings are objective.
+
+Visitors in Dubai
+Since the Abraham Accords (2020), Dubai has become a popular destination. The app was built with an understanding of travelers' unique needs — kosher food, language, local customs and safety.`,
   },
   terms: {
-    title: 'תקנון השימוש', color: '#E76F51',
+    title: 'תקנון השימוש', titleEn: 'Terms of Use', color: '#E76F51',
     body: `עודכן לאחרונה: מאי 2026
 
 1. כללי
@@ -56,9 +75,36 @@ WellCome Dubai רשאי לעדכן תנאים אלו בכל עת. המשך שי�
 
 8. סמכות שיפוט
 על תנאי שימוש אלה יחול הדין הישראלי. סמכות שיפוט בלעדית לבתי המשפט בתל אביב.`,
+    bodyEn: `Last updated: May 2026
+
+1. General
+Use of the WellCome Dubai app (the "App") is subject to these terms of use. Downloading and using the App constitutes agreement to all of the clauses below.
+
+2. Nature of the Service
+The App provides tourist information about Dubai. The service is free, requires no registration, and does not collect personal data.
+
+3. Liability and Limitations
+• All information is provided "AS-IS", without any express or implied warranty.
+• Prices, opening hours, service areas and contact details may change — you must verify directly with the business before making decisions.
+• WellCome Dubai is not responsible for errors, omissions, or any damage arising from use of the information.
+
+4. Third Parties
+Links, maps, and information about hotels/restaurants/transport companies are provided for convenience only. WellCome Dubai is not responsible for transactions, experiences or services provided by any external party.
+
+5. Permitted Use
+Use of the App is permitted for private purposes only. Copying, distributing, or making commercial use of the content without written permission is prohibited.
+
+6. Intellectual Property
+All rights reserved. Provider images belong to their owners and appear for identification purposes only.
+
+7. Changes to the Terms
+WellCome Dubai may update these terms at any time. Continued use after an update constitutes agreement to the changes.
+
+8. Governing Law
+These terms are governed by Israeli law. Exclusive jurisdiction lies with the courts of Tel Aviv.`,
   },
   privacy: {
-    title: 'מדיניות פרטיות', color: '#5B9DC7',
+    title: 'מדיניות פרטיות', titleEn: 'Privacy Policy', color: '#5B9DC7',
     body: `עודכן לאחרונה: מאי 2026
 
 איזה מידע אנחנו אוספים?
@@ -82,6 +128,29 @@ WellCome Dubai פועל ללא רישום משתמשים. לא נאספים שמ
 • זכות עיון: כל הנתונים נשמרים מקומית במכשיר שלכם.
 • זכות מחיקה: ניקוי נתוני האפליקציה ימחק הכל.
 • זכות התנגדות: ניתן לסרב להרשאת מיקום ללא פגיעה ביכולת השימוש.`,
+    bodyEn: `Last updated: May 2026
+
+What Information Do We Collect?
+WellCome Dubai operates without user registration. No names, emails, phone numbers or any identifying details are collected.
+
+Location Data (Geolocation)
+When you tap "Show me what's nearby", the device will request permission to access your location. This data is used solely to calculate distance to attractions, and is not sent to a server or stored anywhere.
+
+Local Storage
+The App stores technical data on your device, without sending it to a server:
+• Currency rates and weather (temporary, for speed)
+• Provider database (categories, routes)
+• Personal ratings you added to itineraries
+
+Third-Party Services
+• Google Maps — displays maps and navigation. Subject to Google's privacy policy.
+• Open-Meteo — a free weather service, no data collection.
+• AeroDataBox / Booking — flight-board and hotel-availability providers.
+
+Your Rights
+• Right of access: all data is stored locally on your device.
+• Right to erasure: clearing the App's data deletes everything.
+• Right to object: you may decline the location permission without affecting usability.`,
   },
 };
 
@@ -94,6 +163,8 @@ const CONTACT_TOPICS = [
 ];
 
 function ContactPage() {
+  const { t, lang } = useI18n();
+  const topicLabel = (id: string) => t('topic.' + id);
   const { topic: topicParam } = useLocalSearchParams<{ topic?: string }>();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -112,13 +183,13 @@ function ContactPage() {
       const a = res.assets?.[0];
       if (a) setFile({ name: a.name, size: a.size });
     } catch {
-      Alert.alert('שגיאה', 'לא הצלחנו לפתוח את בחירת הקובץ');
+      Alert.alert(t('loc.errTitle'), t('contact.fileErr'));
     }
   };
 
   const submit = () => {
     if (!name.trim() || !email.trim() || !msg.trim()) {
-      Alert.alert('חסרים פרטים', 'יש למלא שם, אימייל והודעה');
+      Alert.alert(t('contact.missingTitle'), t('contact.missingMsg'));
       return;
     }
     let body = `שם: ${name}\nאימייל: ${email}`;
@@ -132,35 +203,35 @@ function ContactPage() {
     <View style={s.container}>
       <SafeAreaView edges={['top']} style={{ backgroundColor: '#B8923A' }} />
       <View style={[s.header, { backgroundColor: '#B8923A' }]}>
-        <Text style={[s.title, { flex: 1 }]}>צור קשר</Text>
+        <Text style={[s.title, { flex: 1 }]}>{t('info.contact')}</Text>
         <TouchableOpacity onPress={() => router.back()} style={s.headerClose}>
           <Text style={{ color: '#fff', fontSize: 16, fontWeight: '700' }}>✕</Text>
         </TouchableOpacity>
       </View>
       <ScrollView contentContainerStyle={{ padding: 18, paddingBottom: 100, gap: 12 }} keyboardShouldPersistTaps="handled">
-        <Text style={s.fieldLabel}>שם מלא *</Text>
-        <TextInput style={s.input} value={name} onChangeText={setName} placeholder="ישראל ישראלי" placeholderTextColor="#AAB7BD" />
+        <Text style={s.fieldLabel}>{t('contact.fullName')}</Text>
+        <TextInput style={s.input} value={name} onChangeText={setName} placeholder={t('contact.phName')} placeholderTextColor="#AAB7BD" />
 
-        <Text style={s.fieldLabel}>אימייל *</Text>
+        <Text style={s.fieldLabel}>{t('contact.email')}</Text>
         <TextInput style={s.input} value={email} onChangeText={setEmail} keyboardType="email-address" autoCapitalize="none" placeholder="name@example.com" placeholderTextColor="#AAB7BD" />
 
-        <Text style={s.fieldLabel}>טלפון</Text>
+        <Text style={s.fieldLabel}>{t('contact.phone')}</Text>
         <TextInput style={s.input} value={phone} onChangeText={setPhone} keyboardType="phone-pad" placeholder="050-1234567" placeholderTextColor="#AAB7BD" />
 
-        <Text style={s.fieldLabel}>נושא</Text>
+        <Text style={s.fieldLabel}>{t('contact.topic')}</Text>
         <TouchableOpacity style={s.dropdown} onPress={() => setMenuOpen(true)}>
-          <Text style={s.dropdownTxt}>{current.label}</Text>
+          <Text style={s.dropdownTxt}>{topicLabel(current.id)}</Text>
           <Text style={s.dropdownArrow}>▼</Text>
         </TouchableOpacity>
 
-        <Text style={s.fieldLabel}>הודעה *</Text>
-        <TextInput style={[s.input, { height: 140, textAlignVertical: 'top' }]} value={msg} onChangeText={setMsg} multiline placeholder="כתבו לנו..." placeholderTextColor="#AAB7BD" />
+        <Text style={s.fieldLabel}>{t('contact.message')}</Text>
+        <TextInput style={[s.input, { height: 140, textAlignVertical: 'top' }]} value={msg} onChangeText={setMsg} multiline placeholder={t('contact.phMsg')} placeholderTextColor="#AAB7BD" />
 
         {showDiploma ? (
           <>
-            <Text style={s.fieldLabel}>תעודת הסמכה / דיפלומה (PDF או תמונה)</Text>
+            <Text style={s.fieldLabel}>{t('contact.diploma')}</Text>
             <TouchableOpacity style={s.uploadBtn} onPress={pickFile}>
-              <Text style={s.uploadTxt}>📎 {file ? 'החלף קובץ' : 'הוסף קובץ / דיפלומה'}</Text>
+              <Text style={s.uploadTxt}>📎 {file ? t('contact.replaceFile') : t('contact.addFile')}</Text>
             </TouchableOpacity>
             {file ? (
               <View style={s.fileChip}>
@@ -172,7 +243,7 @@ function ContactPage() {
         ) : null}
 
         <TouchableOpacity onPress={submit} style={s.submitBtn}>
-          <Text style={s.submitTxt}>שלח</Text>
+          <Text style={s.submitTxt}>{t('contact.send')}</Text>
         </TouchableOpacity>
       </ScrollView>
 
@@ -180,11 +251,11 @@ function ContactPage() {
         <View style={s.menuBackdrop}>
           <Pressable onPress={() => setMenuOpen(false)} style={StyleSheet.absoluteFill} />
           <View style={s.menu}>
-            <Text style={s.menuTitle}>בחר נושא</Text>
-            {CONTACT_TOPICS.map(t => (
-              <TouchableOpacity key={t.id} onPress={() => { setTopic(t.id); setMenuOpen(false); }} style={[s.menuItem, topic === t.id && s.menuItemActive]}>
-                <Text style={[s.menuTxt, topic === t.id && s.menuTxtActive]}>{t.label}</Text>
-                {topic === t.id && <Text style={s.menuCheck}>✓</Text>}
+            <Text style={s.menuTitle}>{t('contact.pickTopic')}</Text>
+            {CONTACT_TOPICS.map(top => (
+              <TouchableOpacity key={top.id} onPress={() => { setTopic(top.id); setMenuOpen(false); }} style={[s.menuItem, topic === top.id && s.menuItemActive]}>
+                <Text style={[s.menuTxt, topic === top.id && s.menuTxtActive]}>{topicLabel(top.id)}</Text>
+                {topic === top.id && <Text style={s.menuCheck}>✓</Text>}
               </TouchableOpacity>
             ))}
           </View>
@@ -195,6 +266,7 @@ function ContactPage() {
 }
 
 export default function InfoSubPage() {
+  const { t, lang } = useI18n();
   const { id } = useLocalSearchParams<{ id: string }>();
   if (id === 'contact') return <ContactPage />;
   const sec = SECTIONS[id || ''];
@@ -202,7 +274,7 @@ export default function InfoSubPage() {
     return (
       <View style={s.container}>
         <SafeAreaView edges={['top']} style={{ backgroundColor: '#000' }} />
-        <Text style={{ padding: 20, color: Colors.TEXT }}>לא נמצא</Text>
+        <Text style={{ padding: 20, color: Colors.TEXT }}>{t('common.notFound')}</Text>
       </View>
     );
   }
@@ -210,14 +282,14 @@ export default function InfoSubPage() {
     <View style={s.container}>
       <SafeAreaView edges={['top']} style={{ backgroundColor: sec.color }} />
       <View style={[s.header, { backgroundColor: sec.color }]}>
-        <Text style={[s.title, { flex: 1 }]}>{sec.title}</Text>
+        <Text style={[s.title, { flex: 1 }]}>{lang === 'en' ? sec.titleEn : sec.title}</Text>
         <TouchableOpacity onPress={() => router.back()} style={s.headerClose}>
           <Text style={{ color: '#fff', fontSize: 16, fontWeight: '700' }}>✕</Text>
         </TouchableOpacity>
       </View>
       <ScrollView contentContainerStyle={{ padding: 18, paddingBottom: 80 }}>
         <View style={s.bodyCard}>
-          <Text style={s.body}>{sec.body}</Text>
+          <Text style={[s.body, { writingDirection: lang === 'en' ? 'ltr' : 'rtl', textAlign: lang === 'en' ? 'left' : 'right' }]}>{lang === 'en' ? sec.bodyEn : sec.body}</Text>
         </View>
       </ScrollView>
     </View>

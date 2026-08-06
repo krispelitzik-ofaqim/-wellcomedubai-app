@@ -22,7 +22,14 @@ export const CATALOG = {
         "מפרש",
         "אייקוני"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "7 stars",
+        "Sail",
+        "Iconic"
+      ],
+      "priceRangeEn": "₪4,000-25,000 /night",
+      "descriptionEn": "Dubai's most iconic hotel, shaped like a sail, with unique 24/7 butler service and two-story suites."
     },
     {
       "id": 2,
@@ -48,7 +55,15 @@ export const CATALOG = {
         "כשר",
         "חדש"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "7 stars",
+        "Palm",
+        "Kosher",
+        "New"
+      ],
+      "priceRangeEn": "₪2,000-40,000 /night",
+      "descriptionEn": "A stunning new hotel on the Palm with 17 restaurants, spectacular pools and kosher service by advance request."
     },
     {
       "id": 3,
@@ -74,7 +89,15 @@ export const CATALOG = {
         "כשר",
         "עיצוב"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "7 stars",
+        "Armani",
+        "Kosher",
+        "Design"
+      ],
+      "priceRangeEn": "₪2,500-15,000 /night",
+      "descriptionEn": "Inside Burj Khalifa, personally designed by Giorgio Armani. The kosher Armani/Kaf restaurant on-site and kosher meals by advance request."
     },
     {
       "id": 4,
@@ -98,7 +121,14 @@ export const CATALOG = {
         "אי פרטי",
         "בולגרי"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "7 stars",
+        "Private island",
+        "Bulgari"
+      ],
+      "priceRangeEn": "₪2,200-90,000 /night",
+      "descriptionEn": "An exclusive hotel on a private seahorse-shaped island, designed by Bulgari."
     },
     {
       "id": 5,
@@ -122,7 +152,14 @@ export const CATALOG = {
         "דורצ'סטר",
         "חדש"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "7 stars",
+        "Dorchester",
+        "New"
+      ],
+      "priceRangeEn": "₪3,400-92,000 /night",
+      "descriptionEn": "Part of the Dorchester Collection, with stunning views over the Dubai Water Canal."
     },
     {
       "id": 6,
@@ -146,7 +183,14 @@ export const CATALOG = {
         "בוטיק",
         "פאלם"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "7 stars",
+        "Boutique",
+        "Palm"
+      ],
+      "priceRangeEn": "₪2,600-18,000 /night",
+      "descriptionEn": "An intimate boutique hotel on the Palm with Mediterranean gardens and exceptional service."
     },
     {
       "id": 7,
@@ -170,7 +214,14 @@ export const CATALOG = {
         "ארמון",
         "רומנטי"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "7 stars",
+        "Palace",
+        "Romantic"
+      ],
+      "priceRangeEn": "₪1,600-12,000 /night",
+      "descriptionEn": "A legendary Arabian palace on the beach with palm gardens and a romantic atmosphere."
     },
     {
       "id": 8,
@@ -194,7 +245,14 @@ export const CATALOG = {
         "חוף",
         "פור סיזנס"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "7 stars",
+        "Beach",
+        "Four Seasons"
+      ],
+      "priceRangeEn": "₪2,000-14,000 /night",
+      "descriptionEn": "A resort on 270m of natural beach with pastel-toned rooms."
     },
     {
       "id": 9,
@@ -218,7 +276,14 @@ export const CATALOG = {
         "עסקים",
         "DIFC"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "7 stars",
+        "Business",
+        "DIFC"
+      ],
+      "priceRangeEn": "₪1,800-10,000 /night",
+      "descriptionEn": "An urban hotel in the financial district with contemporary art and superb restaurants."
     },
     {
       "id": 10,
@@ -242,7 +307,14 @@ export const CATALOG = {
         "וורסאצ'ה",
         "ארמון"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "7 stars",
+        "Versace",
+        "Palace"
+      ],
+      "priceRangeEn": "₪1,500-10,000 /night",
+      "descriptionEn": "An Italian palace on the banks of Dubai Creek, entirely furnished by Versace."
     },
     {
       "id": 11,
@@ -266,7 +338,14 @@ export const CATALOG = {
         "ארמון",
         "ג'ומיירה"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "7 stars",
+        "Palace",
+        "Jumeirah"
+      ],
+      "priceRangeEn": "₪1,800-15,000 /night",
+      "descriptionEn": "The 'sea palace' of the Madinat Jumeirah complex, with waterways."
     },
     {
       "id": 12,
@@ -290,7 +369,14 @@ export const CATALOG = {
         "חדש",
         "ימי"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "7 stars",
+        "New",
+        "Marine"
+      ],
+      "priceRangeEn": "₪2,500-20,000 /night",
+      "descriptionEn": "Among the world's 50 best hotels 2025, with striking marine design."
     },
     {
       "id": 13,
@@ -314,7 +400,14 @@ export const CATALOG = {
         "וולדורף",
         "חוף"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "7 stars",
+        "Waldorf",
+        "Beach"
+      ],
+      "priceRangeEn": "₪1,500-9,000 /night",
+      "descriptionEn": "Waldorf Astoria on the Palm beach with a Michelin-starred chef restaurant."
     },
     {
       "id": 14,
@@ -338,7 +431,14 @@ export const CATALOG = {
         "מסיבות",
         "גג"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "7 stars",
+        "Parties",
+        "Rooftop"
+      ],
+      "priceRangeEn": "₪1,200-7,000 /night",
+      "descriptionEn": "A party-boutique hotel with Dubai's most famous rooftop parties."
     },
     {
       "id": 15,
@@ -362,7 +462,14 @@ export const CATALOG = {
         "פארק מים",
         "משפחות"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "7 stars",
+        "Water park",
+        "Families"
+      ],
+      "priceRangeEn": "₪1,000-12,000 /night",
+      "descriptionEn": "The original Palm hotel with the Aquaventure water park and an aquarium."
     },
     {
       "id": 16,
@@ -386,7 +493,14 @@ export const CATALOG = {
         "Downtown",
         "מזרקה"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "7 stars",
+        "Downtown",
+        "Fountain"
+      ],
+      "priceRangeEn": "₪1,200-8,000 /night",
+      "descriptionEn": "A golden tower above the Dubai Fountain, with famous Burj Khalifa views."
     },
     {
       "id": 17,
@@ -410,7 +524,14 @@ export const CATALOG = {
         "St.Regis",
         "פאלם"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "7 stars",
+        "St. Regis",
+        "Palm"
+      ],
+      "priceRangeEn": "₪1,400-9,000 /night",
+      "descriptionEn": "Personal bespoke service and a Heston Blumenthal restaurant."
     },
     {
       "id": 18,
@@ -434,7 +555,14 @@ export const CATALOG = {
         "בריכות",
         "גג"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "7 stars",
+        "Pools",
+        "Rooftop"
+      ],
+      "priceRangeEn": "₪900-5,000 /night",
+      "descriptionEn": "A tower with 5 pools and one of the most popular rooftop clubs."
     },
     {
       "id": 19,
@@ -458,7 +586,14 @@ export const CATALOG = {
         "רפאלס",
         "ספא"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "7 stars",
+        "Raffles",
+        "Spa"
+      ],
+      "priceRangeEn": "₪1,300-8,500 /night",
+      "descriptionEn": "Raffles on the Palm with a world-class spa and one of Dubai's largest pools."
     },
     {
       "id": 20,
@@ -482,7 +617,14 @@ export const CATALOG = {
         "חוף",
         "ג'ומיירה"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "7 stars",
+        "Beach",
+        "Jumeirah"
+      ],
+      "priceRangeEn": "₪1,400-8,000 /night",
+      "descriptionEn": "Part of the Madinat Jumeirah complex with a private beach and a marine zoo."
     },
     {
       "id": 21,
@@ -506,7 +648,14 @@ export const CATALOG = {
         "צרפתי",
         "פאלם"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "5 stars",
+        "French",
+        "Palm"
+      ],
+      "priceRangeEn": "₪900-4,000 /night",
+      "descriptionEn": "A lavish French-Arabian resort on the Palm with tropical gardens."
     },
     {
       "id": 22,
@@ -530,7 +679,14 @@ export const CATALOG = {
         "JBR",
         "חוף"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "5 stars",
+        "JBR",
+        "Beach"
+      ],
+      "priceRangeEn": "₪800-3,500 /night",
+      "descriptionEn": "A Sofitel hotel on JBR beach with an excellent French restaurant."
     },
     {
       "id": 23,
@@ -554,7 +710,14 @@ export const CATALOG = {
         "פיירמונט",
         "חוף"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "5 stars",
+        "Fairmont",
+        "Beach"
+      ],
+      "priceRangeEn": "₪850-4,500 /night",
+      "descriptionEn": "A lavish Fairmont hotel with a private beach and a world-class spa."
     },
     {
       "id": 24,
@@ -578,7 +741,14 @@ export const CATALOG = {
         "מרכזי",
         "עסקים"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "5 stars",
+        "Central",
+        "Business"
+      ],
+      "priceRangeEn": "₪700-3,500 /night",
+      "descriptionEn": "A flagship hotel in the heart of Dubai, opposite the World Trade Centre."
     },
     {
       "id": 25,
@@ -602,7 +772,14 @@ export const CATALOG = {
         "פירמידה",
         "רפאלס"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "5 stars",
+        "Pyramid",
+        "Raffles"
+      ],
+      "priceRangeEn": "₪900-4,500 /night",
+      "descriptionEn": "The Raffles pyramid near Wafi City with a stunning rooftop garden."
     },
     {
       "id": 26,
@@ -626,7 +803,14 @@ export const CATALOG = {
         "שרתון",
         "נוף"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "5 stars",
+        "Sheraton",
+        "View"
+      ],
+      "priceRangeEn": "₪650-2,800 /night",
+      "descriptionEn": "A premium Sheraton on Sheikh Zayed Road with panoramic views and a rooftop pool."
     },
     {
       "id": 27,
@@ -650,7 +834,14 @@ export const CATALOG = {
         "חוף",
         "מרינה"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "5 stars",
+        "Beach",
+        "Marina"
+      ],
+      "priceRangeEn": "₪700-3,000 /night",
+      "descriptionEn": "A Westin beachfront hotel with a private beach and access to the Marina."
     },
     {
       "id": 28,
@@ -676,7 +867,15 @@ export const CATALOG = {
         "כשר",
         "בידור"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "5 stars",
+        "Hilton",
+        "Kosher",
+        "Entertainment"
+      ],
+      "priceRangeEn": "₪700-3,200 /night",
+      "descriptionEn": "Part of Al Habtoor City, with a kosher menu at the hotel and La Perle shows in the complex."
     },
     {
       "id": 29,
@@ -700,7 +899,14 @@ export const CATALOG = {
         "קריק",
         "נוף"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "5 stars",
+        "Creek",
+        "View"
+      ],
+      "priceRangeEn": "₪750-3,500 /night",
+      "descriptionEn": "A hotel on the Dubai Creek waterfront with Burj Khalifa views."
     },
     {
       "id": 30,
@@ -724,7 +930,14 @@ export const CATALOG = {
         "גלים",
         "חוף"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "5 stars",
+        "Waves",
+        "Beach"
+      ],
+      "priceRangeEn": "₪800-4,000 /night",
+      "descriptionEn": "The iconic wave-shaped hotel with Burj Al Arab views and 19 restaurants."
     },
     {
       "id": 31,
@@ -748,7 +961,14 @@ export const CATALOG = {
         "בריכה",
         "JBR"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "5 stars",
+        "Pool",
+        "JBR"
+      ],
+      "priceRangeEn": "₪1,000-5,500 /night",
+      "descriptionEn": "A tower on JBR beach with one of the world's highest infinity pools."
     },
     {
       "id": 32,
@@ -772,7 +992,14 @@ export const CATALOG = {
         "W",
         "מסיבות"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "5 stars",
+        "W",
+        "Parties"
+      ],
+      "priceRangeEn": "₪900-4,500 /night",
+      "descriptionEn": "A vibrant W hotel on the Palm with famous pool parties."
     },
     {
       "id": 33,
@@ -796,7 +1023,14 @@ export const CATALOG = {
         "ריץ",
         "משפחות"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "5 stars",
+        "Ritz",
+        "Families"
+      ],
+      "priceRangeEn": "₪1,100-6,000 /night",
+      "descriptionEn": "Ritz-Carlton on JBR beach, ideal for luxury family holidays."
     },
     {
       "id": 34,
@@ -820,7 +1054,14 @@ export const CATALOG = {
         "קונרד",
         "עיצוב"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "5 stars",
+        "Conrad",
+        "Design"
+      ],
+      "priceRangeEn": "₪700-3,200 /night",
+      "descriptionEn": "Modern design and contemporary art on Sheikh Zayed Road."
     },
     {
       "id": 35,
@@ -844,7 +1085,14 @@ export const CATALOG = {
         "היאט",
         "גינות"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "5 stars",
+        "Hyatt",
+        "Gardens"
+      ],
+      "priceRangeEn": "₪750-3,500 /night",
+      "descriptionEn": "A vast resort with tropical gardens across 37 dunams in the heart of Dubai."
     },
     {
       "id": 36,
@@ -868,7 +1116,14 @@ export const CATALOG = {
         "קניון",
         "סקי"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "5 stars",
+        "Mall",
+        "Ski"
+      ],
+      "priceRangeEn": "₪900-4,000 /night",
+      "descriptionEn": "Connected directly to the Mall of the Emirates, with views of Ski Dubai's snow."
     },
     {
       "id": 37,
@@ -892,7 +1147,14 @@ export const CATALOG = {
         "הגבוה",
         "Business Bay"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "5 stars",
+        "Tallest",
+        "Business Bay"
+      ],
+      "priceRangeEn": "₪700-3,000 /night",
+      "descriptionEn": "The world's tallest hotel, with 72 floors and 14 restaurants."
     },
     {
       "id": 38,
@@ -918,7 +1180,15 @@ export const CATALOG = {
         "כשר",
         "JBR"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "5 stars",
+        "Beach",
+        "Kosher",
+        "JBR"
+      ],
+      "priceRangeEn": "₪800-3,800 /night",
+      "descriptionEn": "A huge resort on JBR beach with a private beach, many restaurants and kosher options by advance request."
     },
     {
       "id": 39,
@@ -942,7 +1212,14 @@ export const CATALOG = {
         "שדה תעופה",
         "כנסים"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "5 stars",
+        "Airport",
+        "Conferences"
+      ],
+      "priceRangeEn": "₪600-2,500 /night",
+      "descriptionEn": "Close to the airport with a huge pool and a conference center."
     },
     {
       "id": 40,
@@ -966,7 +1243,14 @@ export const CATALOG = {
         "דיירה",
         "קריק"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "5 stars",
+        "Deira",
+        "Creek"
+      ],
+      "priceRangeEn": "₪600-2,500 /night",
+      "descriptionEn": "Hyatt Regency in Deira with access to the Gold Souk and Creek views."
     },
     {
       "id": 41,
@@ -990,7 +1274,14 @@ export const CATALOG = {
         "מרכזי",
         "ערך"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "4-5 stars",
+        "Central",
+        "Value"
+      ],
+      "priceRangeEn": "₪280-550 /night",
+      "descriptionEn": "A boutique hotel next to Downtown facing Burj Khalifa — excellent value for the location."
     },
     {
       "id": 42,
@@ -1014,7 +1305,14 @@ export const CATALOG = {
         "City Walk",
         "עיצובי"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "4-5 stars",
+        "City Walk",
+        "Designer"
+      ],
+      "priceRangeEn": "₪260-500 /night",
+      "descriptionEn": "A fresh, design-led hotel in the trendy City Walk area."
     },
     {
       "id": 43,
@@ -1038,7 +1336,14 @@ export const CATALOG = {
         "מרכזי",
         "עסקים"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "3-4 stars",
+        "Central",
+        "Business"
+      ],
+      "priceRangeEn": "₪230-450 /night",
+      "descriptionEn": "Between old and new Dubai, ideal for business and tourism."
     },
     {
       "id": 44,
@@ -1062,7 +1367,14 @@ export const CATALOG = {
         "צנוע",
         "קניון"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "3-4 stars",
+        "Budget",
+        "Mall"
+      ],
+      "priceRangeEn": "₪200-380 /night",
+      "descriptionEn": "A comfortable budget hotel near the Mall of the Emirates with a rooftop pool."
     },
     {
       "id": 45,
@@ -1086,7 +1398,14 @@ export const CATALOG = {
         "היסטורי",
         "מטרו"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "3-4 stars",
+        "Historic",
+        "Metro"
+      ],
+      "priceRangeEn": "₪180-350 /night",
+      "descriptionEn": "Citymax in historic Dubai with a rooftop pool, next to the metro."
     },
     {
       "id": 46,
@@ -1110,7 +1429,14 @@ export const CATALOG = {
         "שדה תעופה",
         "נוח"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "3-4 stars",
+        "Airport",
+        "Comfortable"
+      ],
+      "priceRangeEn": "₪200-380 /night",
+      "descriptionEn": "A reliable, comfortable hotel near the airport for early flights."
     },
     {
       "id": 47,
@@ -1134,7 +1460,14 @@ export const CATALOG = {
         "איביס",
         "זול"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "3-4 stars",
+        "Ibis",
+        "Cheap"
+      ],
+      "priceRangeEn": "₪150-280 /night",
+      "descriptionEn": "A clean, reliable ibis in the heart of Al Barsha, comfortable rooms at a fair price."
     },
     {
       "id": 48,
@@ -1158,7 +1491,14 @@ export const CATALOG = {
         "דיירה",
         "מטרו"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "3-4 stars",
+        "Deira",
+        "Metro"
+      ],
+      "priceRangeEn": "₪140-260 /night",
+      "descriptionEn": "An ibis close to Deira City Centre and the metro station."
     },
     {
       "id": 49,
@@ -1182,7 +1522,14 @@ export const CATALOG = {
         "Downtown",
         "נוף"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "4-5 stars",
+        "Downtown",
+        "View"
+      ],
+      "priceRangeEn": "₪350-650 /night",
+      "descriptionEn": "A 4-star Ramada in Downtown with Dubai skyline views."
     },
     {
       "id": 50,
@@ -1206,7 +1553,14 @@ export const CATALOG = {
         "הילטון",
         "ספא"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "4-5 stars",
+        "Hilton",
+        "Spa"
+      ],
+      "priceRangeEn": "₪280-520 /night",
+      "descriptionEn": "Hilton Garden Inn with a spa and an indoor pool near Port Dubai."
     },
     {
       "id": 51,
@@ -1230,7 +1584,14 @@ export const CATALOG = {
         "דיירה",
         "שוק הזהב"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "3-4 stars",
+        "Deira",
+        "Gold Souk"
+      ],
+      "priceRangeEn": "₪180-340 /night",
+      "descriptionEn": "Golden Tulip in Deira with a rooftop pool, walking distance from the Gold Souk."
     },
     {
       "id": 52,
@@ -1254,7 +1615,14 @@ export const CATALOG = {
         "נקי",
         "דיירה"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "4-5 stars",
+        "Clean",
+        "Deira"
+      ],
+      "priceRangeEn": "₪170-320 /night",
+      "descriptionEn": "A popular 4-star budget hotel in Deira, known for its cleanliness."
     },
     {
       "id": 81,
@@ -1277,7 +1645,14 @@ export const CATALOG = {
         "שדה תעופה",
         "ערך"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "4-5 stars",
+        "Airport",
+        "Value"
+      ],
+      "priceRangeEn": "₪320-580 /night",
+      "descriptionEn": "Excellent value next to Terminal 1 — free shuttle, good breakfast."
     },
     {
       "id": 82,
@@ -1300,7 +1675,14 @@ export const CATALOG = {
         "פאלם",
         "מודרני"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "4-5 stars",
+        "Palm",
+        "Modern"
+      ],
+      "priceRangeEn": "₪450-850 /night",
+      "descriptionEn": "A modern, youthfully designed hotel on the Palm — infinity pool, sea-view deck."
     },
     {
       "id": 83,
@@ -1323,7 +1705,14 @@ export const CATALOG = {
         "דיירה",
         "מטרו"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "4-5 stars",
+        "Deira",
+        "Metro"
+      ],
+      "priceRangeEn": "₪380-680 /night",
+      "descriptionEn": "A modern 4-star in the tourist core of Deira, convenient transport."
     },
     {
       "id": 84,
@@ -1346,7 +1735,14 @@ export const CATALOG = {
         "עסקים",
         "מרכזי"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "4-5 stars",
+        "Business",
+        "Central"
+      ],
+      "priceRangeEn": "₪340-620 /night",
+      "descriptionEn": "A 4-star city-center hotel near the World Trade Centre and Burj Khalifa."
     },
     {
       "id": 85,
@@ -1369,7 +1765,14 @@ export const CATALOG = {
         "צנוע",
         "מטרו"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "4-5 stars",
+        "Budget",
+        "Metro"
+      ],
+      "priceRangeEn": "₪280-510 /night",
+      "descriptionEn": "A popular 4-star budget hotel next to the metro, with a pool and pub."
     },
     {
       "id": 86,
@@ -1392,7 +1795,14 @@ export const CATALOG = {
         "Marina",
         "מטרו"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "4-5 stars",
+        "Marina",
+        "Metro"
+      ],
+      "priceRangeEn": "₪320-580 /night",
+      "descriptionEn": "A comfortable hotel in Internet City, near the metro and the Marina."
     },
     {
       "id": 87,
@@ -1415,7 +1825,14 @@ export const CATALOG = {
         "Mall",
         "שקט"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "4-5 stars",
+        "Mall",
+        "Quiet"
+      ],
+      "priceRangeEn": "₪300-540 /night",
+      "descriptionEn": "A 4-star hotel near the Mall of the Emirates, easy access to Dubai."
     },
     {
       "id": 88,
@@ -1438,7 +1855,14 @@ export const CATALOG = {
         "שקט",
         "משפחות"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "4-5 stars",
+        "Quiet",
+        "Families"
+      ],
+      "priceRangeEn": "₪310-560 /night",
+      "descriptionEn": "A modern hotel in a quiet area, near theme parks and golf."
     },
     {
       "id": 89,
@@ -1461,7 +1885,14 @@ export const CATALOG = {
         "Mall of Emirates",
         "מטרו"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "4-5 stars",
+        "Mall of the Emirates",
+        "Metro"
+      ],
+      "priceRangeEn": "₪290-540 /night",
+      "descriptionEn": "A modern hotel in the heart of Al Barsha, near the Mall of the Emirates and Ski Dubai."
     },
     {
       "id": 90,
@@ -1484,7 +1915,14 @@ export const CATALOG = {
         "JBR",
         "חוף"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "4-5 stars",
+        "JBR",
+        "Beach"
+      ],
+      "priceRangeEn": "₪480-880 /night",
+      "descriptionEn": "A 4-star on JBR, sea views, pool and restaurants in the lively area."
     },
     {
       "id": 91,
@@ -1507,7 +1945,14 @@ export const CATALOG = {
         "עסקים",
         "נוף"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "4-5 stars",
+        "Business",
+        "View"
+      ],
+      "priceRangeEn": "₪430-780 /night",
+      "descriptionEn": "An upscale-yet-moderate business hotel on Sheikh Zayed Road, a high tower with views."
     },
     {
       "id": 92,
@@ -1530,7 +1975,14 @@ export const CATALOG = {
         "Mall",
         "אמין"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "4-5 stars",
+        "Mall",
+        "Reliable"
+      ],
+      "priceRangeEn": "₪320-590 /night",
+      "descriptionEn": "A reliable 4-star in Al Barsha with a pool and a kosher restaurant (seasonal)."
     },
     {
       "id": 93,
@@ -1553,7 +2005,14 @@ export const CATALOG = {
         "JLT",
         "ספא"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "4-5 stars",
+        "JLT",
+        "Spa"
+      ],
+      "priceRangeEn": "₪480-880 /night",
+      "descriptionEn": "A light 5-star hotel in JLT — spa, infinity pool and rooftop bar."
     },
     {
       "id": 94,
@@ -1576,7 +2035,14 @@ export const CATALOG = {
         "Marina",
         "מודרני"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "4-5 stars",
+        "Marina",
+        "Modern"
+      ],
+      "priceRangeEn": "₪450-820 /night",
+      "descriptionEn": "A modern 4-star hotel in the heart of Dubai Marina, near Marina Walk."
     },
     {
       "id": 95,
@@ -1599,7 +2065,14 @@ export const CATALOG = {
         "Bur Dubai",
         "אירופאי"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "4-5 stars",
+        "Bur Dubai",
+        "European"
+      ],
+      "priceRangeEn": "₪380-690 /night",
+      "descriptionEn": "A European-classic hotel in central Bur Dubai, fine breakfast."
     },
     {
       "id": 53,
@@ -1623,7 +2096,14 @@ export const CATALOG = {
         "דירות",
         "משפחות"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "3-4 stars",
+        "Apartments",
+        "Families"
+      ],
+      "priceRangeEn": "₪200-380 /night",
+      "descriptionEn": "Hotel apartments with a kitchenette, ideal for long stays and families."
     },
     {
       "id": 54,
@@ -1647,7 +2127,14 @@ export const CATALOG = {
         "ערבי",
         "שדה תעופה"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "3-4 stars",
+        "Arabic",
+        "Airport"
+      ],
+      "priceRangeEn": "₪200-370 /night",
+      "descriptionEn": "A gently Arabian-style hotel, quiet and comfortable near the airport."
     },
     {
       "id": 55,
@@ -1671,7 +2158,14 @@ export const CATALOG = {
         "מרכזי",
         "מטרו"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "3-4 stars",
+        "Central",
+        "Metro"
+      ],
+      "priceRangeEn": "₪220-400 /night",
+      "descriptionEn": "A veteran budget hotel in central Dubai near a metro station."
     },
     {
       "id": 56,
@@ -1695,7 +2189,14 @@ export const CATALOG = {
         "ערך",
         "Bur Dubai"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "3-4 stars",
+        "Value",
+        "Bur Dubai"
+      ],
+      "priceRangeEn": "₪190-350 /night",
+      "descriptionEn": "Reasonable and well-regarded in Bur Dubai, excellent value for money."
     },
     {
       "id": 57,
@@ -1719,7 +2220,14 @@ export const CATALOG = {
         "DIFC",
         "מודרני"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "3-4 stars",
+        "DIFC",
+        "Modern"
+      ],
+      "priceRangeEn": "₪160-300 /night",
+      "descriptionEn": "A modern ibis neighboring the World Trade Centre and DIFC."
     },
     {
       "id": 58,
@@ -1743,7 +2251,14 @@ export const CATALOG = {
         "רוב",
         "מינימלי"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "3-4 stars",
+        "Popular",
+        "Minimalist"
+      ],
+      "priceRangeEn": "₪200-400 /night",
+      "descriptionEn": "A minimalist, comfortable Rove for city-center lovers."
     },
     {
       "id": 59,
@@ -1767,7 +2282,14 @@ export const CATALOG = {
         "מעוצב",
         "היסטורי"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "3-4 stars",
+        "Stylish",
+        "Historic"
+      ],
+      "priceRangeEn": "₪160-300 /night",
+      "descriptionEn": "Stylish and modern in the historic Al Raffa neighborhood."
     },
     {
       "id": 60,
@@ -1791,7 +2313,14 @@ export const CATALOG = {
         "שאטל",
         "בריכה"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "3-4 stars",
+        "Shuttle",
+        "Pool"
+      ],
+      "priceRangeEn": "₪230-420 /night",
+      "descriptionEn": "A Premier Inn with a pool and free shuttle."
     },
     {
       "id": 61,
@@ -1815,7 +2344,14 @@ export const CATALOG = {
         "אמנות",
         "היסטורי"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "Budget",
+        "Art",
+        "Historic"
+      ],
+      "priceRangeEn": "₪250-450 /night",
+      "descriptionEn": "An artistic boutique hotel in the historic Al Fahidi quarter, one of a kind."
     },
     {
       "id": 62,
@@ -1839,7 +2375,14 @@ export const CATALOG = {
         "מסורתי",
         "מוזיאון"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Budget",
+        "Traditional",
+        "Museum"
+      ],
+      "priceRangeEn": "₪180-320 /night",
+      "descriptionEn": "A traditional guesthouse with open courtyards facing the Dubai Museum."
     },
     {
       "id": 63,
@@ -1863,7 +2406,14 @@ export const CATALOG = {
         "הוסטל",
         "צעירים"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Budget",
+        "Hostel",
+        "Young crowd"
+      ],
+      "priceRangeEn": "₪80-180 /night",
+      "descriptionEn": "A modern hostel with sleeping pods and fast WiFi, ideal for tight budgets."
     },
     {
       "id": 64,
@@ -1887,7 +2437,14 @@ export const CATALOG = {
         "בריכה",
         "גג"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "3-4 stars",
+        "Pool",
+        "Rooftop"
+      ],
+      "priceRangeEn": "₪150-280 /night",
+      "descriptionEn": "Budget-friendly with a bar, rooftop bars and a pool — excellent value."
     },
     {
       "id": 65,
@@ -1911,7 +2468,14 @@ export const CATALOG = {
         "צבעוני",
         "חוף"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "3-4 stars",
+        "Colorful",
+        "Beach"
+      ],
+      "priceRangeEn": "₪160-300 /night",
+      "descriptionEn": "A colorful ibis Styles close to Jumeirah beach."
     },
     {
       "id": 66,
@@ -1935,7 +2499,14 @@ export const CATALOG = {
         "מורשת",
         "קריק"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "3-4 stars",
+        "Heritage",
+        "Creek"
+      ],
+      "priceRangeEn": "₪300-500 /night",
+      "descriptionEn": "A heritage hotel in classic Arabian design on the banks of the Creek."
     },
     {
       "id": 67,
@@ -1959,7 +2530,14 @@ export const CATALOG = {
         "דיירה",
         "זול"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Budget",
+        "Deira",
+        "Cheap"
+      ],
+      "priceRangeEn": "₪130-240 /night",
+      "descriptionEn": "Simple and clean in Deira, close to the Gold Souk and the metro."
     },
     {
       "id": 68,
@@ -1983,7 +2561,14 @@ export const CATALOG = {
         "לבנוני",
         "TECOM"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "3-4 stars",
+        "Lebanese",
+        "TECOM"
+      ],
+      "priceRangeEn": "₪200-380 /night",
+      "descriptionEn": "A Lebanese hotel with an excellent Middle Eastern restaurant."
     },
     {
       "id": 69,
@@ -2007,7 +2592,14 @@ export const CATALOG = {
         "פשוט",
         "דיירה"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Budget",
+        "Simple",
+        "Deira"
+      ],
+      "priceRangeEn": "₪110-220 /night",
+      "descriptionEn": "Sun and sand in Deira, simple rooms near the port."
     },
     {
       "id": 70,
@@ -2031,7 +2623,14 @@ export const CATALOG = {
         "אכסנייה",
         "צעירים"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Budget",
+        "Inn",
+        "Young crowd"
+      ],
+      "priceRangeEn": "₪60-150 /night",
+      "descriptionEn": "Dubai's official youth hostel, with air-conditioned dorms."
     },
     {
       "id": 71,
@@ -2055,7 +2654,14 @@ export const CATALOG = {
         "שרתון",
         "בריכה"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "3-4 stars",
+        "Sheraton",
+        "Pool"
+      ],
+      "priceRangeEn": "₪250-450 /night",
+      "descriptionEn": "A comfortable, reliable Four Points in Bur Dubai with a pool."
     },
     {
       "id": 72,
@@ -2079,7 +2685,14 @@ export const CATALOG = {
         "ותיק",
         "Bur Dubai"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Budget",
+        "Established",
+        "Bur Dubai"
+      ],
+      "priceRangeEn": "₪150-270 /night",
+      "descriptionEn": "Veteran and reliable in Bur Dubai, popular with returning travelers."
     },
     {
       "id": 73,
@@ -2103,7 +2716,14 @@ export const CATALOG = {
         "היאט",
         "בוקר כלול"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "3-4 stars",
+        "Hyatt",
+        "Breakfast included"
+      ],
+      "priceRangeEn": "₪220-400 /night",
+      "descriptionEn": "A budget-premium Hyatt Place in Deira with breakfast included."
     },
     {
       "id": 74,
@@ -2127,7 +2747,14 @@ export const CATALOG = {
         "ערבי",
         "ותיק"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Budget",
+        "Arabic",
+        "Established"
+      ],
+      "priceRangeEn": "₪130-250 /night",
+      "descriptionEn": "A veteran in Bur Dubai with an Arabian atmosphere, near BurJuman."
     },
     {
       "id": 75,
@@ -2151,7 +2778,14 @@ export const CATALOG = {
         "משופץ",
         "שוקים"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "3-4 stars",
+        "Renovated",
+        "Souks"
+      ],
+      "priceRangeEn": "₪130-250 /night",
+      "descriptionEn": "Recently renovated with a rooftop pool, near the souks."
     },
     {
       "id": 76,
@@ -2175,7 +2809,14 @@ export const CATALOG = {
         "מילניום",
         "שירות"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "3-4 stars",
+        "Millennium",
+        "Service"
+      ],
+      "priceRangeEn": "₪220-400 /night",
+      "descriptionEn": "Modern in Barsha Heights, known for its service-to-price ratio."
     },
     {
       "id": 77,
@@ -2199,7 +2840,14 @@ export const CATALOG = {
         "Business Bay",
         "בריכה"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "3-4 stars",
+        "Business Bay",
+        "Pool"
+      ],
+      "priceRangeEn": "₪200-380 /night",
+      "descriptionEn": "A trendy Citymax in Business Bay with a pool and contemporary design."
     },
     {
       "id": 78,
@@ -2223,7 +2871,14 @@ export const CATALOG = {
         "Aloft",
         "אקספו"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "3-4 stars",
+        "Aloft",
+        "Expo"
+      ],
+      "priceRangeEn": "₪200-380 /night",
+      "descriptionEn": "Young and musical in Dubai South, near Expo City."
     },
     {
       "id": 79,
@@ -2247,7 +2902,14 @@ export const CATALOG = {
         "בוטיק",
         "Al Barsha"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "3-4 stars",
+        "Boutique",
+        "Al Barsha"
+      ],
+      "priceRangeEn": "₪190-340 /night",
+      "descriptionEn": "A small contemporary-style boutique, good value for money."
     },
     {
       "id": 80,
@@ -2271,7 +2933,14 @@ export const CATALOG = {
         "בסיסי",
         "זול"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Budget",
+        "Basic",
+        "Cheap"
+      ],
+      "priceRangeEn": "₪120-230 /night",
+      "descriptionEn": "Basic, correct service, an economical option for trips."
     },
     {
       "id": 96,
@@ -2297,7 +2966,15 @@ export const CATALOG = {
         "הילטון",
         "יוקרה"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "5 stars",
+        "Kosher",
+        "Hilton",
+        "Luxury"
+      ],
+      "priceRangeEn": "₪750-3,300 /night",
+      "descriptionEn": "Part of Al Habtoor City — kosher menu at the hotel by advance request, gourmet restaurants, pool and entertainment in the complex."
     },
     {
       "id": 97,
@@ -2321,7 +2998,14 @@ export const CATALOG = {
         "Bur Dubai",
         "ערך"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "3-4 stars",
+        "Bur Dubai",
+        "Value"
+      ],
+      "priceRangeEn": "₪180-340 /night",
+      "descriptionEn": "A clean, cheap 3-star in central Bur Dubai — close to the souks, metro and the Al Fahidi quarter."
     },
     {
       "id": 98,
@@ -2345,7 +3029,14 @@ export const CATALOG = {
         "דיירה",
         "מטרו"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Budget",
+        "Deira",
+        "Metro"
+      ],
+      "priceRangeEn": "₪140-260 /night",
+      "descriptionEn": "A budget hotel in Deira next to the metro — efficient for tourists needing fast public transport."
     },
     {
       "id": 99,
@@ -2369,7 +3060,14 @@ export const CATALOG = {
         "Al Wasl",
         "פארק"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "3-4 stars",
+        "Al Wasl",
+        "Park"
+      ],
+      "priceRangeEn": "₪240-440 /night",
+      "descriptionEn": "A modern 3-star in Al Wasl — close to City Walk, Safa Park and the city center at a fair price."
     },
     {
       "id": 100,
@@ -2393,7 +3091,14 @@ export const CATALOG = {
         "Bur Dubai",
         "נחל"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "3-4 stars",
+        "Bur Dubai",
+        "Creek"
+      ],
+      "priceRangeEn": "₪260-460 /night",
+      "descriptionEn": "A new 3-star on Dubai Creek — Old Dubai views, breakfast included, near the abra boats and the souks."
     },
     {
       "id": 200,
@@ -2419,7 +3124,15 @@ export const CATALOG = {
         "הבטור",
         "יוקרה"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "5 stars",
+        "Kosher",
+        "Habtoor",
+        "Luxury"
+      ],
+      "priceRangeEn": "₪900-3,800 /night",
+      "descriptionEn": "A luxury hotel in the Al Habtoor City complex — kosher-friendly with advance meal coordination, pool and gourmet restaurants."
     },
     {
       "id": 201,
@@ -2445,7 +3158,15 @@ export const CATALOG = {
         "OU",
         "סופ\"ש"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "5 stars",
+        "Kosher",
+        "OU",
+        "Weekend"
+      ],
+      "priceRangeEn": "₪750-2,400 /night",
+      "descriptionEn": "A 5-star hotel in Garhoud — home to The Kosher Place restaurant (OU-supervised) for weekends, with a kosher half-board option."
     },
     {
       "id": 102,
@@ -2468,7 +3189,14 @@ export const CATALOG = {
         "לגו",
         "פארק"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "Family-friendly",
+        "Lego",
+        "Park"
+      ],
+      "priceRangeEn": "₪1,200-3,500 /night",
+      "descriptionEn": "A LEGO-themed family hotel at Dubai Parks & Resorts — 250 rooms themed in different styles (pirates, knights, kingdom). Free park entry."
     }
   ],
   "restaurants": [
@@ -2492,7 +3220,14 @@ export const CATALOG = {
         "יפני",
         "סושי"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "Ultra-luxury",
+        "Japanese",
+        "Sushi"
+      ],
+      "priceRangeEn": "₪1,400-2,200  per couple",
+      "descriptionEn": "A branch of chef Nobu's world-famous restaurant — Japanese-Peruvian fusion."
     },
     {
       "id": 102,
@@ -2515,7 +3250,14 @@ export const CATALOG = {
         "מישלן",
         "אקוריום"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "Ultra-luxury",
+        "Michelin",
+        "Aquarium"
+      ],
+      "priceRangeEn": "₪2,000-2,800  per couple",
+      "descriptionEn": "An award-winning seafood restaurant with a stunning aquarium."
     },
     {
       "id": 103,
@@ -2537,7 +3279,14 @@ export const CATALOG = {
         "יפני",
         "ברנץ'"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "Ultra-luxury",
+        "Japanese",
+        "Brunch"
+      ],
+      "priceRangeEn": "₪1,400-2,000  per couple",
+      "descriptionEn": "An iconic Japanese izakaya-bar with a global reputation and a buzzing atmosphere."
     },
     {
       "id": 104,
@@ -2560,7 +3309,14 @@ export const CATALOG = {
         "מישלן",
         "הודי"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Ultra-luxury",
+        "Michelin",
+        "Indian"
+      ],
+      "priceRangeEn": "₪1,600-2,400  per couple",
+      "descriptionEn": "An avant-garde, Michelin-starred Indian restaurant, 20 courses."
     },
     {
       "id": 105,
@@ -2583,7 +3339,14 @@ export const CATALOG = {
         "מישלן",
         "אש"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Ultra-luxury",
+        "Michelin",
+        "Grill"
+      ],
+      "priceRangeEn": "₪1,200-1,800  per couple",
+      "descriptionEn": "A Michelin-starred Danish chef, wood-fire cooking with seasonal ingredients."
     },
     {
       "id": 106,
@@ -2606,7 +3369,14 @@ export const CATALOG = {
         "צרפתי",
         "מישלן"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Ultra-luxury",
+        "French",
+        "Michelin"
+      ],
+      "priceRangeEn": "₪2,000-3,000  per couple",
+      "descriptionEn": "A French chef with 3 Michelin stars, contemporary French cuisine."
     },
     {
       "id": 107,
@@ -2628,7 +3398,14 @@ export const CATALOG = {
         "פרואני",
         "קוקטיילים"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Ultra-luxury",
+        "Peruvian",
+        "Cocktails"
+      ],
+      "priceRangeEn": "₪1,200-1,800  per couple",
+      "descriptionEn": "An upscale Peruvian restaurant with ceviche and cocktails."
     },
     {
       "id": 108,
@@ -2650,7 +3427,14 @@ export const CATALOG = {
         "סטייק",
         "מפורסם"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "Ultra-luxury",
+        "Steak",
+        "Famous"
+      ],
+      "priceRangeEn": "₪2,000-4,000  per couple",
+      "descriptionEn": "Salt Bae's famous steakhouse."
     },
     {
       "id": 109,
@@ -2673,7 +3457,14 @@ export const CATALOG = {
         "סיני",
         "קנטוני"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Ultra-luxury",
+        "Chinese",
+        "Cantonese"
+      ],
+      "priceRangeEn": "₪1,400-2,000  per couple",
+      "descriptionEn": "Upscale contemporary Cantonese Chinese, known worldwide."
     },
     {
       "id": 110,
@@ -2695,7 +3486,14 @@ export const CATALOG = {
         "קוריאני",
         "פיוז'ן"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Ultra-luxury",
+        "Korean",
+        "Fusion"
+      ],
+      "priceRangeEn": "₪1,200-1,800  per couple",
+      "descriptionEn": "Korean-Japanese by a Michelin-starred chef, bold fusion."
     },
     {
       "id": 111,
@@ -2718,7 +3516,14 @@ export const CATALOG = {
         "בריטי",
         "יצירתי"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Ultra-luxury",
+        "British",
+        "Creative"
+      ],
+      "priceRangeEn": "₪1,800-2,500  per couple",
+      "descriptionEn": "An acclaimed British chef with a creative menu inspired by culinary history."
     },
     {
       "id": 112,
@@ -2740,7 +3545,14 @@ export const CATALOG = {
         "פירות ים",
         "רומנטי"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "Upscale",
+        "Seafood",
+        "Romantic"
+      ],
+      "priceRangeEn": "₪1,000-1,600  per couple",
+      "descriptionEn": "Romantic seafood on a pier over the sea, with Burj Al Arab views."
     },
     {
       "id": 113,
@@ -2762,7 +3574,14 @@ export const CATALOG = {
         "צרפתי",
         "ביסטרו"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Upscale",
+        "French",
+        "Bistro"
+      ],
+      "priceRangeEn": "₪900-1,400  per couple",
+      "descriptionEn": "An elegant Niçoise bistro with light dishes and fresh fish."
     },
     {
       "id": 114,
@@ -2784,7 +3603,14 @@ export const CATALOG = {
         "איטלקי",
         "פסטה"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Upscale",
+        "Italian",
+        "Pasta"
+      ],
+      "priceRangeEn": "₪900-1,400  per couple",
+      "descriptionEn": "Classic, elegant Italian with fine pasta and truffles."
     },
     {
       "id": 115,
@@ -2806,7 +3632,14 @@ export const CATALOG = {
         "דרום אמריקאי",
         "ג'ונגל"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Upscale",
+        "South American",
+        "Jungle"
+      ],
+      "priceRangeEn": "₪1,000-1,600  per couple",
+      "descriptionEn": "A South American rainforest-jungle style with cocktails and ceviche."
     },
     {
       "id": 116,
@@ -2828,7 +3661,14 @@ export const CATALOG = {
         "תאילנדי",
         "נוף"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "Upscale",
+        "Thai",
+        "View"
+      ],
+      "priceRangeEn": "₪800-1,200  per couple",
+      "descriptionEn": "Traditional Thai with direct views of Burj Khalifa and the fountain lake."
     },
     {
       "id": 117,
@@ -2850,7 +3690,14 @@ export const CATALOG = {
         "איטלקי",
         "רטרו"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Upscale",
+        "Italian",
+        "Retro"
+      ],
+      "priceRangeEn": "₪900-1,400  per couple",
+      "descriptionEn": "Italian by chef Massimo Bottura in a 1970s seaside style."
     },
     {
       "id": 119,
@@ -2872,7 +3719,14 @@ export const CATALOG = {
         "הודי",
         "מלכותי"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Upscale",
+        "Indian",
+        "Royal"
+      ],
+      "priceRangeEn": "₪700-1,100  per couple",
+      "descriptionEn": "Royal Indian with Mughlai cuisine and refined chef's dishes."
     },
     {
       "id": 120,
@@ -2894,7 +3748,14 @@ export const CATALOG = {
         "איטלקי",
         "וונציה"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Upscale",
+        "Italian",
+        "Venice"
+      ],
+      "priceRangeEn": "₪1,000-1,600  per couple",
+      "descriptionEn": "Legendary Italian from Venice, known for pasta and the Rossini spritz."
     },
     {
       "id": 121,
@@ -2916,7 +3777,14 @@ export const CATALOG = {
         "יפני",
         "סאקה"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Upscale",
+        "Japanese",
+        "Sake"
+      ],
+      "priceRangeEn": "₪1,000-1,600  per couple",
+      "descriptionEn": "Contemporary Japanese with omakase dishes and an excellent sake bar."
     },
     {
       "id": 122,
@@ -2938,7 +3806,14 @@ export const CATALOG = {
         "סטייק",
         "ויסקי"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Upscale",
+        "Steak",
+        "Whisky"
+      ],
+      "priceRangeEn": "₪800-1,200  per couple",
+      "descriptionEn": "A fashionable Canadian-American steakhouse with a whisky bar."
     },
     {
       "id": 123,
@@ -2960,7 +3835,14 @@ export const CATALOG = {
         "אייל שני",
         "חוויה"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "Israeli",
+        "Ayel Sheni",
+        "Experience"
+      ],
+      "priceRangeEn": "₪1,000-1,800  per couple",
+      "descriptionEn": "The Dubai branch of Eyal Shani's legendary restaurant — a special night out."
     },
     {
       "id": 124,
@@ -2982,7 +3864,14 @@ export const CATALOG = {
         "כשר",
         "יוקרה"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "Israeli",
+        "Kosher",
+        "Luxury"
+      ],
+      "priceRangeEn": "₪800-1,400  per couple",
+      "descriptionEn": "An upscale kosher restaurant inside the Armani hotel, international menu."
     },
     {
       "id": 125,
@@ -3004,7 +3893,14 @@ export const CATALOG = {
         "כשר",
         "יוקרה"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "Israeli",
+        "Kosher",
+        "Luxury"
+      ],
+      "priceRangeEn": "₪700-1,200  per couple",
+      "descriptionEn": "A fashionable kosher restaurant on the 31st floor of Sofitel Downtown."
     },
     {
       "id": 126,
@@ -3026,7 +3922,14 @@ export const CATALOG = {
         "פיתה",
         "אביב משה"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "Israeli",
+        "Pita",
+        "Aviv Moshe"
+      ],
+      "priceRangeEn": "₪200-350  per couple",
+      "descriptionEn": "Aviv Moshe's pita chain — pita, roasted vegetables, burgers."
     },
     {
       "id": 127,
@@ -3048,7 +3951,14 @@ export const CATALOG = {
         "כשר",
         "ים תיכוני"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Israeli",
+        "Kosher",
+        "Mediterranean"
+      ],
+      "priceRangeEn": "₪400-800  per couple",
+      "descriptionEn": "Kosher Mediterranean-Middle Eastern: hummus, shakshuka, falafel and more."
     },
     {
       "id": 128,
@@ -3070,7 +3980,14 @@ export const CATALOG = {
         "כשר",
         "ראשון"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "Israeli",
+        "Kosher",
+        "Sunday"
+      ],
+      "priceRangeEn": "₪700-1,200  per couple",
+      "descriptionEn": "The first Israeli restaurant in Dubai — kosher, with Burj Al Arab views."
     },
     {
       "id": 129,
@@ -3092,7 +4009,14 @@ export const CATALOG = {
         "כשר",
         "חלבי"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Israeli",
+        "Kosher",
+        "Dairy"
+      ],
+      "priceRangeEn": "₪200-450  per couple",
+      "descriptionEn": "Kosher catering and restaurant (Chalav Yisrael) at Golden Mile Palm — breakfast/lunch."
     },
     {
       "id": 130,
@@ -3114,7 +4038,14 @@ export const CATALOG = {
         "כשר",
         "קפה"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Israeli",
+        "Kosher",
+        "Café"
+      ],
+      "priceRangeEn": "₪150-300  per couple",
+      "descriptionEn": "A kosher café with focaccias, shakshuka and hummus — an Israeli vibe."
     },
     {
       "id": 131,
@@ -3136,7 +4067,14 @@ export const CATALOG = {
         "כשר",
         "בשרי"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Israeli",
+        "Kosher",
+        "Meat"
+      ],
+      "priceRangeEn": "₪500-900  per couple",
+      "descriptionEn": "A kosher restaurant in JLT — meat, with contemporary Israeli dishes."
     },
     {
       "id": 132,
@@ -3158,7 +4096,14 @@ export const CATALOG = {
         "כשר",
         "מגוון"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Israeli",
+        "Kosher",
+        "Variety"
+      ],
+      "priceRangeEn": "₪400-700  per couple",
+      "descriptionEn": "A kosher restaurant with a varied menu — Middle Eastern and Mediterranean dishes."
     },
     {
       "id": 135,
@@ -3180,7 +4125,14 @@ export const CATALOG = {
         "יוקרתי",
         "ביתי"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "Lebanese",
+        "Upscale",
+        "Homestyle"
+      ],
+      "priceRangeEn": "₪700-1,100  per couple",
+      "descriptionEn": "Upscale Lebanese with homestyle dishes and palace-like decor."
     },
     {
       "id": 136,
@@ -3202,7 +4154,14 @@ export const CATALOG = {
         "מסורתי",
         "אלגנטי"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "Lebanese",
+        "Traditional",
+        "Elegant"
+      ],
+      "priceRangeEn": "₪600-1,000  per couple",
+      "descriptionEn": "One of Dubai's best, elegant traditional dishes."
     },
     {
       "id": 137,
@@ -3224,7 +4183,14 @@ export const CATALOG = {
         "שווארמה",
         "זול"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Lebanese",
+        "Shawarma",
+        "Cheap"
+      ],
+      "priceRangeEn": "₪150-280  per couple",
+      "descriptionEn": "A popular Levantine chain with falafel, shawarma and fatayer."
     },
     {
       "id": 138,
@@ -3246,7 +4212,14 @@ export const CATALOG = {
         "כפרי",
         "רומנטי"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Lebanese",
+        "Rustic",
+        "Romantic"
+      ],
+      "priceRangeEn": "₪400-700  per couple",
+      "descriptionEn": "Modern with rustic-intimate decor and an authentic homestyle menu."
     },
     {
       "id": 139,
@@ -3268,7 +4241,14 @@ export const CATALOG = {
         "גורמה",
         "גבינות"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Lebanese",
+        "Gourmet",
+        "Cheeses"
+      ],
+      "priceRangeEn": "₪300-550  per couple",
+      "descriptionEn": "A shop-restaurant with gourmet products, cheeses and cooked dishes."
     },
     {
       "id": 142,
@@ -3290,7 +4270,14 @@ export const CATALOG = {
         "פלאפל",
         "זול"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Lebanese",
+        "Falafel",
+        "Cheap"
+      ],
+      "priceRangeEn": "₪40-100  per couple",
+      "descriptionEn": "A high-quality falafel, hummus and shawarma chain."
     },
     {
       "id": 143,
@@ -3312,7 +4299,14 @@ export const CATALOG = {
         "כנאפה",
         "מסורתי"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Lebanese",
+        "Knafeh",
+        "Traditional"
+      ],
+      "priceRangeEn": "₪300-550  per couple",
+      "descriptionEn": "A famous chain with traditional dishes and amazing knafeh."
     },
     {
       "id": 145,
@@ -3334,7 +4328,14 @@ export const CATALOG = {
         "מזה",
         "נרגילה"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Lebanese",
+        "Mezze",
+        "Shisha"
+      ],
+      "priceRangeEn": "₪350-600  per couple",
+      "descriptionEn": "A rich mezze selection, grill and shisha."
     },
     {
       "id": 147,
@@ -3356,7 +4357,14 @@ export const CATALOG = {
         "סטייק",
         "פרמיום"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "Turkish",
+        "Steak",
+        "Premium"
+      ],
+      "priceRangeEn": "₪600-1,000  per couple",
+      "descriptionEn": "The famous Turkish steak chain — premium meat."
     },
     {
       "id": 148,
@@ -3378,7 +4386,14 @@ export const CATALOG = {
         "מודרני",
         "יוקרתי"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "Turkish",
+        "Modern",
+        "Upscale"
+      ],
+      "priceRangeEn": "₪700-1,100  per couple",
+      "descriptionEn": "Modern Turkish in Al Habtoor City with creative cooking and fresh simit."
     },
     {
       "id": 149,
@@ -3400,7 +4415,14 @@ export const CATALOG = {
         "ביתי",
         "מוסאקה"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Turkish",
+        "Homestyle",
+        "Moussaka"
+      ],
+      "priceRangeEn": "₪400-700  per couple",
+      "descriptionEn": "A veteran favorite with homestyle dishes like moussaka and İşkembe."
     },
     {
       "id": 150,
@@ -3422,7 +4444,14 @@ export const CATALOG = {
         "מודרני",
         "DIFC"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Turkish",
+        "Modern",
+        "DIFC"
+      ],
+      "priceRangeEn": "₪700-1,100  per couple",
+      "descriptionEn": "In a modern Istanbul style with Mediterranean dishes."
     },
     {
       "id": 151,
@@ -3444,7 +4473,14 @@ export const CATALOG = {
         "יוקרתי",
         "עות'מני"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "Turkish",
+        "Upscale",
+        "Ottoman"
+      ],
+      "priceRangeEn": "₪700-1,100  per couple",
+      "descriptionEn": "A lavish Turkish restaurant at Jumeirah Zabeel Saray with Ottoman decor."
     },
     {
       "id": 152,
@@ -3466,7 +4502,14 @@ export const CATALOG = {
         "מזה",
         "גריל"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Turkish",
+        "Mezze",
+        "Grill"
+      ],
+      "priceRangeEn": "₪500-900  per couple",
+      "descriptionEn": "A Turkish restaurant at Rixos Premium — mezze, grill, seafood and desserts."
     },
     {
       "id": 153,
@@ -3488,7 +4531,14 @@ export const CATALOG = {
         "מסורתי",
         "קניון"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Turkish",
+        "Traditional",
+        "Mall"
+      ],
+      "priceRangeEn": "₪400-700  per couple",
+      "descriptionEn": "A Turkish restaurant at Sheraton Mall of the Emirates — traditional recipes with fresh ingredients."
     },
     {
       "id": 154,
@@ -3510,7 +4560,14 @@ export const CATALOG = {
         "בוקר",
         "מנמן"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Turkish",
+        "Breakfast",
+        "Cozy"
+      ],
+      "priceRangeEn": "₪200-400  per couple",
+      "descriptionEn": "Traditional Turkish breakfast — menemen, sujuk, cheeses and pastries."
     },
     {
       "id": 156,
@@ -3532,7 +4589,14 @@ export const CATALOG = {
         "קלאסי",
         "JLT"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Turkish",
+        "Classic",
+        "JLT"
+      ],
+      "priceRangeEn": "₪350-600  per couple",
+      "descriptionEn": "A classic with Hünkar Beğendi and İşkembe-taş-kebab."
     },
     {
       "id": 157,
@@ -3554,7 +4618,14 @@ export const CATALOG = {
         "המבורגר",
         "סולט ביי"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Turkish",
+        "Burgers",
+        "Salt Bae"
+      ],
+      "priceRangeEn": "₪300-550  per couple",
+      "descriptionEn": "Salt Bae's cheaper version — Turkish burgers."
     },
     {
       "id": 159,
@@ -3576,7 +4647,14 @@ export const CATALOG = {
         "אמיראתי",
         "מסורתי"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "Casual",
+        "Emirati",
+        "Traditional"
+      ],
+      "priceRangeEn": "₪300-550  per couple",
+      "descriptionEn": "Authentic Emirati with classic decor and dishes like harees and machboos."
     },
     {
       "id": 160,
@@ -3598,7 +4676,14 @@ export const CATALOG = {
         "אמיראתי",
         "היסטורי"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "Casual",
+        "Emirati",
+        "Historic"
+      ],
+      "priceRangeEn": "₪150-280  per couple",
+      "descriptionEn": "An iconic Emirati café in the heart of Al Fahidi with luqaimat and lahm."
     },
     {
       "id": 161,
@@ -3620,7 +4705,14 @@ export const CATALOG = {
         "פקיסטני",
         "אגדי"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "Casual",
+        "Pakistani",
+        "Legendary"
+      ],
+      "priceRangeEn": "₪80-160  per couple",
+      "descriptionEn": "A legendary Pakistani-Indian eatery since 1978, amazing food at rock-bottom prices."
     },
     {
       "id": 162,
@@ -3642,7 +4734,14 @@ export const CATALOG = {
         "דגים",
         "חוף"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Casual",
+        "Seafood",
+        "Beach"
+      ],
+      "priceRangeEn": "₪120-220  per couple",
+      "descriptionEn": "On the seafront with fresh fried fish and local curry."
     },
     {
       "id": 163,
@@ -3664,7 +4763,14 @@ export const CATALOG = {
         "פקיסטני",
         "ביריאני"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Casual",
+        "Pakistani",
+        "Biryani"
+      ],
+      "priceRangeEn": "₪80-160  per couple",
+      "descriptionEn": "Casual Pakistani, biryani and nihari — popular with Israelis too."
     },
     {
       "id": 164,
@@ -3686,7 +4792,14 @@ export const CATALOG = {
         "הודי",
         "קארי"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Casual",
+        "Indian",
+        "Curry"
+      ],
+      "priceRangeEn": "₪200-380  per couple",
+      "descriptionEn": "A popular Indian chain with curry, tandoori and naan."
     },
     {
       "id": 165,
@@ -3708,7 +4821,14 @@ export const CATALOG = {
         "הודי",
         "בוליווד"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Casual",
+        "Indian",
+        "Bollywood"
+      ],
+      "priceRangeEn": "₪300-550  per couple",
+      "descriptionEn": "Bollywood-style Indian inspired by the singer Asha Bhosle."
     },
     {
       "id": 166,
@@ -3730,7 +4850,14 @@ export const CATALOG = {
         "הודי",
         "דוסה"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Casual",
+        "Indian",
+        "Dosa"
+      ],
+      "priceRangeEn": "₪120-220  per couple",
+      "descriptionEn": "Authentic Kerala-Indian with dosa, biryani and seafood."
     },
     {
       "id": 167,
@@ -3752,7 +4879,14 @@ export const CATALOG = {
         "היסטורי",
         "קריק"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Casual",
+        "Historic",
+        "Creek"
+      ],
+      "priceRangeEn": "₪200-380  per couple",
+      "descriptionEn": "Old Emirati in a historic building on the Creek."
     },
     {
       "id": 169,
@@ -3774,7 +4908,14 @@ export const CATALOG = {
         "הודי",
         "מוגולי"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Casual",
+        "Indian",
+        "Mughlai"
+      ],
+      "priceRangeEn": "₪200-380  per couple",
+      "descriptionEn": "Classic Mughlai Indian with korma and butter-chicken dishes."
     },
     {
       "id": 170,
@@ -3796,7 +4937,14 @@ export const CATALOG = {
         "אמיראתי",
         "סמבוסה"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Casual",
+        "Emirati",
+        "Samosa"
+      ],
+      "priceRangeEn": "₪150-280  per couple",
+      "descriptionEn": "Traditional Emirati — samosa, luqaimat and machboos."
     },
     {
       "id": 171,
@@ -3818,7 +4966,14 @@ export const CATALOG = {
         "קבב",
         "ותיק"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "Street food",
+        "Kebab",
+        "Established"
+      ],
+      "priceRangeEn": "₪80-150  per couple",
+      "descriptionEn": "Classic Iranian kebab, open since 1978, one of Dubai's oldest."
     },
     {
       "id": 172,
@@ -3840,7 +4995,14 @@ export const CATALOG = {
         "שווארמה",
         "אגדי"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "Street food",
+        "Shawarma",
+        "Legendary"
+      ],
+      "priceRangeEn": "₪60-120  per couple",
+      "descriptionEn": "A veteran Arabic shawarma and street-food spot in Satwa."
     },
     {
       "id": 173,
@@ -3862,7 +5024,14 @@ export const CATALOG = {
         "תה",
         "אמיראתי"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Street food",
+        "Tea",
+        "Emirati"
+      ],
+      "priceRangeEn": "₪30-80  per couple",
+      "descriptionEn": "An iconic Emirati café, famous for its karak chai (smoky tea)."
     },
     {
       "id": 174,
@@ -3884,7 +5053,14 @@ export const CATALOG = {
         "שווארמה",
         "זול מאוד"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Street food",
+        "Shawarma",
+        "Very cheap"
+      ],
+      "priceRangeEn": "₪20-50  per couple",
+      "descriptionEn": "Giant Arabic shawarma with tahini, very popular."
     },
     {
       "id": 175,
@@ -3906,7 +5082,14 @@ export const CATALOG = {
         "עיראקי",
         "טנור"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Street food",
+        "Iraqi",
+        "Tandoor"
+      ],
+      "priceRangeEn": "₪100-200  per couple",
+      "descriptionEn": "Iraqi with fatteh, kebab and hot tandoor bread."
     },
     {
       "id": 176,
@@ -3928,7 +5111,14 @@ export const CATALOG = {
         "תה",
         "הודי"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Street food",
+        "Tea",
+        "Indian"
+      ],
+      "priceRangeEn": "₪10-40  per couple",
+      "descriptionEn": "Karak chai and Indian street food, the most authentic."
     },
     {
       "id": 177,
@@ -3950,7 +5140,14 @@ export const CATALOG = {
         "איראני",
         "זעפרן"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Street food",
+        "Iranian",
+        "Saffron"
+      ],
+      "priceRangeEn": "₪100-180  per couple",
+      "descriptionEn": "Iranian street food with kebab, khubz and saffron rice."
     },
     {
       "id": 178,
@@ -3972,7 +5169,14 @@ export const CATALOG = {
         "שווארמה",
         "JBR"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Street food",
+        "Shawarma",
+        "JBR"
+      ],
+      "priceRangeEn": "₪25-60  per couple",
+      "descriptionEn": "Juicy chicken and lamb shawarma, an endless queue."
     },
     {
       "id": 179,
@@ -3994,7 +5198,14 @@ export const CATALOG = {
         "בוקר",
         "אמיראתי"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Street food",
+        "Breakfast",
+        "Emirati"
+      ],
+      "priceRangeEn": "₪50-100  per couple",
+      "descriptionEn": "Emirati breakfast with luqaimat, halwa and chai."
     },
     {
       "id": 180,
@@ -4016,7 +5227,14 @@ export const CATALOG = {
         "בנגלדשי",
         "זול"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Street food",
+        "Bangladeshi",
+        "Cheap"
+      ],
+      "priceRangeEn": "₪60-110  per couple",
+      "descriptionEn": "Bangladeshi-Indian with cheap biryani, dal and curry."
     },
     {
       "id": 181,
@@ -4038,7 +5256,14 @@ export const CATALOG = {
         "שוק",
         "מגוון"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Street food",
+        "Souk",
+        "Variety"
+      ],
+      "priceRangeEn": "₪50-100  per couple",
+      "descriptionEn": "A casual food market with stalls from across Asia — Indian, Filipino, Egyptian."
     },
     {
       "id": 182,
@@ -4060,7 +5285,14 @@ export const CATALOG = {
         "חומוס",
         "בוקר"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Street food",
+        "Hummus",
+        "Breakfast"
+      ],
+      "priceRangeEn": "₪60-120  per couple",
+      "descriptionEn": "Egyptian-Lebanese hummus and ful, a popular breakfast."
     },
     {
       "id": 183,
@@ -4082,7 +5314,14 @@ export const CATALOG = {
         "איטלקי",
         "משפחתי"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "Kosher",
+        "Italian",
+        "Family-friendly"
+      ],
+      "priceRangeEn": "₪400-700  per couple",
+      "descriptionEn": "A kosher Italian restaurant — pasta, pizza and antipasti with kosher wines. Family atmosphere."
     },
     {
       "id": 184,
@@ -4104,7 +5343,14 @@ export const CATALOG = {
         "ישראלי",
         "מנגל"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Kosher",
+        "Israeli",
+        "BBQ"
+      ],
+      "priceRangeEn": "₪250-500  per couple",
+      "descriptionEn": "A kosher Israeli restaurant — salads, grill and pitas, homestyle. Local rabbinical supervision."
     },
     {
       "id": 185,
@@ -4126,7 +5372,14 @@ export const CATALOG = {
         "מאפייה",
         "קונדיטוריה"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Kosher",
+        "Bakery",
+        "Patisserie"
+      ],
+      "priceRangeEn": "₪80-200  per person",
+      "descriptionEn": "A kosher French bakery in the Marina — croissants, baguettes, cookies and a patisserie boutique. All fresh each morning."
     },
     {
       "id": 193,
@@ -4149,7 +5402,13 @@ export const CATALOG = {
         "כשר",
         "שף"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "Israeli",
+        "Kosher",
+        "Chef"
+      ],
+      "descriptionEn": "A kosher Israeli restaurant in Dubai — Israeli chef, a menu blending the Middle East with Mediterranean influences. Fashionable atmosphere."
     },
     {
       "id": 194,
@@ -4171,7 +5430,13 @@ export const CATALOG = {
         "איטלקי",
         "משפחתי"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Israeli",
+        "Italian",
+        "Family-friendly"
+      ],
+      "descriptionEn": "An Israeli-owned Italian café-restaurant — pastas, pizza and cakes. Family atmosphere and a central location."
     },
     {
       "id": 195,
@@ -4194,7 +5459,13 @@ export const CATALOG = {
         "כשר",
         "המבורגר"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "Israeli",
+        "Kosher",
+        "Burgers"
+      ],
+      "descriptionEn": "A kosher Israeli burger joint in Dubai — fresh meat, house buns, crispy fries and cocktails. A branch of the Israeli chain."
     },
     {
       "id": 196,
@@ -4217,7 +5488,13 @@ export const CATALOG = {
         "כשר מהדרין",
         "שבת"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "Israeli",
+        "Glatt kosher",
+        "Shabbat"
+      ],
+      "descriptionEn": "A glatt-kosher kitchen in Dubai — homestyle Israeli food, a Shabbat menu, holiday meals. Under rabbinical supervision."
     },
     {
       "id": 187,
@@ -4239,7 +5516,13 @@ export const CATALOG = {
         "ים-תיכוני",
         "ברנץ'"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "Café",
+        "Mediterranean",
+        "Brunch"
+      ],
+      "descriptionEn": "A brasserie-café with a Mediterranean menu, vegetarian options and quality coffee. Fashionable atmosphere with multiple branches."
     },
     {
       "id": 188,
@@ -4261,7 +5544,13 @@ export const CATALOG = {
         "מאפים",
         "אינסטגרמי"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "Café",
+        "Pastries",
+        "Instagrammable"
+      ],
+      "descriptionEn": "A fashionable café chain with pink, floral decor — gorgeous pastries, breakfast and wines. Instagrammable. Branches in leading malls."
     },
     {
       "id": 189,
@@ -4283,7 +5572,13 @@ export const CATALOG = {
         "ברנץ'",
         "אמריקאי"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Café",
+        "Brunch",
+        "American"
+      ],
+      "descriptionEn": "An American-coastal style café. A breakfast menu, pastas and healthy salads. 3 branches in Jumeirah and near Miracle Garden."
     },
     {
       "id": 190,
@@ -4305,7 +5600,13 @@ export const CATALOG = {
         "אוסטרלי",
         "ברנץ'"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Café",
+        "Australian",
+        "Brunch"
+      ],
+      "descriptionEn": "An Australian brunch café — barista-quality coffee, omelets, pancakes, healthy salads. 4 branches."
     },
     {
       "id": 191,
@@ -4327,7 +5628,13 @@ export const CATALOG = {
         "ברונץ'",
         "אינסטגרמי"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Café",
+        "Brunch",
+        "Instagrammable"
+      ],
+      "descriptionEn": "A colorful, floral 'garden of Eden'-themed café — a lovely brunch menu, creative dishes and decorated plates. 3 branches in Dubai + Abu Dhabi."
     },
     {
       "id": 192,
@@ -4349,7 +5656,13 @@ export const CATALOG = {
         "בריא",
         "טבעוני"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Café",
+        "Healthy",
+        "Vegan"
+      ],
+      "descriptionEn": "A healthy café at Al Quoz Garden Center and the Fit Lab gym. Salads, smoothies and healthy pastries in a green setting."
     },
     {
       "id": 197,
@@ -4372,7 +5685,13 @@ export const CATALOG = {
         "Tasting",
         "פרמיום"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "2 Michelin stars",
+        "Tasting",
+        "Premium"
+      ],
+      "descriptionEn": "The Swedish chef's restaurant inside Atlantis The Royal — a 12-course Nordic-Japanese degustation menu. Book two months ahead."
     },
     {
       "id": 198,
@@ -4395,7 +5714,13 @@ export const CATALOG = {
         "איטלקי",
         "Niko Romito"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "2 Michelin stars",
+        "Italian",
+        "Niko Romito"
+      ],
+      "descriptionEn": "An Italian restaurant by chef Niko Romito at Bulgari Resort — polished Italian cuisine."
     },
     {
       "id": 199,
@@ -4418,7 +5743,13 @@ export const CATALOG = {
         "נוף",
         "ברג' אל ערב"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "1 Michelin star",
+        "View",
+        "Burj Al Arab"
+      ],
+      "descriptionEn": "The chef's restaurant on the 27th floor of Burj Al Arab — endless sea views, contemporary European cuisine."
     },
     {
       "id": 200,
@@ -4441,7 +5772,13 @@ export const CATALOG = {
         "איטלקי",
         "אופנה"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "1 Michelin star",
+        "Italian",
+        "Fashion"
+      ],
+      "descriptionEn": "An Italian restaurant at the Armani hotel at the base of Burj Khalifa — an elegant atmosphere, an eclectic Italian menu."
     },
     {
       "id": 250,
@@ -4464,7 +5801,14 @@ export const CATALOG = {
         "הודי",
         "טבעוני"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "1 Michelin star",
+        "Indian",
+        "Vegan"
+      ],
+      "priceRangeEn": "AED 555  per person",
+      "descriptionEn": "An innovative Indian-vegan restaurant with a 16-course, yoga-based degustation. The Middle East's first Michelin star for vegan."
     },
     {
       "id": 251,
@@ -4487,7 +5831,13 @@ export const CATALOG = {
         "אומקאסה",
         "סושי"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "1 Michelin star",
+        "Omakase",
+        "Sushi"
+      ],
+      "descriptionEn": "An intimate Japanese omakase restaurant at Bulgari Resort — only 9 bar seats, a daily-changing menu."
     },
     {
       "id": 252,
@@ -4510,7 +5860,13 @@ export const CATALOG = {
         "Tasting",
         "אסיאתי"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "1 Michelin star",
+        "Tasting",
+        "Asian"
+      ],
+      "descriptionEn": "A rooftop restaurant at J1 Beach with only 12 seats — a pan-Asian degustation menu inspired by chef Solemann Haddad."
     },
     {
       "id": 253,
@@ -4533,7 +5889,13 @@ export const CATALOG = {
         "לבנטיני",
         "סורי"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "1 Michelin star",
+        "Levantine",
+        "Syrian"
+      ],
+      "descriptionEn": "A bistro by 3 Syrian brothers — creative modern Levantine cuisine. One of Dubai's hottest restaurants."
     },
     {
       "id": 254,
@@ -4556,7 +5918,13 @@ export const CATALOG = {
         "Tasting",
         "DIFC"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "1 Michelin star",
+        "Tasting",
+        "DIFC"
+      ],
+      "descriptionEn": "A degustation restaurant with a hyper-local menu — a bar table with only 10 seats on the 45th floor of the Gate tower in DIFC."
     },
     {
       "id": 255,
@@ -4579,7 +5947,13 @@ export const CATALOG = {
         "בשרים",
         "Tasting"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "1 Michelin star",
+        "Meats",
+        "Tasting"
+      ],
+      "descriptionEn": "A fire restaurant by Spanish chef Dani García at Atlantis The Royal — meats over coals, a degustation menu."
     },
     {
       "id": 256,
@@ -4602,7 +5976,13 @@ export const CATALOG = {
         "פורטוגלי",
         "דגים"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "1 Michelin star",
+        "Portuguese",
+        "Seafood"
+      ],
+      "descriptionEn": "Innovative Portuguese cuisine by chef Avillez at Mandarin Oriental — fish, seafood and Portuguese wines."
     },
     {
       "id": 257,
@@ -4625,7 +6005,13 @@ export const CATALOG = {
         "מצרי",
         "ערבי"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "1 Michelin star",
+        "Egyptian",
+        "Arabic"
+      ],
+      "descriptionEn": "A modern-Egyptian restaurant by chef Christophe Pelé at Kempinski Marsa Al Arab — a unique modern-Egypt experience."
     },
     {
       "id": 258,
@@ -4648,7 +6034,13 @@ export const CATALOG = {
         "אסיאתי",
         "סושי"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "1 Michelin star",
+        "Asian",
+        "Sushi"
+      ],
+      "descriptionEn": "A sushi and pan-Asian gem at Jumeirah Fishing Harbor — Mediterranean, Japanese and Chinese, casual style."
     },
     {
       "id": 186,
@@ -4670,7 +6062,13 @@ export const CATALOG = {
         "מגוון",
         "מודרני"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "Food hall",
+        "Variety",
+        "Modern"
+      ],
+      "descriptionEn": "A food hall gathering Dubai's best restaurants under one roof — 17+ stalls, a bar and a restaurant. A New York food-hall vibe."
     }
   ],
   "attractions": [
@@ -4698,7 +6096,13 @@ export const CATALOG = {
       "webcam": "https://www.webcamtaxi.com/en/united-arab-emirates/dubai/burj-khalifa-lake-dubai.html",
       "featured": true,
       "ticketType": "online",
-      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-burj-khalifa-levels-124-125-entry-ticket-options-t49019/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
+      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-burj-khalifa-levels-124-125-entry-ticket-options-t49019/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C",
+      "tagsEn": [
+        "Landmark",
+        "Observation deck",
+        "Must-see"
+      ],
+      "descriptionEn": "The world's tallest tower (828m), a breathtaking panoramic observation deck on the 148th floor."
     },
     {
       "id": 202,
@@ -4723,7 +6127,14 @@ export const CATALOG = {
       ],
       "webcam": "https://www.webcamtaxi.com/en/united-arab-emirates/dubai/burj-khalifa-lake-dubai.html",
       "featured": true,
-      "ticketType": "free"
+      "ticketType": "free",
+      "tagsEn": [
+        "Landmark",
+        "Shopping",
+        "Families"
+      ],
+      "priceRangeEn": "Entry Free",
+      "descriptionEn": "One of the world's largest shopping centers, with endless shops, restaurants and attractions."
     },
     {
       "id": 203,
@@ -4747,7 +6158,13 @@ export const CATALOG = {
       ],
       "webcam": "https://www.skylinewebcams.com/en/webcam/united-arab-emirates/dubai/dubai/dubai-marina.html",
       "featured": true,
-      "ticketType": "free"
+      "ticketType": "free",
+      "tagsEn": [
+        "Landmark",
+        "Island",
+        "Monorail"
+      ],
+      "descriptionEn": "A palm-shaped artificial island, one of Dubai's modern engineering marvels."
     },
     {
       "id": 204,
@@ -4772,7 +6189,13 @@ export const CATALOG = {
       ],
       "featured": true,
       "ticketType": "online",
-      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-entry-ticket-to-the-dubai-frame-with-deck-access-t714548/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
+      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-entry-ticket-to-the-dubai-frame-with-deck-access-t714548/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C",
+      "tagsEn": [
+        "Landmark",
+        "Observation deck",
+        "Photography"
+      ],
+      "descriptionEn": "A giant rectangular frame offering a unique view of old and new Dubai."
     },
     {
       "id": 205,
@@ -4795,7 +6218,14 @@ export const CATALOG = {
         "חינם"
       ],
       "featured": false,
-      "ticketType": "free"
+      "ticketType": "free",
+      "tagsEn": [
+        "Landmark",
+        "Promenade",
+        "Free"
+      ],
+      "priceRangeEn": "Free",
+      "descriptionEn": "A modern harbor district with skyscrapers, restaurants and a promenade along a sea canal."
     },
     {
       "id": 206,
@@ -4819,7 +6249,13 @@ export const CATALOG = {
       ],
       "featured": true,
       "ticketType": "online",
-      "ticketUrl": "https://www.getyourguide.com/ain-dubai-l165284/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
+      "ticketUrl": "https://www.getyourguide.com/ain-dubai-l165284/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C",
+      "tagsEn": [
+        "Landmark",
+        "Observation deck",
+        "Romantic"
+      ],
+      "descriptionEn": "The world's tallest observation wheel (250m) with a breathtaking panoramic view."
     },
     {
       "id": 207,
@@ -4842,7 +6278,14 @@ export const CATALOG = {
         "תעלות"
       ],
       "featured": false,
-      "ticketType": "onsite"
+      "ticketType": "onsite",
+      "tagsEn": [
+        "Landmark",
+        "Arabic",
+        "Canals"
+      ],
+      "priceRangeEn": "Entry Free",
+      "descriptionEn": "A lavish hotel and shopping complex in traditional Arabian style, with canals and a magical atmosphere."
     },
     {
       "id": 208,
@@ -4865,7 +6308,13 @@ export const CATALOG = {
         "אברה"
       ],
       "featured": false,
-      "ticketType": "free"
+      "ticketType": "free",
+      "tagsEn": [
+        "Landmark",
+        "Historic",
+        "Abra"
+      ],
+      "descriptionEn": "A historic waterway, the beating heart of old Dubai, with traditional abra boat rides."
     },
     {
       "id": 209,
@@ -4889,7 +6338,13 @@ export const CATALOG = {
       ],
       "featured": true,
       "ticketType": "online",
-      "ticketUrl": "https://www.getyourguide.com/miracle-garden-l3351/dubai-miracle-garden-skip-the-line-ticket-t405844/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
+      "ticketUrl": "https://www.getyourguide.com/miracle-garden-l3351/dubai-miracle-garden-skip-the-line-ticket-t405844/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C",
+      "tagsEn": [
+        "Landmark",
+        "Flowers",
+        "Photography"
+      ],
+      "descriptionEn": "The world's largest flower garden, with floral creations of millions of flowers."
     },
     {
       "id": 210,
@@ -4914,7 +6369,13 @@ export const CATALOG = {
       ],
       "featured": true,
       "ticketType": "online",
-      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-museum-of-the-future-admission-ticket-t411488/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
+      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-museum-of-the-future-admission-ticket-t411488/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C",
+      "tagsEn": [
+        "Museum",
+        "Technology",
+        "Architecture"
+      ],
+      "descriptionEn": "A stunning futuristic museum presenting visions and technologies that will shape tomorrow's world."
     },
     {
       "id": 211,
@@ -4938,7 +6399,13 @@ export const CATALOG = {
       ],
       "featured": false,
       "ticketType": "online",
-      "ticketUrl": "https://www.getyourguide.com/dubai-aquarium-underwater-zoo-l3333/dubai-aquarium-and-underwater-zoo-entry-ticket-t123092/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
+      "ticketUrl": "https://www.getyourguide.com/dubai-aquarium-underwater-zoo-l3333/dubai-aquarium-and-underwater-zoo-entry-ticket-t123092/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C",
+      "tagsEn": [
+        "Museum",
+        "Aquarium",
+        "Families"
+      ],
+      "descriptionEn": "A giant aquarium inside Dubai Mall with a glass tunnel and diving tours."
     },
     {
       "id": 212,
@@ -4962,7 +6429,13 @@ export const CATALOG = {
       ],
       "featured": false,
       "ticketType": "online",
-      "ticketUrl": "https://www.getyourguide.com/dubai-garden-glow-l169697/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
+      "ticketUrl": "https://www.getyourguide.com/dubai-garden-glow-l169697/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C",
+      "tagsEn": [
+        "Museum",
+        "Light",
+        "Nightlife"
+      ],
+      "descriptionEn": "A magical nighttime art park with light displays and glowing sculptures."
     },
     {
       "id": 213,
@@ -4985,7 +6458,14 @@ export const CATALOG = {
         "משפחות"
       ],
       "featured": true,
-      "ticketType": "free"
+      "ticketType": "free",
+      "tagsEn": [
+        "Beach",
+        "Free",
+        "Families"
+      ],
+      "priceRangeEn": "Free",
+      "descriptionEn": "An open, popular beach along the JBR boardwalk with restaurants and activities."
     },
     {
       "id": 214,
@@ -5008,7 +6488,14 @@ export const CATALOG = {
         "עפיפון"
       ],
       "featured": false,
-      "ticketType": "free"
+      "ticketType": "free",
+      "tagsEn": [
+        "Beach",
+        "Sport",
+        "Kite"
+      ],
+      "priceRangeEn": "Free",
+      "descriptionEn": "A modern beach popular with kite surfers, with sports facilities."
     },
     {
       "id": 215,
@@ -5031,7 +6518,14 @@ export const CATALOG = {
         "בילוי"
       ],
       "featured": false,
-      "ticketType": "free"
+      "ticketType": "free",
+      "tagsEn": [
+        "Beach",
+        "Bohemian",
+        "Nightlife"
+      ],
+      "priceRangeEn": "Free (פעילויות בתשלום)",
+      "descriptionEn": "A modern, bohemian-style beachfront leisure area with shops, restaurants and a water park."
     },
     {
       "id": 216,
@@ -5055,7 +6549,13 @@ export const CATALOG = {
       ],
       "featured": true,
       "ticketType": "online",
-      "ticketUrl": "https://www.getyourguide.com/dubai-l173/aquaventure-world-waterpark-ticket-at-atlantis-dubai-t570397/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
+      "ticketUrl": "https://www.getyourguide.com/dubai-l173/aquaventure-world-waterpark-ticket-at-atlantis-dubai-t570397/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C",
+      "tagsEn": [
+        "Water park",
+        "Slides",
+        "Families"
+      ],
+      "descriptionEn": "An exciting water park on the Palm with adrenaline slides and attractions for all ages."
     },
     {
       "id": 217,
@@ -5079,7 +6579,13 @@ export const CATALOG = {
       ],
       "featured": false,
       "ticketType": "online",
-      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-wild-wadi-waterpark-full-day-ticket-t124418/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
+      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-wild-wadi-waterpark-full-day-ticket-t124418/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C",
+      "tagsEn": [
+        "Water park",
+        "Waves",
+        "Fun"
+      ],
+      "descriptionEn": "A popular water park with slides and wave pools in a fantastic setting."
     },
     {
       "id": 218,
@@ -5103,7 +6609,13 @@ export const CATALOG = {
       ],
       "featured": true,
       "ticketType": "online",
-      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-img-worlds-of-adventure-t121581/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
+      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-img-worlds-of-adventure-t121581/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C",
+      "tagsEn": [
+        "Theme park",
+        "Indoor",
+        "Marvel"
+      ],
+      "descriptionEn": "One of the world's largest indoor theme parks, with Marvel and dinosaur zones."
     },
     {
       "id": 219,
@@ -5127,7 +6639,13 @@ export const CATALOG = {
       ],
       "featured": true,
       "ticketType": "online",
-      "ticketUrl": "https://www.getyourguide.com/dubai-l173/ski-dubai-tickets-full-day-super-pass-t122445/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
+      "ticketUrl": "https://www.getyourguide.com/dubai-l173/ski-dubai-tickets-full-day-super-pass-t122445/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C",
+      "tagsEn": [
+        "Theme park",
+        "Ski",
+        "Snow"
+      ],
+      "descriptionEn": "An indoor ski resort with real snow slopes in the heart of the desert!"
     },
     {
       "id": 220,
@@ -5151,7 +6669,13 @@ export const CATALOG = {
       ],
       "featured": false,
       "ticketType": "online",
-      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-global-village-entry-ticket-t553170/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
+      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-global-village-entry-ticket-t553170/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C",
+      "tagsEn": [
+        "Theme park",
+        "Culture",
+        "Festival"
+      ],
+      "descriptionEn": "A huge international culture and entertainment festival presenting cultures from dozens of countries."
     },
     {
       "id": 221,
@@ -5175,7 +6699,13 @@ export const CATALOG = {
       ],
       "featured": true,
       "ticketType": "online",
-      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-desert-safari-with-bbq-dinner-quad-biking-options-t31103/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
+      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-desert-safari-with-bbq-dinner-quad-biking-options-t31103/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C",
+      "tagsEn": [
+        "Tour",
+        "Desert",
+        "Adventure"
+      ],
+      "descriptionEn": "A thrilling tour of the desert sands including dune bashing and a Bedouin dinner."
     },
     {
       "id": 222,
@@ -5199,7 +6729,13 @@ export const CATALOG = {
       ],
       "featured": false,
       "ticketType": "online",
-      "ticketUrl": "https://www.getyourguide.com/dubai-l173/15-minute-helicopter-tour-of-dubai-t31156/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
+      "ticketUrl": "https://www.getyourguide.com/dubai-l173/15-minute-helicopter-tour-of-dubai-t31156/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C",
+      "tagsEn": [
+        "Tour",
+        "Helicopter",
+        "View"
+      ],
+      "descriptionEn": "A stunning helicopter tour above Dubai with views of Burj Khalifa and the Palm."
     },
     {
       "id": 223,
@@ -5223,7 +6759,13 @@ export const CATALOG = {
       ],
       "featured": false,
       "ticketType": "online",
-      "ticketUrl": "https://www.getyourguide.com/dubai-marina-l3415/90-minute-palm-burj-al-arab-rib-tour-t90741/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
+      "ticketUrl": "https://www.getyourguide.com/dubai-marina-l3415/90-minute-palm-burj-al-arab-rib-tour-t90741/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C",
+      "tagsEn": [
+        "Tour",
+        "Boat",
+        "Adrenaline"
+      ],
+      "descriptionEn": "A fast, thrilling speedboat tour with skyline views."
     },
     {
       "id": 224,
@@ -5247,7 +6789,14 @@ export const CATALOG = {
       ],
       "featured": false,
       "ticketType": "online",
-      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-guided-city-walking-tour-to-spice-and-gold-souk-t427563/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
+      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-guided-city-walking-tour-to-spice-and-gold-souk-t427563/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C",
+      "tagsEn": [
+        "Tour",
+        "Gold",
+        "Souk"
+      ],
+      "priceRangeEn": "Free",
+      "descriptionEn": "A traditional, famous gold souk in Deira with hundreds of jewelry shops."
     },
     {
       "id": 225,
@@ -5271,7 +6820,13 @@ export const CATALOG = {
       ],
       "featured": false,
       "ticketType": "online",
-      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-1-day-entry-ticket-to-dubai-safari-park-t443463/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
+      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-1-day-entry-ticket-to-dubai-safari-park-t443463/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C",
+      "tagsEn": [
+        "Zoo",
+        "Animals",
+        "Families"
+      ],
+      "descriptionEn": "A large, modern safari park home to thousands of animals in natural habitats."
     },
     {
       "id": 243,
@@ -5295,7 +6850,13 @@ export const CATALOG = {
       ],
       "featured": true,
       "ticketType": "online",
-      "ticketUrl": "https://www.getyourguide.com/skydive-dubai-l92336/dubai-skydive-over-the-palm-or-the-desert-t298845/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
+      "ticketUrl": "https://www.getyourguide.com/skydive-dubai-l92336/dubai-skydive-over-the-palm-or-the-desert-t298845/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C",
+      "tagsEn": [
+        "Extreme",
+        "Skydiving",
+        "Palm"
+      ],
+      "descriptionEn": "A skydive above the Palm — insane views, a full ~15-minute experience. Professional safety."
     },
     {
       "id": 244,
@@ -5319,7 +6880,13 @@ export const CATALOG = {
       ],
       "featured": true,
       "ticketType": "online",
-      "ticketUrl": "https://www.getyourguide.com/ifly-dubai-l3322/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
+      "ticketUrl": "https://www.getyourguide.com/ifly-dubai-l3322/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C",
+      "tagsEn": [
+        "Extreme",
+        "Indoor",
+        "Skydiving"
+      ],
+      "descriptionEn": "An indoor wind tunnel — a skydiving experience without jumping from a plane. Suitable from age 3."
     },
     {
       "id": 245,
@@ -5343,7 +6910,13 @@ export const CATALOG = {
       ],
       "featured": true,
       "ticketType": "online",
-      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-hot-air-balloon-tour-over-the-dubai-desert-t411207/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
+      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-hot-air-balloon-tour-over-the-dubai-desert-t411207/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C",
+      "tagsEn": [
+        "Extreme",
+        "Hot-air balloon",
+        "Sunrise"
+      ],
+      "descriptionEn": "A hot-air balloon over the desert at sunrise — a romantic experience with a unique view. Includes breakfast at a Bedouin camp."
     },
     {
       "id": 246,
@@ -5367,7 +6940,13 @@ export const CATALOG = {
       ],
       "featured": false,
       "ticketType": "online",
-      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-17-minute-panoramic-helicopter-tour-t56081/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
+      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-17-minute-panoramic-helicopter-tour-t56081/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C",
+      "tagsEn": [
+        "Extreme",
+        "Helicopter",
+        "Observation deck"
+      ],
+      "descriptionEn": "A 12-45 minute helicopter tour — aerial views of the Palm, Burj Khalifa and Atlantis."
     },
     {
       "id": 247,
@@ -5390,7 +6969,14 @@ export const CATALOG = {
         "עכשווי"
       ],
       "featured": true,
-      "ticketType": "free"
+      "ticketType": "free",
+      "tagsEn": [
+        "Art",
+        "Galleries",
+        "Contemporary"
+      ],
+      "priceRangeEn": "Entry Free",
+      "descriptionEn": "A contemporary art complex in the heart of Al Quoz — galleries, studios, cafés and boutiques. Free entry, a sophisticated urban vibe."
     },
     {
       "id": 248,
@@ -5413,7 +6999,14 @@ export const CATALOG = {
         "אדריכלות"
       ],
       "featured": true,
-      "ticketType": "free"
+      "ticketType": "free",
+      "tagsEn": [
+        "Historic",
+        "Heritage",
+        "Architecture"
+      ],
+      "priceRangeEn": "Free",
+      "descriptionEn": "Dubai's historic quarter — traditional wind towers, stone alleys, galleries and cafés. A glimpse of pre-oil times."
     },
     {
       "id": 249,
@@ -5437,7 +7030,13 @@ export const CATALOG = {
       ],
       "featured": false,
       "ticketType": "online",
-      "ticketUrl": "https://www.getyourguide.com/etihad-museum-l192837/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
+      "ticketUrl": "https://www.getyourguide.com/etihad-museum-l192837/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C",
+      "tagsEn": [
+        "Museum",
+        "History",
+        "Union"
+      ],
+      "descriptionEn": "A modern museum documenting the founding of the UAE (1971). A striking architectural building with historic documents."
     },
     {
       "id": 250,
@@ -5460,7 +7059,13 @@ export const CATALOG = {
         "היסטורי"
       ],
       "featured": false,
-      "ticketType": "onsite"
+      "ticketType": "onsite",
+      "tagsEn": [
+        "Museum",
+        "Café",
+        "Historic"
+      ],
+      "descriptionEn": "A small, fascinating museum in Al Bastakiya — the history of Arabic coffee, traditional equipment and tastings."
     },
     {
       "id": 251,
@@ -5483,7 +7088,14 @@ export const CATALOG = {
         "תרבות"
       ],
       "featured": false,
-      "ticketType": "onsite"
+      "ticketType": "onsite",
+      "tagsEn": [
+        "Museum",
+        "Camels",
+        "Culture"
+      ],
+      "priceRangeEn": "Free",
+      "descriptionEn": "A museum about the camel in Bedouin culture — its role, history and connection to the UAE."
     },
     {
       "id": 252,
@@ -5506,7 +7118,14 @@ export const CATALOG = {
         "היסטוריה"
       ],
       "featured": false,
-      "ticketType": "onsite"
+      "ticketType": "onsite",
+      "tagsEn": [
+        "Museum",
+        "Coins",
+        "History"
+      ],
+      "priceRangeEn": "Free",
+      "descriptionEn": "The history of coins — from Silk Road trade to the modern dirham."
     },
     {
       "id": 253,
@@ -5529,7 +7148,13 @@ export const CATALOG = {
         "היסטוריה"
       ],
       "featured": false,
-      "ticketType": "appointment"
+      "ticketType": "appointment",
+      "tagsEn": [
+        "Museum",
+        "Antiquities",
+        "History"
+      ],
+      "descriptionEn": "A private museum on Dubai Creek — ancient civilizations, papyri, swords and weapons."
     },
     {
       "id": 254,
@@ -5553,7 +7178,13 @@ export const CATALOG = {
       ],
       "featured": true,
       "ticketType": "online",
-      "ticketUrl": "https://www.getyourguide.com/dubai-marina-l3415/dubai-marina-luxury-dhow-dinner-cruise-t199267/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
+      "ticketUrl": "https://www.getyourguide.com/dubai-marina-l3415/dubai-marina-luxury-dhow-dinner-cruise-t199267/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C",
+      "tagsEn": [
+        "Tour",
+        "Boat",
+        "Traditional"
+      ],
+      "descriptionEn": "A cruise on a traditional wooden dhow on Dubai Creek — a romantic atmosphere, dinner and a show."
     },
     {
       "id": 255,
@@ -5577,7 +7208,13 @@ export const CATALOG = {
       ],
       "featured": true,
       "ticketType": "online",
-      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-marina-1-hour-luxury-sightseeing-speedboat-tour-t559949/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
+      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-marina-1-hour-luxury-sightseeing-speedboat-tour-t559949/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C",
+      "tagsEn": [
+        "Tour",
+        "Yacht",
+        "Sea"
+      ],
+      "descriptionEn": "A private yacht cruise in the Marina — Bluewaters beach, the Palm and Burj Al Arab from the water. Includes a barbecue."
     },
     {
       "id": 256,
@@ -5600,7 +7237,14 @@ export const CATALOG = {
         "קהילה"
       ],
       "featured": true,
-      "ticketType": "appointment"
+      "ticketType": "appointment",
+      "tagsEn": [
+        "Judaism",
+        "Synagogue",
+        "Community"
+      ],
+      "priceRangeEn": "Free",
+      "descriptionEn": "A Jewish community center and active Orthodox synagogue in Dubai led by Rabbi Levi Duchman. Prayers, bar/bat mitzvah, events. Kosher restaurant on-site."
     },
     {
       "id": 274,
@@ -5623,7 +7267,14 @@ export const CATALOG = {
         "קהילה"
       ],
       "featured": true,
-      "ticketType": "appointment"
+      "ticketType": "appointment",
+      "tagsEn": [
+        "Judaism",
+        "Chabad",
+        "Community"
+      ],
+      "priceRangeEn": "Free — תרומה מומלצת",
+      "descriptionEn": "An active Chabad house in Dubai led by Rabbi Levi Duchman — daily prayers, Shabbat meals, Passover Seders, holidays, help for Israeli tourists, a mikveh and a kosher restaurant in the complex."
     },
     {
       "id": 275,
@@ -5646,7 +7297,14 @@ export const CATALOG = {
         "קהילה"
       ],
       "featured": false,
-      "ticketType": "appointment"
+      "ticketType": "appointment",
+      "tagsEn": [
+        "Judaism",
+        "Mikveh",
+        "Community"
+      ],
+      "priceRangeEn": "Free — תרומה מומלצת",
+      "descriptionEn": "A kosher women's mikveh in Dubai run by the Jewish community — hours by advance arrangement. Free for community members and Israeli tourists."
     },
     {
       "id": 276,
@@ -5669,7 +7327,14 @@ export const CATALOG = {
         "הסכמי אברהם"
       ],
       "featured": true,
-      "ticketType": "appointment"
+      "ticketType": "appointment",
+      "tagsEn": [
+        "Judaism",
+        "Community",
+        "Abraham Accords"
+      ],
+      "priceRangeEn": "Free",
+      "descriptionEn": "An official Jewish community of ~3,000 members that grew after the Abraham Accords (2020). Includes synagogues, a mikveh, kosher restaurants, a Jewish kindergarten and catering."
     },
     {
       "id": 277,
@@ -5692,7 +7357,13 @@ export const CATALOG = {
         "סופר"
       ],
       "featured": true,
-      "ticketType": "free"
+      "ticketType": "free",
+      "tagsEn": [
+        "Judaism",
+        "Kosher",
+        "Supermarket"
+      ],
+      "descriptionEn": "A kosher supermarket in Dubai — meat, dairy, pastries, salads and products from Israel. Open all week, serving Israeli tourists."
     },
     {
       "id": 278,
@@ -5715,7 +7386,14 @@ export const CATALOG = {
         "מסעדה"
       ],
       "featured": true,
-      "ticketType": "onsite"
+      "ticketType": "onsite",
+      "tagsEn": [
+        "Judaism",
+        "Kosher",
+        "Restaurant"
+      ],
+      "priceRangeEn": "₪500-1,000  per couple",
+      "descriptionEn": "A kosher restaurant at the InterContinental Festival City hotel — meat, a formal atmosphere, Shabbat meals by advance request. Under rabbinical supervision."
     },
     {
       "id": 279,
@@ -5739,7 +7417,15 @@ export const CATALOG = {
         "אבו דאבי"
       ],
       "featured": false,
-      "ticketType": "appointment"
+      "ticketType": "appointment",
+      "tagsEn": [
+        "Judaism",
+        "Kosher",
+        "Dairy",
+        "Abu Dhabi"
+      ],
+      "priceRangeEn": "₪200-450  per couple",
+      "descriptionEn": "A kosher dairy restaurant in Abu Dhabi — starters, salads, pastas, pizzas and fish. A kosher Israeli vibe in the Middle East."
     },
     {
       "id": 258,
@@ -5763,7 +7449,13 @@ export const CATALOG = {
       ],
       "featured": true,
       "ticketType": "online",
-      "ticketUrl": "https://www.getyourguide.com/the-view-at-the-palm-l167754/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
+      "ticketUrl": "https://www.getyourguide.com/the-view-at-the-palm-l167754/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C",
+      "tagsEn": [
+        "Observation deck",
+        "Palm",
+        "Landmark"
+      ],
+      "descriptionEn": "An observation deck on the 52nd floor (240m) of the Palm Tower. A 360° view of Palm Jumeirah, Atlantis and the skyline. Includes an interactive display of the Palm's history."
     },
     {
       "id": 259,
@@ -5788,7 +7480,13 @@ export const CATALOG = {
       "website": "https://www.visitdubai.com/en/places-to-visit/sky-views-dubai",
       "featured": true,
       "ticketType": "online",
-      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-sky-views-observatory-tickets-t407711/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
+      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-sky-views-observatory-tickets-t407711/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C",
+      "tagsEn": [
+        "Observation deck",
+        "Glass",
+        "Slide"
+      ],
+      "descriptionEn": "An observation deck at 219m at the Address Sky View hotel. Includes a glass walkway between the two towers and an external slide from the 53rd floor. Views of Burj Khalifa."
     },
     {
       "id": 260,
@@ -5812,7 +7510,13 @@ export const CATALOG = {
       ],
       "website": "https://www.cultures.ae",
       "featured": true,
-      "ticketType": "appointment"
+      "ticketType": "appointment",
+      "tagsEn": [
+        "Mosque",
+        "Tour",
+        "Culture"
+      ],
+      "descriptionEn": "The only mosque in Dubai open to guided tours for visitors of all faiths. 'Open Doors, Open Minds' tours present Islam and local culture."
     },
     {
       "id": 262,
@@ -5837,7 +7541,13 @@ export const CATALOG = {
       "website": "https://www.dubaiopera.com",
       "featured": true,
       "ticketType": "online",
-      "ticketUrl": "https://www.getyourguide.com/dubai-opera-l148725/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
+      "ticketUrl": "https://www.getyourguide.com/dubai-opera-l148725/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C",
+      "tagsEn": [
+        "Opera",
+        "Culture",
+        "Architecture"
+      ],
+      "descriptionEn": "A modern opera house with a unique dhow-shaped design in Downtown. Hosts ballet, opera, classical music and jazz. You can tour the architecture even without a show."
     },
     {
       "id": 263,
@@ -5862,7 +7572,13 @@ export const CATALOG = {
       "website": "https://ayauniverse.com",
       "featured": true,
       "ticketType": "online",
-      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-aya-universe-entry-ticket-t513502/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
+      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-aya-universe-entry-ticket-t513502/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C",
+      "tagsEn": [
+        "Art",
+        "Lights",
+        "New"
+      ],
+      "descriptionEn": "An immersive experience of 12 digital-art worlds — mind-bending lights, sounds and projections. Suitable for adults and children."
     },
     {
       "id": 264,
@@ -5887,7 +7603,13 @@ export const CATALOG = {
       "website": "https://www.madametussauds.com/dubai/",
       "featured": true,
       "ticketType": "online",
-      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-madame-tussauds-adult-general-entry-ticket-t501117/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
+      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-madame-tussauds-adult-general-entry-ticket-t501117/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C",
+      "tagsEn": [
+        "Museum",
+        "Wax",
+        "Bluewaters"
+      ],
+      "descriptionEn": "The first branch of the iconic wax museum in the Middle East, on Bluewaters Island. Includes 60+ wax figures of Israeli and international celebrities."
     },
     {
       "id": 265,
@@ -5912,7 +7634,13 @@ export const CATALOG = {
       "website": "https://www.atlantis.com/dubai/atlantis-the-palm/marine-and-waterpark/the-lost-chambers-aquarium",
       "featured": true,
       "ticketType": "online",
-      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-the-lost-chambers-aquarium-tickets-t130209/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
+      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-the-lost-chambers-aquarium-tickets-t130209/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C",
+      "tagsEn": [
+        "Aquarium",
+        "Palm",
+        "Families"
+      ],
+      "descriptionEn": "An aquarium beneath Atlantis simulating the lost city of Atlantis. 65,000+ fish, sharks and divers. Pairs perfectly with Aquaventure."
     },
     {
       "id": 266,
@@ -5937,7 +7665,13 @@ export const CATALOG = {
       "website": "https://www.thegreenplanetdubai.com",
       "featured": false,
       "ticketType": "online",
-      "ticketUrl": "https://www.getyourguide.com/dubai-l173/the-green-planet-t105442/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
+      "ticketUrl": "https://www.getyourguide.com/dubai-l173/the-green-planet-t105442/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C",
+      "tagsEn": [
+        "Rainforest",
+        "Animals",
+        "City Walk"
+      ],
+      "descriptionEn": "An indoor tropical rainforest at Dubai City Walk. 3,000+ exotic plants and animals — sloths, birds, snakes, a butterfly farm."
     },
     {
       "id": 267,
@@ -5962,7 +7696,13 @@ export const CATALOG = {
       "website": "https://www.visithatta.com",
       "featured": true,
       "ticketType": "online",
-      "ticketUrl": "https://www.getyourguide.com/hatta-l2455/hatta-mountain-tour-water-dam-heritage-village-bee-garden-t649583/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
+      "ticketUrl": "https://www.getyourguide.com/hatta-l2455/hatta-mountain-tour-water-dam-heritage-village-bee-garden-t649583/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C",
+      "tagsEn": [
+        "Mountains",
+        "Kayaks",
+        "Dam"
+      ],
+      "descriptionEn": "Dubai's mountain enclave on the Oman border. A turquoise-green dam for kayaking, a heritage village, and a trek. ~90 min drive from Dubai. A popular weekend."
     },
     {
       "id": 268,
@@ -5987,7 +7727,13 @@ export const CATALOG = {
       "website": "https://www.motiongate.com",
       "featured": true,
       "ticketType": "online",
-      "ticketUrl": "https://www.getyourguide.com/motiongate-dubai-l88333/motiongate-dubai-ticket-at-dubai-parks-and-resorts-t118768/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
+      "ticketUrl": "https://www.getyourguide.com/motiongate-dubai-l88333/motiongate-dubai-ticket-at-dubai-parks-and-resorts-t118768/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C",
+      "tagsEn": [
+        "Amusement",
+        "Hollywood",
+        "Families"
+      ],
+      "descriptionEn": "A Hollywood theme park with rides from Sony, Lionsgate and DreamWorks. 27 rides — Smurfs, Hunger Games, Madagascar."
     },
     {
       "id": 269,
@@ -6012,7 +7758,13 @@ export const CATALOG = {
       "website": "https://www.legoland.com/dubai/",
       "featured": true,
       "ticketType": "online",
-      "ticketUrl": "https://www.getyourguide.com/dubai-l173/legolandr-dubai-ticket-at-dubai-parks-and-resorts-1day-1park-t118771/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
+      "ticketUrl": "https://www.getyourguide.com/dubai-l173/legolandr-dubai-ticket-at-dubai-parks-and-resorts-1day-1park-t118771/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C",
+      "tagsEn": [
+        "LEGO",
+        "Kids",
+        "Families"
+      ],
+      "descriptionEn": "The Middle East's first LEGO park — 40 rides, LEGO miniatures of Dubai, Abu Dhabi and Jerusalem. Geared for kids 2-12."
     },
     {
       "id": 270,
@@ -6037,7 +7789,13 @@ export const CATALOG = {
       "website": "https://www.bollywoodparksdubai.com",
       "featured": false,
       "ticketType": "online",
-      "ticketUrl": "https://www.getyourguide.com/bollywood-parks-dubai-l88615/bollywood-parks-1-day-1-park-admission-t118762/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
+      "ticketUrl": "https://www.getyourguide.com/bollywood-parks-dubai-l88615/bollywood-parks-1-day-1-park-admission-t118762/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C",
+      "tagsEn": [
+        "Bollywood",
+        "Indian",
+        "Shows"
+      ],
+      "descriptionEn": "The world's first Bollywood-themed park — shows, rides and Indian restaurants. Indian culture inside Dubai."
     },
     {
       "id": 241,
@@ -6061,7 +7819,14 @@ export const CATALOG = {
         "חדש"
       ],
       "featured": true,
-      "ticketType": "onsite"
+      "ticketType": "onsite",
+      "tagsEn": [
+        "Museum",
+        "Sweets",
+        "Instagram",
+        "New"
+      ],
+      "descriptionEn": "Dubai's new candy museum 🍬 — 14 Instagram-friendly rooms themed around candy, chocolate and desserts. A giant lollipop, a chocolate bath, a sweets room. Fun for kids and adults."
     },
     {
       "id": 231,
@@ -6085,7 +7850,14 @@ export const CATALOG = {
       ],
       "featured": true,
       "ticketType": "online",
-      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-premium-red-dunes-camel-bbq-safari-at-al-khayma-t387428/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
+      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-premium-red-dunes-camel-bbq-safari-at-al-khayma-t387428/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C",
+      "tagsEn": [
+        "Desert safari",
+        "Premium",
+        "Reserve"
+      ],
+      "priceRangeEn": "₪650-1,500  per person",
+      "descriptionEn": "A premium safari in the nature reserve — dunes in a luxury Hummer, camels, a Bedouin meal."
     },
     {
       "id": 232,
@@ -6109,7 +7881,14 @@ export const CATALOG = {
       ],
       "featured": true,
       "ticketType": "online",
-      "ticketUrl": "https://www.getyourguide.com/dubai-l173/desert-safari-with-bbq-dinner-live-shows-free-quad-biking-t25698/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
+      "ticketUrl": "https://www.getyourguide.com/dubai-l173/desert-safari-with-bbq-dinner-live-shows-free-quad-biking-t25698/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C",
+      "tagsEn": [
+        "Desert safari",
+        "Established",
+        "Emirates"
+      ],
+      "priceRangeEn": "₪400-900  per person",
+      "descriptionEn": "A veteran, leading company — dune safari (4x4), dinner at a Bedouin camp."
     },
     {
       "id": 233,
@@ -6133,7 +7912,14 @@ export const CATALOG = {
       ],
       "featured": false,
       "ticketType": "online",
-      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-fossil-camel-rocks-extreme-safari-w-bbq-dinner-t121428/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
+      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-fossil-camel-rocks-extreme-safari-w-bbq-dinner-t121428/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C",
+      "tagsEn": [
+        "Desert safari",
+        "Evening",
+        "Shows"
+      ],
+      "priceRangeEn": "₪200-500  per person",
+      "descriptionEn": "A popular evening package — dune bashing, camels, henna, a meal and a dance show."
     },
     {
       "id": 234,
@@ -6157,7 +7943,14 @@ export const CATALOG = {
       ],
       "featured": false,
       "ticketType": "online",
-      "ticketUrl": "https://www.getyourguide.com/dubai-l173/red-dunes-desert-safari-with-bbq-buffet-dinner-t56413/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
+      "ticketUrl": "https://www.getyourguide.com/dubai-l173/red-dunes-desert-safari-with-bbq-buffet-dinner-t56413/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C",
+      "tagsEn": [
+        "Desert safari",
+        "Extreme",
+        "Motorcycles"
+      ],
+      "priceRangeEn": "₪450-900  per person",
+      "descriptionEn": "High dunes with a 4x4 and quad bikes for extreme lovers."
     },
     {
       "id": 235,
@@ -6181,7 +7974,14 @@ export const CATALOG = {
       ],
       "featured": true,
       "ticketType": "online",
-      "ticketUrl": "https://www.getyourguide.com/dubai-desert-conservation-reserve-l3312/sunrise-desert-dunes-wildlife-experience-t390592/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
+      "ticketUrl": "https://www.getyourguide.com/dubai-desert-conservation-reserve-l3312/sunrise-desert-dunes-wildlife-experience-t390592/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C",
+      "tagsEn": [
+        "Desert safari",
+        "Balloon",
+        "Sunrise"
+      ],
+      "priceRangeEn": "₪900-1,800  per person",
+      "descriptionEn": "A desert sunrise experience — a hot-air balloon, breakfast and a camel ride."
     },
     {
       "id": 280,
@@ -6206,7 +8006,14 @@ export const CATALOG = {
       "website": "https://dinnerinthesky.ae",
       "featured": true,
       "ticketType": "online",
-      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-dinner-in-the-sky-t102806/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
+      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-dinner-in-the-sky-t102806/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C",
+      "tagsEn": [
+        "Extreme",
+        "Unique",
+        "Experience"
+      ],
+      "priceRangeEn": "AED 600-900  per person",
+      "descriptionEn": "A unique meal suspended 50 meters above the ground — a table for 22 diners, a 360-degree view, a live chef."
     },
     {
       "id": 281,
@@ -6231,7 +8038,13 @@ export const CATALOG = {
       "website": "https://laperle.com",
       "featured": true,
       "ticketType": "online",
-      "ticketUrl": "https://www.getyourguide.com/la-perle-by-dragone-l111552/la-perle-by-dragone-al-habtoor-city-t127463/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
+      "ticketUrl": "https://www.getyourguide.com/la-perle-by-dragone-l111552/la-perle-by-dragone-al-habtoor-city-t127463/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C",
+      "tagsEn": [
+        "Show",
+        "Acrobatics",
+        "Theater"
+      ],
+      "descriptionEn": "A resident acrobatic show — 65 minutes of water, fire and technology. A custom theater of just 1,300 seats."
     },
     {
       "id": 282,
@@ -6256,7 +8069,13 @@ export const CATALOG = {
       "website": "https://museumofillusions.ae",
       "featured": false,
       "ticketType": "online",
-      "ticketUrl": "https://www.getyourguide.com/museum-of-illusions-dubai-l135742/dubai-museum-of-illusions-entry-ticket-t302128/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
+      "ticketUrl": "https://www.getyourguide.com/museum-of-illusions-dubai-l135742/dubai-museum-of-illusions-entry-ticket-t302128/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C",
+      "tagsEn": [
+        "Museum",
+        "Illusions",
+        "Families"
+      ],
+      "descriptionEn": "An interactive museum with 80+ optical illusions, an anti-gravity room and a vertigo tunnel. Fun for the whole family."
     },
     {
       "id": 283,
@@ -6280,7 +8099,13 @@ export const CATALOG = {
       ],
       "featured": false,
       "ticketType": "online",
-      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-real-madrid-world-theme-park-entry-ticket-t649072/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
+      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-real-madrid-world-theme-park-entry-ticket-t649072/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C",
+      "tagsEn": [
+        "Football",
+        "Families",
+        "Immersive"
+      ],
+      "descriptionEn": "A fan experience — Real Madrid-themed rides, virtual reality, match simulations and a walk through the players' tunnel."
     },
     {
       "id": 284,
@@ -6305,7 +8130,14 @@ export const CATALOG = {
       "website": "https://topgolfdubai.com",
       "featured": false,
       "ticketType": "online",
-      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-1hr-topgolf-game-t738994/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
+      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-1hr-topgolf-game-t738994/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C",
+      "tagsEn": [
+        "Golf",
+        "Entertainment",
+        "Friends"
+      ],
+      "priceRangeEn": "AED 100-300  per person",
+      "descriptionEn": "A golf-entertainment attraction — electronic targets, a restaurant, a bar and music. Suitable for beginners too."
     },
     {
       "id": 285,
@@ -6329,7 +8161,14 @@ export const CATALOG = {
       ],
       "website": "https://www.expocitydubai.com",
       "featured": true,
-      "ticketType": "free"
+      "ticketType": "free",
+      "tagsEn": [
+        "Expo",
+        "Architecture",
+        "Free"
+      ],
+      "priceRangeEn": "Entry Free",
+      "descriptionEn": "The Expo 2020 site turned into a smart city — country pavilions, sculptures, restaurants and a garden. Free entry."
     },
     {
       "id": 286,
@@ -6353,7 +8192,13 @@ export const CATALOG = {
       ],
       "featured": false,
       "ticketType": "online",
-      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-skip-the-line-ticket-to-butterfly-garden-t404997/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
+      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-skip-the-line-ticket-to-butterfly-garden-t404997/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C",
+      "tagsEn": [
+        "Butterflies",
+        "Nature",
+        "Families"
+      ],
+      "descriptionEn": "The world's largest butterfly garden — 9 domes with 15,000+ butterflies of 50 species. Next to Miracle Garden."
     },
     {
       "id": 287,
@@ -6378,7 +8223,13 @@ export const CATALOG = {
       "website": "https://www.dubaidolphinarium.ae",
       "featured": false,
       "ticketType": "online",
-      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-dubai-dolphinarium-dolphin-seal-bird-show-tickets-t564165/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
+      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-dubai-dolphinarium-dolphin-seal-bird-show-tickets-t564165/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C",
+      "tagsEn": [
+        "Dolphins",
+        "Live shows",
+        "Families"
+      ],
+      "descriptionEn": "Dolphin, sea lion and bird shows — a daily 45-minute show inside Creek Park."
     },
     {
       "id": 288,
@@ -6402,7 +8253,13 @@ export const CATALOG = {
       ],
       "featured": false,
       "ticketType": "online",
-      "ticketUrl": "https://www.getyourguide.com/dubai-l173/3d-world-selfie-museum-dubai-ticket-t286245/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
+      "ticketUrl": "https://www.getyourguide.com/dubai-l173/3d-world-selfie-museum-dubai-ticket-t286245/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C",
+      "tagsEn": [
+        "Selfie",
+        "3D",
+        "Families"
+      ],
+      "descriptionEn": "An interactive museum with 100+ 3D wall paintings. Stand inside the painting and take photos — a funny experience for the whole family."
     },
     {
       "id": 289,
@@ -6427,7 +8284,13 @@ export const CATALOG = {
       "website": "https://www.legoland.com/dubai",
       "featured": false,
       "ticketType": "online",
-      "ticketUrl": "https://www.getyourguide.com/dubai-l173/1-day-legolandr-water-park-pass-at-dubai-parks-and-resorts-t118774/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
+      "ticketUrl": "https://www.getyourguide.com/dubai-l173/1-day-legolandr-water-park-pass-at-dubai-parks-and-resorts-t118774/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C",
+      "tagsEn": [
+        "Water park",
+        "Kids",
+        "LEGO"
+      ],
+      "descriptionEn": "A LEGO-themed water park — 20+ slides and pools for kids 2-12. A wet building area and a DUPLO slide."
     },
     {
       "id": 290,
@@ -6451,7 +8314,13 @@ export const CATALOG = {
       ],
       "website": "https://www.dubaiicerink.com",
       "featured": false,
-      "ticketType": "onsite"
+      "ticketType": "onsite",
+      "tagsEn": [
+        "Ice",
+        "Skating",
+        "Mall"
+      ],
+      "descriptionEn": "An Olympic ice-skating rink at Dubai Mall — for free skating, lessons and even shows."
     },
     {
       "id": 291,
@@ -6475,7 +8344,13 @@ export const CATALOG = {
       ],
       "featured": false,
       "ticketType": "online",
-      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-fountain-show-and-burj-lake-ride-by-traditional-boat-t60095/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
+      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-fountain-show-and-burj-lake-ride-by-traditional-boat-t60095/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C",
+      "tagsEn": [
+        "Cruise",
+        "Fountains",
+        "Evening"
+      ],
+      "descriptionEn": "A short ride in a colorful boat on the Burj Khalifa lake — a VIP spot to watch the fountain show up close."
     },
     {
       "id": 295,
@@ -6500,7 +8375,13 @@ export const CATALOG = {
       "website": "https://dubaidutyfreetennischampionships.com",
       "featured": true,
       "ticketType": "online",
-      "ticketUrl": "https://dubaidutyfreetennischampionships.com/tickets/"
+      "ticketUrl": "https://dubaidutyfreetennischampionships.com/tickets/",
+      "tagsEn": [
+        "Tennis",
+        "International",
+        "February"
+      ],
+      "descriptionEn": "An annual international tennis tournament in February — top players, the Aviation Club stadium. Tickets from AED 75."
     },
     {
       "id": 296,
@@ -6525,7 +8406,13 @@ export const CATALOG = {
       "website": "https://dubaimarathon.org",
       "featured": false,
       "ticketType": "online",
-      "ticketUrl": "https://www.dubaimarathon.com/"
+      "ticketUrl": "https://www.dubaimarathon.com/",
+      "tagsEn": [
+        "Marathon",
+        "January",
+        "Sport"
+      ],
+      "descriptionEn": "An international marathon in January — a 42 km course, a half marathon and 10K. One of the world's fastest thanks to flat terrain."
     },
     {
       "id": 297,
@@ -6550,7 +8437,13 @@ export const CATALOG = {
       "website": "https://desertclassic.com",
       "featured": false,
       "ticketType": "online",
-      "ticketUrl": "https://www.dubaidesertclassic.com/"
+      "ticketUrl": "https://www.dubaidesertclassic.com/",
+      "tagsEn": [
+        "Golf",
+        "Tournament",
+        "January"
+      ],
+      "descriptionEn": "A prestigious DP World Tour golf tournament — January. Top players, Emirates Golf Club. Open to spectators."
     },
     {
       "id": 298,
@@ -6573,7 +8466,14 @@ export const CATALOG = {
         "מגדלי רוח"
       ],
       "featured": true,
-      "ticketType": "free"
+      "ticketType": "free",
+      "tagsEn": [
+        "Historic",
+        "Alleys",
+        "Wind towers"
+      ],
+      "priceRangeEn": "Free",
+      "descriptionEn": "Dubai's historic quarter — narrow alleys, clay houses and traditional wind towers. Home to museums, galleries, cafés and handicrafts."
     },
     {
       "id": 299,
@@ -6596,7 +8496,14 @@ export const CATALOG = {
         "אווירה"
       ],
       "featured": false,
-      "ticketType": "free"
+      "ticketType": "free",
+      "tagsEn": [
+        "Promenade",
+        "Architecture",
+        "Atmosphere"
+      ],
+      "priceRangeEn": "Free · מסעדות וחנויות",
+      "descriptionEn": "A promenade on Dubai Creek blending traditional architecture with modern shops. Restaurants, boutiques, and abra rides in the evening."
     },
     {
       "id": 226,
@@ -6620,7 +8527,13 @@ export const CATALOG = {
       ],
       "featured": true,
       "ticketType": "online",
-      "ticketUrl": "https://www.getyourguide.com/al-fahidi-fort-l4882/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
+      "ticketUrl": "https://www.getyourguide.com/al-fahidi-fort-l4882/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C",
+      "tagsEn": [
+        "Museum",
+        "History",
+        "Fort"
+      ],
+      "descriptionEn": "Dubai's oldest museum — housed in Al Fahidi Fort from 1787. Displays on tribal life, pearl divers and the city up to the oil era."
     },
     {
       "id": 227,
@@ -6644,7 +8557,13 @@ export const CATALOG = {
       ],
       "featured": true,
       "ticketType": "online",
-      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-al-shindagha-museum-entry-ticket-t428614/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
+      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-al-shindagha-museum-entry-ticket-t428614/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C",
+      "tagsEn": [
+        "Museum",
+        "Maritime",
+        "Heritage"
+      ],
+      "descriptionEn": "A modern museum complex dedicated to Dubai's maritime heritage — pearl divers, dhow boats, the ruling family's life."
     },
     {
       "id": 228,
@@ -6667,7 +8586,13 @@ export const CATALOG = {
         "ממצאים"
       ],
       "featured": false,
-      "ticketType": "onsite"
+      "ticketType": "onsite",
+      "tagsEn": [
+        "Archaeology",
+        "Iron Age",
+        "Artifacts"
+      ],
+      "descriptionEn": "An archaeological museum with 900+ Iron Age finds (3,000 years old) discovered in the desert near Dubai. Jewelry, weapons and household items."
     },
     {
       "id": 229,
@@ -6690,7 +8615,13 @@ export const CATALOG = {
         "יהדות"
       ],
       "featured": true,
-      "ticketType": "appointment"
+      "ticketType": "appointment",
+      "tagsEn": [
+        "Museum",
+        "Holocaust",
+        "Judaism"
+      ],
+      "descriptionEn": "A private museum in Al Fahidi — displays on the Holocaust, a Holy Land gallery, and a Jewish-Islamic-Christian cultural encounter."
     },
     {
       "id": 230,
@@ -6713,7 +8644,13 @@ export const CATALOG = {
         "אוכל אמיראתי"
       ],
       "featured": true,
-      "ticketType": "appointment"
+      "ticketType": "appointment",
+      "tagsEn": [
+        "Tour",
+        "Culture",
+        "Emirati food"
+      ],
+      "descriptionEn": "Guided tours of the old city and traditional Emirati breakfasts/lunches — the best opportunity to understand the culture."
     },
     {
       "id": 236,
@@ -6736,7 +8673,14 @@ export const CATALOG = {
         "עכשווי"
       ],
       "featured": false,
-      "ticketType": "free"
+      "ticketType": "free",
+      "tagsEn": [
+        "Art",
+        "Gallery",
+        "Contemporary"
+      ],
+      "priceRangeEn": "Free",
+      "descriptionEn": "A contemporary Middle Eastern art gallery in a traditional Al Fahidi house — rotating exhibitions, a café and a boutique hotel."
     },
     {
       "id": 237,
@@ -6759,7 +8703,14 @@ export const CATALOG = {
         "אדריכלות"
       ],
       "featured": false,
-      "ticketType": "free"
+      "ticketType": "free",
+      "tagsEn": [
+        "Mosque",
+        "Historic",
+        "Architecture"
+      ],
+      "priceRangeEn": "Free",
+      "descriptionEn": "A historic mosque in the heart of the old quarter near Dubai Creek — traditional Islamic architecture with an inner courtyard."
     },
     {
       "id": 238,
@@ -6782,7 +8733,13 @@ export const CATALOG = {
         "חוצה קריק"
       ],
       "featured": true,
-      "ticketType": "onsite"
+      "ticketType": "onsite",
+      "tagsEn": [
+        "Boat",
+        "Traditional",
+        "Creek crossing"
+      ],
+      "descriptionEn": "A traditional wooden boat crossing Dubai Creek between Bur Dubai and Deira — an authentic 5-minute experience for just AED 1."
     },
     {
       "id": 521,
@@ -6807,7 +8764,14 @@ export const CATALOG = {
       "website": "https://www.bigbustours.com/en/dubai/blue-marina-route-dubai",
       "featured": true,
       "ticketType": "online",
-      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-big-bus-hop-on-hop-off-tour-dhow-cruise-t5105/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
+      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-big-bus-hop-on-hop-off-tour-dhow-cruise-t5105/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C",
+      "tagsEn": [
+        "Tourist bus",
+        "Double-decker",
+        "Hebrew audio"
+      ],
+      "priceRangeEn": "AED 200-310  per day",
+      "descriptionEn": "A red double-decker tourist bus, hop-on hop-off with 3 routes: City, Beach, Premium. Hebrew audio guide. Hours: 9:00-18:00 every 30 min."
     },
     {
       "id": 522,
@@ -6832,7 +8796,14 @@ export const CATALOG = {
       "website": "https://city-sightseeing.com/en/112/dubai/244/hop-on-hop-off-dubai",
       "featured": false,
       "ticketType": "online",
-      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-city-sightseeing-hoho-bus-tour-sunset-night-tour-t49021/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
+      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-city-sightseeing-hoho-bus-tour-sunset-night-tour-t49021/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C",
+      "tagsEn": [
+        "Tourist bus",
+        "Double-decker",
+        "Hebrew audio"
+      ],
+      "priceRangeEn": "AED 178-260  per day",
+      "descriptionEn": "A red open-top double-decker tourist bus, hop-on hop-off — 2 routes parallel to Big Bus. Audio guide in 12 languages (including Hebrew). Frequency: every 30 min."
     },
     {
       "id": 800,
@@ -6856,7 +8827,13 @@ export const CATALOG = {
       ],
       "featured": true,
       "ticketType": "online",
-      "ticketUrl": "https://www.tiqets.com/en/theatre-of-digital-art-tickets-l187196/"
+      "ticketUrl": "https://www.tiqets.com/en/theatre-of-digital-art-tickets-l187196/",
+      "tagsEn": [
+        "Multimedia",
+        "Art",
+        "Experience"
+      ],
+      "descriptionEn": "An immersive experience complex with 360° projections of Gauguin, Van Gogh and others. A stunning multimedia scene at Madinat Souk."
     },
     {
       "id": 801,
@@ -6879,7 +8856,14 @@ export const CATALOG = {
         "מופע"
       ],
       "featured": true,
-      "ticketType": "free"
+      "ticketType": "free",
+      "tagsEn": [
+        "Fountain",
+        "Free",
+        "Show"
+      ],
+      "priceRangeEn": "Free",
+      "descriptionEn": "A Guinness-record fountain — the world's largest (14,000 m²). A choreographed show with music and light at the edge of Palm Jumeirah."
     },
     {
       "id": 802,
@@ -6903,7 +8887,13 @@ export const CATALOG = {
       ],
       "featured": true,
       "ticketType": "online",
-      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-sky-views-observatory-tickets-t407711/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
+      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-sky-views-observatory-tickets-t407711/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C",
+      "tagsEn": [
+        "Observation deck",
+        "Heights",
+        "Extreme"
+      ],
+      "descriptionEn": "A 220-meter-high observation over Burj Khalifa from the glass bridge — an Edge Walk/Glass Slide. For those comfortable with heights."
     },
     {
       "id": 803,
@@ -6927,7 +8917,13 @@ export const CATALOG = {
       ],
       "featured": false,
       "ticketType": "online",
-      "ticketUrl": "https://www.getyourguide.com/s/?q=Dreamscape%20Dubai&partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
+      "ticketUrl": "https://www.getyourguide.com/s/?q=Dreamscape%20Dubai&partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C",
+      "tagsEn": [
+        "VR",
+        "Virtual reality",
+        "Adventure"
+      ],
+      "descriptionEn": "Immersive virtual-reality experiences with full motion. Five different 15-minute adventures."
     },
     {
       "id": 804,
@@ -6951,7 +8947,13 @@ export const CATALOG = {
       ],
       "featured": true,
       "ticketType": "online",
-      "ticketUrl": "https://www.getyourguide.com/wadi-hub-at-hatta-resorts-l261593/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
+      "ticketUrl": "https://www.getyourguide.com/wadi-hub-at-hatta-resorts-l261593/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C",
+      "tagsEn": [
+        "Adventure",
+        "Mountains",
+        "Activity"
+      ],
+      "descriptionEn": "An adventure center in the mountain desert of Hatta — mountain biking, tobogganing, zipline, archery, axe throwing. Two hours from Dubai."
     },
     {
       "id": 805,
@@ -6975,7 +8977,13 @@ export const CATALOG = {
       ],
       "featured": true,
       "ticketType": "online",
-      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-madame-tussauds-adult-general-entry-ticket-t501117/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C"
+      "ticketUrl": "https://www.getyourguide.com/dubai-l173/dubai-madame-tussauds-adult-general-entry-ticket-t501117/?partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C",
+      "tagsEn": [
+        "Celebrities",
+        "Museum",
+        "Bluewaters"
+      ],
+      "descriptionEn": "A wax-figure museum — 60+ celebrity figures from Hollywood, Bollywood, sport and royalty. At Bluewaters near Ain Dubai."
     },
     {
       "id": 806,
@@ -6998,7 +9006,13 @@ export const CATALOG = {
         "זומבים"
       ],
       "featured": false,
-      "ticketType": "onsite"
+      "ticketType": "onsite",
+      "tagsEn": [
+        "Adrenaline",
+        "Escape room",
+        "Zombies"
+      ],
+      "descriptionEn": "An apocalypse-themed adventure park — escape rooms, immersive zombie experiences, laser tag. For adrenaline seekers."
     }
   ],
   "shopping": [
@@ -7022,7 +9036,13 @@ export const CATALOG = {
         "יוקרה",
         "משפחות"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "Mall",
+        "Luxury",
+        "Families"
+      ],
+      "descriptionEn": "The world's largest mall! Over 1,200 shops, an aquarium, ice skating."
     },
     {
       "id": 302,
@@ -7044,7 +9064,13 @@ export const CATALOG = {
         "סקי",
         "בידור"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "Mall",
+        "Ski",
+        "Entertainment"
+      ],
+      "descriptionEn": "600+ shops with Ski Dubai — an indoor ski resort in the heart of the desert!"
     },
     {
       "id": 303,
@@ -7066,7 +9092,13 @@ export const CATALOG = {
         "ענק",
         "גינה"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "Mall",
+        "Giant",
+        "Garden"
+      ],
+      "descriptionEn": "The world's largest single-story mall! 1.2 million m² with a botanical garden."
     },
     {
       "id": 304,
@@ -7088,7 +9120,13 @@ export const CATALOG = {
         "חדש",
         "רכבת הרים"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "Mall",
+        "New",
+        "Roller coaster"
+      ],
+      "descriptionEn": "A new mall (2022) with the world's fastest indoor roller coaster!"
     },
     {
       "id": 305,
@@ -7110,7 +9148,13 @@ export const CATALOG = {
         "טיילת",
         "מזרקות"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Mall",
+        "Promenade",
+        "Fountains"
+      ],
+      "descriptionEn": "A waterfront mall with a promenade, fountains and a stunning light show."
     },
     {
       "id": 306,
@@ -7132,7 +9176,13 @@ export const CATALOG = {
         "תרבות",
         "עיצוב"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Mall",
+        "Culture",
+        "Design"
+      ],
+      "descriptionEn": "Designed as Ibn Battuta's journey with 6 zones: China, India, Persia, Egypt, Tunisia, Andalusia."
     },
     {
       "id": 307,
@@ -7154,7 +9204,13 @@ export const CATALOG = {
         "פתוח",
         "בוטיק"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Mall",
+        "Open",
+        "Boutique"
+      ],
+      "descriptionEn": "An open-air, European-style shopping area with boutiques, restaurants and galleries."
     },
     {
       "id": 308,
@@ -7176,7 +9232,13 @@ export const CATALOG = {
         "פאלם",
         "נוף"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Mall",
+        "Palm",
+        "View"
+      ],
+      "descriptionEn": "A mall on the Palm with stunning views, chef restaurants and pools."
     },
     {
       "id": 309,
@@ -7198,7 +9260,13 @@ export const CATALOG = {
         "איטלקי",
         "אופנה"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Mall",
+        "Italian",
+        "Fashion"
+      ],
+      "descriptionEn": "An Italian Renaissance-style mall with fashion shops and restaurants."
     },
     {
       "id": 310,
@@ -7220,7 +9288,13 @@ export const CATALOG = {
         "מצרי",
         "יוקרה"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Mall",
+        "Egyptian",
+        "Luxury"
+      ],
+      "descriptionEn": "An ancient-Egyptian-themed mall with pyramids, luxury shops and restaurants."
     },
     {
       "id": 311,
@@ -7242,7 +9316,13 @@ export const CATALOG = {
         "זהב",
         "תכשיטים"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "Souk",
+        "Gold",
+        "Jewelry"
+      ],
+      "descriptionEn": "The famous Gold Souk. Hundreds of jewelry shops at competitive prices."
     },
     {
       "id": 312,
@@ -7264,7 +9344,13 @@ export const CATALOG = {
         "תבלינים",
         "מסורתי"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Souk",
+        "Spices",
+        "Traditional"
+      ],
+      "descriptionEn": "The historic Spice Souk. Amazing aromas and spices from around the world."
     },
     {
       "id": 313,
@@ -7286,7 +9372,13 @@ export const CATALOG = {
         "בדים",
         "מסורתי"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Souk",
+        "Textiles",
+        "Traditional"
+      ],
+      "descriptionEn": "Bur Dubai's textile souk. Fabrics, pashmina and made-to-order suits."
     },
     {
       "id": 314,
@@ -7308,7 +9400,13 @@ export const CATALOG = {
         "בשמים",
         "עוד"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Souk",
+        "Perfumes",
+        "More"
+      ],
+      "descriptionEn": "Deira's perfume souk. Oud, Arabic perfumes and essential oils."
     },
     {
       "id": 315,
@@ -7330,7 +9428,13 @@ export const CATALOG = {
         "יוקרה",
         "תעלות"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "Souk",
+        "Luxury",
+        "Canals"
+      ],
+      "descriptionEn": "An upscale souk in traditional Arabian style with canals, galleries and restaurants."
     },
     {
       "id": 316,
@@ -7352,7 +9456,13 @@ export const CATALOG = {
         "יין",
         "תיירים"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Alcohol",
+        "Wine",
+        "Tourists"
+      ],
+      "descriptionEn": "A licensed alcohol-store chain. Tourists 21+ buy with a passport only (no license). Branches in Dubai and Abu Dhabi."
     },
     {
       "id": 317,
@@ -7374,7 +9484,13 @@ export const CATALOG = {
         "וויסקי",
         "יין"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Alcohol",
+        "Whisky",
+        "Wine"
+      ],
+      "descriptionEn": "A leading alcohol-store chain. Tourists 21+ with a passport. Convenient branches in Dubai and Abu Dhabi, a wide selection including whisky, wine and beer."
     },
     {
       "id": 318,
@@ -7396,7 +9512,13 @@ export const CATALOG = {
         "מרינה",
         "מסעדות"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Mall",
+        "Marina",
+        "Restaurants"
+      ],
+      "descriptionEn": "A boutique mall on the Marina — waterside dining, fashion brands, a Mediterranean vibe."
     },
     {
       "id": 319,
@@ -7418,7 +9540,13 @@ export const CATALOG = {
         "הנחות",
         "מותגים"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Outlet",
+        "Discounts",
+        "Brands"
+      ],
+      "descriptionEn": "An outlet center with 30-90% discounts on international brands. ~30 min drive from central Dubai."
     },
     {
       "id": 320,
@@ -7440,7 +9568,13 @@ export const CATALOG = {
         "זול",
         "אלקטרוניקה"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Chinese",
+        "Cheap",
+        "Electronics"
+      ],
+      "descriptionEn": "The largest Chinese trading complex outside China — electronics, clothing, furniture. Cheap prices."
     },
     {
       "id": 321,
@@ -7462,7 +9596,13 @@ export const CATALOG = {
         "יוקרה",
         "מטרו"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Mall",
+        "Luxury",
+        "Metro"
+      ],
+      "descriptionEn": "A veteran mall in Bur Dubai with luxury brands and a Sephora. Next to the BurJuman metro station."
     },
     {
       "id": 324,
@@ -7484,7 +9624,13 @@ export const CATALOG = {
         "יוקרה",
         "מתנות"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Cigars",
+        "Luxury",
+        "Gifts"
+      ],
+      "descriptionEn": "A luxury cigar chain — a selection of premium, hand-rolled cigars and vitolas. Branches in leading malls (Dubai Mall, Mall of the Emirates)."
     },
     {
       "id": 325,
@@ -7506,7 +9652,13 @@ export const CATALOG = {
         "קובני",
         "פרימיום"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Cigars",
+        "Cuban",
+        "Premium"
+      ],
+      "descriptionEn": "An official Cuban-cigar branch — all the leading brands (Cohiba, Montecristo, Romeo y Julieta). A VIP smoking room on-site."
     },
     {
       "id": 323,
@@ -7528,7 +9680,13 @@ export const CATALOG = {
         "מסורתי",
         "מזרקות"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Souk",
+        "Traditional",
+        "Fountains"
+      ],
+      "descriptionEn": "A traditional Arabian-style souk on the Burj Lake bridge — views of Burj Khalifa and the fountain show, restaurants, galleries and gift shops."
     },
     {
       "id": 322,
@@ -7550,7 +9708,13 @@ export const CATALOG = {
         "מזרקות",
         "פאלם"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Promenade",
+        "Fountains",
+        "Palm"
+      ],
+      "descriptionEn": "A dining and shopping complex at the tip of Palm Jumeirah with views of Atlantis and a giant fountain show."
     }
   ],
   "nightlife": [
@@ -7574,7 +9738,13 @@ export const CATALOG = {
         "DJ",
         "לילה"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "Club",
+        "DJ",
+        "Nightlife"
+      ],
+      "descriptionEn": "An open rooftop club at Meydan — international DJs."
     },
     {
       "id": 405,
@@ -7596,7 +9766,13 @@ export const CATALOG = {
         "פתוח",
         "טרנדי"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "Club",
+        "Open",
+        "Trendy"
+      ],
+      "descriptionEn": "A huge entertainment complex at Meydan with a club, rooftop bar, restaurants and a garden."
     },
     {
       "id": 406,
@@ -7618,7 +9794,13 @@ export const CATALOG = {
         "יוקרה",
         "איטלקי"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Club",
+        "Luxury",
+        "Italian"
+      ],
+      "descriptionEn": "An upscale club under the Cavalli brand — Italian glam."
     },
     {
       "id": 407,
@@ -7640,7 +9822,13 @@ export const CATALOG = {
         "גג",
         "לילה"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Club",
+        "Rooftop",
+        "Nightlife"
+      ],
+      "descriptionEn": "A high-floor club with a view — master DJs."
     },
     {
       "id": 408,
@@ -7662,7 +9850,13 @@ export const CATALOG = {
         "לאונג׳",
         "אקזוטי"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Club",
+        "Lounge",
+        "Exotic"
+      ],
+      "descriptionEn": "A club-lounge at Meydan with an exotic-Borneo atmosphere."
     },
     {
       "id": 402,
@@ -7684,7 +9878,13 @@ export const CATALOG = {
         "תצפית",
         "יוקרה"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "Bar",
+        "Observation deck",
+        "Luxury"
+      ],
+      "descriptionEn": "A bar and restaurant on the 122nd floor of Burj Khalifa — the world's highest."
     },
     {
       "id": 409,
@@ -7706,7 +9906,13 @@ export const CATALOG = {
         "בריכה",
         "אסיאתי"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "Rooftop",
+        "Pool",
+        "Asian"
+      ],
+      "descriptionEn": "A stunning rooftop bar at Address Sky View — a pool and Asian cuisine."
     },
     {
       "id": 410,
@@ -7728,7 +9934,13 @@ export const CATALOG = {
         "טרופי",
         "קוקטיילים"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Rooftop",
+        "Tropical",
+        "Cocktails"
+      ],
+      "descriptionEn": "A rooftop bar with Burj Khalifa views — a tropical atmosphere and cocktails."
     },
     {
       "id": 411,
@@ -7750,7 +9962,13 @@ export const CATALOG = {
         "קוקטיילים",
         "דאון טאון"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Rooftop",
+        "Cocktails",
+        "Downtown"
+      ],
+      "descriptionEn": "A rooftop bar on the 40th floor near Burj Khalifa."
     },
     {
       "id": 412,
@@ -7772,7 +9990,13 @@ export const CATALOG = {
         "בריכה",
         "יום"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "Beach club",
+        "Pool",
+        "Day"
+      ],
+      "descriptionEn": "An upscale beach club with a pool, private beach and day parties."
     },
     {
       "id": 413,
@@ -7794,7 +10018,13 @@ export const CATALOG = {
         "יוקרה",
         "חוף"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Beach club",
+        "Luxury",
+        "Beach"
+      ],
+      "descriptionEn": "A beach club at One&Only with Burj Al Arab views."
     },
     {
       "id": 414,
@@ -7816,7 +10046,13 @@ export const CATALOG = {
         "ברנץ׳",
         "Bluewaters"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Beach club",
+        "Brunch",
+        "Bluewaters"
+      ],
+      "descriptionEn": "A trendy beach club at Bluewaters — a pool, beach and restaurant."
     },
     {
       "id": 415,
@@ -7838,7 +10074,13 @@ export const CATALOG = {
         "מסיבות",
         "DJ"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Beach club",
+        "Parties",
+        "DJ"
+      ],
+      "descriptionEn": "An active beach club with a pool and DJ parties."
     },
     {
       "id": 423,
@@ -7860,7 +10102,13 @@ export const CATALOG = {
         "יוקרה",
         "VIP"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Club",
+        "Luxury",
+        "VIP"
+      ],
+      "descriptionEn": "An upscale New York-style nightclub — international DJs, dining and VIP tables. Minimum age 21."
     },
     {
       "id": 417,
@@ -7883,7 +10131,15 @@ export const CATALOG = {
         "ערב",
         "חדש"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "Fountain",
+        "Free",
+        "Evening",
+        "New"
+      ],
+      "priceRangeEn": "Free",
+      "descriptionEn": "Back after an upgrade — innovative effects, stunning music, synced with the Burj Khalifa lighting. Free, every half hour from 18:00 to 23:00."
     },
     {
       "id": 420,
@@ -7905,7 +10161,14 @@ export const CATALOG = {
         "חינם",
         "מופע"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "Drones",
+        "Free",
+        "Show"
+      ],
+      "priceRangeEn": "Free",
+      "descriptionEn": "A stunning show of hundreds of drones in Dubai's skies — 3D images, an Expo logo and fireworks. Free, mainly on Friday-Saturday nights and holidays above Burj Khalifa and Bluewaters."
     },
     {
       "id": 421,
@@ -7928,7 +10191,15 @@ export const CATALOG = {
         "פאלם",
         "שיא גינס"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "Fountain",
+        "Free",
+        "Palm",
+        "Guinness record"
+      ],
+      "priceRangeEn": "Free",
+      "descriptionEn": "The world's largest interactive fountain (a Guinness record) — 105,000 square feet of water, 3,000 LEDs. Free, shows every 30 minutes from 19:00."
     },
     {
       "id": 422,
@@ -7951,7 +10222,15 @@ export const CATALOG = {
         "מופע",
         "פסטיבל"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "Laser",
+        "Free",
+        "Show",
+        "Festival"
+      ],
+      "priceRangeEn": "Free",
+      "descriptionEn": "A water-laser-fireworks show on the Dubai Creek waterfront. A mesmerizing blend of water, fire and laser. Free, evenings starting at 19:30."
     },
     {
       "id": 404,
@@ -7973,7 +10252,13 @@ export const CATALOG = {
         "אקרובטיקה",
         "משפחות"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "Show",
+        "Acrobatics",
+        "Families"
+      ],
+      "descriptionEn": "A stunning acrobatic show with water and fire effects."
     },
     {
       "id": 418,
@@ -7995,7 +10280,13 @@ export const CATALOG = {
         "קלאסי",
         "ברודווי"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "Opera",
+        "Classic",
+        "Broadway"
+      ],
+      "descriptionEn": "Dubai's opera house — concerts, ballet and Broadway shows."
     },
     {
       "id": 419,
@@ -8017,7 +10308,13 @@ export const CATALOG = {
         "אינטימי",
         "מופעים"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Theater",
+        "Intimate",
+        "Shows"
+      ],
+      "descriptionEn": "An intimate theater at Madinat Jumeirah — music and comedy."
     },
     {
       "id": 424,
@@ -8039,7 +10336,13 @@ export const CATALOG = {
         "משחקים",
         "ארקייד"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Bar",
+        "Games",
+        "Arcade"
+      ],
+      "descriptionEn": "A virtual games bar combined with alcohol — mini bowling, retro arcade, cards, and a trendy pub. A social atmosphere."
     }
   ],
   "kids": [
@@ -8063,7 +10366,13 @@ export const CATALOG = {
         "משפחות",
         "מקורה"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "Theme park",
+        "Families",
+        "Indoor"
+      ],
+      "descriptionEn": "A huge indoor theme park — Marvel, Cartoon Network, Jurassic."
     },
     {
       "id": 702,
@@ -8085,7 +10394,13 @@ export const CATALOG = {
         "לגו",
         "ילדים"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "Theme park",
+        "Lego",
+        "Kids"
+      ],
+      "descriptionEn": "A LEGO park for ages 2-12 — rides, shows and LEGO building."
     },
     {
       "id": 703,
@@ -8107,7 +10422,13 @@ export const CATALOG = {
         "הוליווד",
         "משפחות"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Theme park",
+        "Hollywood",
+        "Families"
+      ],
+      "descriptionEn": "A Hollywood theme park — movies, extreme rides and shows."
     },
     {
       "id": 704,
@@ -8129,7 +10450,13 @@ export const CATALOG = {
         "בוליווד",
         "משפחות"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Theme park",
+        "Bollywood",
+        "Families"
+      ],
+      "descriptionEn": "A park inspired by the Indian film industry — shows and rides."
     },
     {
       "id": 705,
@@ -8151,7 +10478,13 @@ export const CATALOG = {
         "בינלאומי",
         "עונתי"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "Park",
+        "International",
+        "Seasonal"
+      ],
+      "descriptionEn": "A huge international festival (Oct-Apr) with 90 countries, attractions and food."
     },
     {
       "id": 706,
@@ -8173,7 +10506,13 @@ export const CATALOG = {
         "אטלנטיס",
         "חוף"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "Water park",
+        "Atlantis",
+        "Beach"
+      ],
+      "descriptionEn": "The world's largest water park — water rides, marine animals and a private beach."
     },
     {
       "id": 707,
@@ -8195,7 +10534,13 @@ export const CATALOG = {
         "ג׳ומיירה",
         "משפחות"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Water park",
+        "Jumeirah",
+        "Families"
+      ],
+      "descriptionEn": "30 water rides — slides, a lazy river and artificial waves."
     },
     {
       "id": 708,
@@ -8217,7 +10562,13 @@ export const CATALOG = {
         "חוף",
         "La Mer"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Water park",
+        "Beach",
+        "La Mer"
+      ],
+      "descriptionEn": "A beachfront water park — slides, waves and restaurants."
     },
     {
       "id": 709,
@@ -8239,7 +10590,13 @@ export const CATALOG = {
         "דגים",
         "מנהרה"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "Aquarium",
+        "Seafood",
+        "Tunnel"
+      ],
+      "descriptionEn": "33,000 marine animals, a 48m glass tunnel and a shark pantry."
     },
     {
       "id": 710,
@@ -8261,7 +10618,13 @@ export const CATALOG = {
         "אטלנטיס",
         "חורבות"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Aquarium",
+        "Atlantis",
+        "Ruins"
+      ],
+      "descriptionEn": "Underwater Atlantis ruins with exotic marine life."
     },
     {
       "id": 711,
@@ -8283,7 +10646,13 @@ export const CATALOG = {
         "משחק",
         "חינוכי"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "Kids zone",
+        "Game",
+        "Educational"
+      ],
+      "descriptionEn": "A mini city — role-play professions (firefighter, doctor, pilot) in the mall."
     },
     {
       "id": 712,
@@ -8305,7 +10674,13 @@ export const CATALOG = {
         "VR",
         "טכנולוגיה"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Kids zone",
+        "VR",
+        "Technology"
+      ],
+      "descriptionEn": "Virtual reality — advanced VR attractions for all ages."
     },
     {
       "id": 713,
@@ -8327,7 +10702,13 @@ export const CATALOG = {
         "טרמפולינה",
         "ספורט"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Kids zone",
+        "Trampoline",
+        "Sport"
+      ],
+      "descriptionEn": "A trampoline park — jumps, extreme sports and a climbing wall."
     },
     {
       "id": 714,
@@ -8350,7 +10731,14 @@ export const CATALOG = {
         "פינגווינים",
         "Snow Park"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "Ski",
+        "Snow",
+        "Penguins",
+        "Snow Park"
+      ],
+      "descriptionEn": "A huge indoor snow complex at Mall of the Emirates — ski and snowboard runs for adults, a Snow Park for kids with slides, an igloo and activities, and a meeting with real penguins."
     },
     {
       "id": 716,
@@ -8372,7 +10760,13 @@ export const CATALOG = {
         "ארקייד",
         "קניון"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "Kids zone",
+        "Arcade",
+        "Mall"
+      ],
+      "descriptionEn": "A family entertainment chain — arcade, bumper cars, rides. In several Dubai malls."
     },
     {
       "id": 717,
@@ -8394,7 +10788,13 @@ export const CATALOG = {
         "ארקייד",
         "פעוטות"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "Kids zone",
+        "Arcade",
+        "Toddlers"
+      ],
+      "descriptionEn": "A family entertainment center — arcade games, a small train, toddler rides. Branches at Reef Mall (Deira), BurJuman, Times Square, Bin Sougat, Wafi Mall."
     }
   ],
   "transport": [
@@ -8418,7 +10818,13 @@ export const CATALOG = {
         "זול",
         "נוח"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "Metro",
+        "Cheap",
+        "Comfortable"
+      ],
+      "descriptionEn": "An automated metro network. The Red and Green lines cover most points of interest. Buy a Nol Card!"
     },
     {
       "id": 502,
@@ -8440,7 +10846,13 @@ export const CATALOG = {
         "נוח",
         "24/7"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Taxi",
+        "Comfortable",
+        "24/7"
+      ],
+      "descriptionEn": "Official cream-colored taxis. Reliable and convenient."
     },
     {
       "id": 503,
@@ -8462,7 +10874,13 @@ export const CATALOG = {
         "מסורתי",
         "זול"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "Boat",
+        "Traditional",
+        "Cheap"
+      ],
+      "descriptionEn": "Traditional wooden boats crossing Dubai Creek for 1 dirham!"
     },
     {
       "id": 504,
@@ -8485,7 +10903,14 @@ export const CATALOG = {
         "מהיר",
         "מקומי"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "App",
+        "Comfortable",
+        "Fast",
+        "Local"
+      ],
+      "descriptionEn": "A local ride-hailing app service, popular across the UAE."
     },
     {
       "id": 516,
@@ -8509,7 +10934,14 @@ export const CATALOG = {
         "NOL"
       ],
       "website": "https://www.rta.ae/wps/portal/rta/ae/public-transport/buses",
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Bus",
+        "RTA",
+        "Tourists",
+        "NOL"
+      ],
+      "descriptionEn": "Recommended RTA routes for tourists: Route 8 (Sheikh Zayed Road — Burj Khalifa, Dubai Mall, Mall of the Emirates), X28 (Mall of the Emirates ↔ Gold Souk), 27 (Al Ghubaiba ↔ Mall of the Emirates), C26 (BurJuman ↔ Ibn Battuta), F30 (Al Rigga metro ↔ Gold Souk). Pay with a NOL Card. Frequency: every 10-20 min."
     },
     {
       "id": 515,
@@ -8532,7 +10964,14 @@ export const CATALOG = {
         "מהיר",
         "גלובלי"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "App",
+        "Comfortable",
+        "Fast",
+        "Global"
+      ],
+      "descriptionEn": "A global ride-hailing app service."
     },
     {
       "id": 520,
@@ -8554,7 +10993,13 @@ export const CATALOG = {
         "אבו דאבי",
         "E100"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "Bus",
+        "Abu Dhabi",
+        "E100"
+      ],
+      "descriptionEn": "Route E100 from Al Ghubaiba (Bur Dubai) or E101 from Ibn Battuta Metro to Abu Dhabi's central bus station. Departs every 30 minutes, 05:30-23:30. Travel time ~1:45 hours. A convenient route for tourists wanting a day in Abu Dhabi (Sheikh Zayed Mosque, Yas Island, the Louvre)."
     },
     {
       "id": 505,
@@ -8576,7 +11021,14 @@ export const CATALOG = {
         "יוקרה",
         "ספורט"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "Car rental",
+        "Luxury",
+        "Sport"
+      ],
+      "priceRangeEn": "₪3,000-12,000  per day",
+      "descriptionEn": "Supercars — Lamborghini, Ferrari, Bentley, Rolls-Royce."
     },
     {
       "id": 506,
@@ -8598,7 +11050,14 @@ export const CATALOG = {
         "יוקרה",
         "VIP"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Car rental",
+        "Luxury",
+        "VIP"
+      ],
+      "priceRangeEn": "₪2,500-10,000  per day",
+      "descriptionEn": "VIP services — luxury and sports cars with a driver."
     },
     {
       "id": 507,
@@ -8620,7 +11079,14 @@ export const CATALOG = {
         "יוקרה",
         "סופר קאר"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "Car rental",
+        "Luxury",
+        "Supercar"
+      ],
+      "priceRangeEn": "₪3,500-15,000  per day",
+      "descriptionEn": "Supercars — Lamborghini Urus, Huracán, Ferrari Roma, McLaren."
     },
     {
       "id": 508,
@@ -8642,7 +11108,14 @@ export const CATALOG = {
         "יוקרה",
         "ותיק"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Car rental",
+        "Luxury",
+        "Established"
+      ],
+      "priceRangeEn": "₪2,000-8,000  per day",
+      "descriptionEn": "A selection of luxury and sports cars at competitive prices."
     },
     {
       "id": 509,
@@ -8664,7 +11137,14 @@ export const CATALOG = {
         "יוקרה",
         "SUV"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Car rental",
+        "Luxury",
+        "SUV"
+      ],
+      "priceRangeEn": "₪1,500-6,000  per day",
+      "descriptionEn": "Luxury cars — Range Rover, Mercedes-AMG, Porsche."
     },
     {
       "id": 510,
@@ -8686,7 +11166,14 @@ export const CATALOG = {
         "רגיל",
         "משפחתי"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "Car rental",
+        "Standard",
+        "Family-friendly"
+      ],
+      "priceRangeEn": "₪150-400  per day",
+      "descriptionEn": "An international chain — a selection of family cars, SUVs and minivans."
     },
     {
       "id": 511,
@@ -8708,7 +11195,14 @@ export const CATALOG = {
         "רגיל",
         "אמין"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Car rental",
+        "Standard",
+        "Reliable"
+      ],
+      "priceRangeEn": "₪140-380  per day",
+      "descriptionEn": "Reliable rental with family and touring cars at competitive prices."
     },
     {
       "id": 512,
@@ -8730,7 +11224,14 @@ export const CATALOG = {
         "רגיל",
         "גרמני"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "Car rental",
+        "Standard",
+        "German"
+      ],
+      "priceRangeEn": "₪150-450  per day",
+      "descriptionEn": "German rental — new cars and a wide selection."
     },
     {
       "id": 513,
@@ -8752,7 +11253,14 @@ export const CATALOG = {
         "רגיל",
         "אירופאי"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Car rental",
+        "Standard",
+        "European"
+      ],
+      "priceRangeEn": "₪130-360  per day",
+      "descriptionEn": "A range of family and business cars, deals for tourists."
     },
     {
       "id": 514,
@@ -8774,7 +11282,14 @@ export const CATALOG = {
         "רגיל",
         "צנוע"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Car rental",
+        "Standard",
+        "Budget"
+      ],
+      "priceRangeEn": "₪110-280  per day",
+      "descriptionEn": "Economy rental — compact and family cars at low prices."
     },
     {
       "id": 521,
@@ -8801,7 +11316,15 @@ export const CATALOG = {
         "אודיו עברית"
       ],
       "website": "https://www.bigbustours.com/en/dubai/blue-marina-route-dubai",
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "Tourist bus",
+        "Double-decker",
+        "Hop-on hop-off",
+        "Hebrew audio"
+      ],
+      "priceRangeEn": "AED 200-310  per day (24/48 שעות)",
+      "descriptionEn": "A red double-decker hop-on hop-off tourist bus with 3 routes: City (red) — Burj Khalifa, Dubai Creek, Heritage Village, Al Fahidi, Museum of the Future, Deira souks. Beach (blue) — Dubai Marina, Palm, Atlantis, Souk Madinat, Ain Dubai. Hebrew audio guide. Hours: 9:00-18:00 every 30 min."
     },
     {
       "id": 522,
@@ -8828,7 +11351,15 @@ export const CATALOG = {
         "אודיו עברית"
       ],
       "website": "https://city-sightseeing.com/en/112/dubai/244/hop-on-hop-off-dubai",
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Tourist bus",
+        "Double-decker",
+        "Hop-on hop-off",
+        "Hebrew audio"
+      ],
+      "priceRangeEn": "AED 178-260  per day (24/48 שעות)",
+      "descriptionEn": "A red open-top double-decker hop-on hop-off tourist bus — 2 routes parallel to Big Bus. Includes an audio guide in 12 languages (including Hebrew). Frequency: every 30 min."
     }
   ],
   "casino": [
@@ -8852,7 +11383,13 @@ export const CATALOG = {
         "חדש",
         "יוקרה"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "Casino",
+        "New",
+        "Luxury"
+      ],
+      "descriptionEn": "The first casino resort in the UAE! Expected to open in 2027."
     },
     {
       "id": 602,
@@ -8874,7 +11411,13 @@ export const CATALOG = {
         "סוסים",
         "VIP"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "Racing",
+        "Horses",
+        "VIP"
+      ],
+      "descriptionEn": "Dubai's prestigious horse-racing complex. The Dubai World Cup — the world's richest prize."
     },
     {
       "id": 603,
@@ -8896,7 +11439,14 @@ export const CATALOG = {
         "גמלים",
         "מסורתי"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "Racing",
+        "Camels",
+        "Traditional"
+      ],
+      "priceRangeEn": "Free",
+      "descriptionEn": "Traditional camel races with robot jockeys. A unique, free Emirati experience!"
     },
     {
       "id": 605,
@@ -8918,7 +11468,13 @@ export const CATALOG = {
         "סוסים",
         "גביע"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Racing",
+        "Horses",
+        "Cup"
+      ],
+      "descriptionEn": "The World Cup of horse racing — the world's richest prize ($12 million). Every March."
     },
     {
       "id": 606,
@@ -8940,7 +11496,13 @@ export const CATALOG = {
         "פולו",
         "VIP"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Sport",
+        "Polo",
+        "VIP"
+      ],
+      "descriptionEn": "Dubai's polo club. Matches, VIP events and a Friday brunch."
     },
     {
       "id": 607,
@@ -8962,7 +11524,13 @@ export const CATALOG = {
         "גולף",
         "מועדון"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Sport",
+        "Golf",
+        "Club"
+      ],
+      "descriptionEn": "Dubai's famous golf club with an 18-hole course and a VIP clubhouse."
     },
     {
       "id": 608,
@@ -8984,7 +11552,13 @@ export const CATALOG = {
         "קרטינג",
         "אדרנלין"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Sport",
+        "Karting",
+        "Adrenaline"
+      ],
+      "descriptionEn": "A racetrack and professional karting complex. An adrenaline experience for all ages."
     },
     {
       "id": 610,
@@ -9007,7 +11581,13 @@ export const CATALOG = {
         "קונצרטים"
       ],
       "website": "https://coca-cola-arena.com",
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "Live shows",
+        "Arena",
+        "Concerts"
+      ],
+      "descriptionEn": "The largest indoor arena in the Middle East — 17,000 seats. World artist concerts, stand-up, sports. Check the schedule on the website."
     },
     {
       "id": 611,
@@ -9030,7 +11610,13 @@ export const CATALOG = {
         "אבו דאבי"
       ],
       "website": "https://etihadarena.ae",
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Live shows",
+        "Yas",
+        "Abu Dhabi"
+      ],
+      "descriptionEn": "An innovative arena on Yas Island, Abu Dhabi — 18,000 seats. International concerts, tennis and more. ~1.5-hour drive from Dubai."
     },
     {
       "id": 612,
@@ -9052,7 +11638,13 @@ export const CATALOG = {
         "חשמלי",
         "מקורה"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Karting",
+        "Electric",
+        "Indoor"
+      ],
+      "descriptionEn": "An indoor electric karting track at Zabeel Park — 480 meters, fast cars, professional. For adults and kids from age 8."
     },
     {
       "id": 613,
@@ -9074,7 +11666,14 @@ export const CATALOG = {
         "eSports",
         "VR"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Gaming",
+        "eSports",
+        "VR"
+      ],
+      "priceRangeEn": "AED 60-200  per hour",
+      "descriptionEn": "A professional gaming and eSports complex at Dubai Hills — high-end PCs, consoles, racing simulators, and VR. For families and pro gamers."
     },
     {
       "id": 614,
@@ -9096,7 +11695,13 @@ export const CATALOG = {
         "אוכל",
         "מופע"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "Theater",
+        "Food",
+        "Show"
+      ],
+      "descriptionEn": "A Broadway-style theater-restaurant at Address Beach. Singing, music and acrobatics shows while you dine. A full evening experience."
     },
     {
       "id": 615,
@@ -9118,7 +11723,13 @@ export const CATALOG = {
         "משפחתי",
         "ארקייד"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Bowling",
+        "Family-friendly",
+        "Arcade"
+      ],
+      "descriptionEn": "A modern bowling hall with professional lanes, an arcade, a bar and a restaurant. Family and friends outing. Multiple branches."
     }
   ],
   "abudhabi": [
@@ -9142,7 +11753,13 @@ export const CATALOG = {
         "אבו דאבי",
         "חדש"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "Museum",
+        "Abu Dhabi",
+        "New"
+      ],
+      "descriptionEn": "New in 2025 — a flagship museum in Abu Dhabi commemorating Sheikh Zayed, founder of the UAE. Part of the Saadiyat Cultural District (alongside the Louvre and the new Guggenheim)."
     },
     {
       "id": 257,
@@ -9164,7 +11781,14 @@ export const CATALOG = {
         "בין-דתי",
         "אבו דאבי"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "Judaism",
+        "Interfaith",
+        "Abu Dhabi"
+      ],
+      "priceRangeEn": "Free",
+      "descriptionEn": "An interfaith complex in Abu Dhabi comprising a synagogue (Moses Ben Maimon), a church and a mosque. Opened in 2023 as a symbol of tolerance. The first synagogue built in the UAE since 1958."
     },
     {
       "id": 261,
@@ -9187,7 +11811,14 @@ export const CATALOG = {
         "חובה"
       ],
       "website": "https://www.szgmc.gov.ae",
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "Mosque",
+        "Abu Dhabi",
+        "Must-see"
+      ],
+      "priceRangeEn": "Free",
+      "descriptionEn": "One of the world's most beautiful mosques, in Abu Dhabi. Includes 82 domes, 1,000+ columns and the world's largest hand-woven carpet. Free entry for tourists (modest dress; abaya provided)."
     },
     {
       "id": 271,
@@ -9210,7 +11841,13 @@ export const CATALOG = {
         "אקסטרים"
       ],
       "website": "https://www.ferrariworldabudhabi.com",
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "Ferrari",
+        "Abu Dhabi",
+        "Extreme"
+      ],
+      "descriptionEn": "A Ferrari theme park — Formula Rossa, the world's fastest roller coaster (240 km/h). Suited to speed lovers and kids."
     },
     {
       "id": 272,
@@ -9233,7 +11870,13 @@ export const CATALOG = {
         "משפחות"
       ],
       "website": "https://www.yaswaterworld.com",
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "Water park",
+        "Abu Dhabi",
+        "Families"
+      ],
+      "descriptionEn": "A luxury water park in Abu Dhabi, 40+ slides with an Emirati theme. An attraction worth a full day."
     },
     {
       "id": 273,
@@ -9256,7 +11899,13 @@ export const CATALOG = {
         "אדריכלות"
       ],
       "website": "https://www.louvreabudhabi.ae",
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "Museum",
+        "Abu Dhabi",
+        "Architecture"
+      ],
+      "descriptionEn": "The Louvre Abu Dhabi — Jean Nouvel's stunning architecture, a collection of 600+ works from different cultures. A 'rain of light' starry-roof canopy."
     },
     {
       "id": 604,
@@ -9278,7 +11927,13 @@ export const CATALOG = {
         "F1",
         "אירוע"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "Sport",
+        "F1",
+        "Event"
+      ],
+      "descriptionEn": "A Formula 1 Grand Prix at the Yas Marina Circuit. The biggest sporting event in the Middle East."
     },
     {
       "id": 700,
@@ -9301,7 +11956,13 @@ export const CATALOG = {
         "חובה"
       ],
       "website": "https://www.qasralwatan.ae",
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "Palace",
+        "Abu Dhabi",
+        "Must-see"
+      ],
+      "descriptionEn": "The presidential palace of the UAE, open to the public. Stunning architecture, ornate halls, gardens and a museum. Highly recommended entry for any Abu Dhabi visit."
     },
     {
       "id": 701,
@@ -9323,7 +11984,13 @@ export const CATALOG = {
         "יוקרה",
         "ארמון"
       ],
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "Hotel",
+        "Luxury",
+        "Palace"
+      ],
+      "descriptionEn": "One of the world's most luxurious hotels with golden accents, traditional Arabian architecture, a private beach and a famous gold coffee. Worth a visit even if you're not staying."
     },
     {
       "id": 702,
@@ -9346,7 +12013,14 @@ export const CATALOG = {
         "חובה"
       ],
       "website": "https://www.yasmall.ae",
-      "featured": true
+      "featured": true,
+      "tagsEn": [
+        "Mall",
+        "Yas",
+        "Must-see"
+      ],
+      "priceRangeEn": "Free Entry",
+      "descriptionEn": "The largest mall in Abu Dhabi, on Yas Island. 400+ shops, restaurants, kids' attractions, and next to Ferrari World and Yas Waterworld."
     },
     {
       "id": 703,
@@ -9369,7 +12043,14 @@ export const CATALOG = {
         "משפחות"
       ],
       "website": "https://marinamall.ae",
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Mall",
+        "Corniche",
+        "Families"
+      ],
+      "priceRangeEn": "Free Entry",
+      "descriptionEn": "A central mall on the Corniche breakwater, near Emirates Palace. 400+ shops, an entertainment complex, bowling and a cinema."
     },
     {
       "id": 704,
@@ -9391,7 +12072,13 @@ export const CATALOG = {
         "דגים",
         "אותנטי"
       ],
-      "featured": false
+      "featured": false,
+      "tagsEn": [
+        "Souk",
+        "Seafood",
+        "Authentic"
+      ],
+      "descriptionEn": "The largest, most authentic fish market in Abu Dhabi. Local fishermen bring in the daily catch, with 'pick-and-cook' restaurants that will cook the fish for you on the spot."
     }
   ]
 };

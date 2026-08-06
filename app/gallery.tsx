@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView, Dimensions
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { Colors } from '../constants/colors';
+import { useI18n } from '../constants/i18n';
 import GALLERY from '../data/gallery.json';
 
 function imgUrl(name: string) {
@@ -16,6 +17,7 @@ const COL_GAP = 4;
 const TILE_W = (width - COL_GAP) / 2;
 
 export default function GalleryScreen() {
+  const { t } = useI18n();
   const [idx, setIdx] = useState(0);
   const items = GALLERY as string[];
   const total = items.length;
@@ -44,7 +46,7 @@ export default function GalleryScreen() {
         </TouchableOpacity>
       </View>
       <View style={s.header}>
-        <Text style={s.title}>הגלרייה שלנו</Text>
+        <Text style={s.title}>{t('home.gallery')}</Text>
         <Text style={s.count}>{idx + 1} / {total}</Text>
       </View>
 

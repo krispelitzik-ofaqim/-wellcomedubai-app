@@ -5,6 +5,7 @@ import { useLocalSearchParams, router } from 'expo-router';
 import { Audio } from 'expo-av';
 import { WebView } from 'react-native-webview';
 import { Colors } from '../../constants/colors';
+import { useI18n } from '../../constants/i18n';
 import LEARN from '../../data/learn.json';
 
 function fmtTime(ms: number) {
@@ -123,6 +124,7 @@ function imgUrl(img: string) {
 }
 
 export default function LearnScreen() {
+  const { t, lang } = useI18n();
   const { id } = useLocalSearchParams<{ id: string }>();
   const item = (LEARN as any)[id || ''];
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
@@ -160,13 +162,16 @@ export default function LearnScreen() {
           <TouchableOpacity onPress={() => router.back()} style={s.back}>
             <Text style={{ color: '#fff', fontSize: 22 }}>←</Text>
           </TouchableOpacity>
-          <Text style={s.title}>לא נמצא</Text>
+          <Text style={s.title}>{t('common.notFound')}</Text>
         </View>
       </SafeAreaView>
     );
   }
 
-  const isHtml = (item.text || '').includes('<table');
+  const en = lang === 'en';
+  const artTitle = en ? (item.titleEn || item.title) : item.title;
+  const artText = en ? (item.textEn || item.text) : item.text;
+  const isHtml = (artText || '').includes('<table');
 
   return (
     <View style={s.backdrop}>
@@ -175,7 +180,7 @@ export default function LearnScreen() {
         <View style={[s.modalHeader, { backgroundColor: item.color || Colors.PRIMARY }]}>
           <View style={{ flexDirection: 'row-reverse', alignItems: 'center', gap: 10, flex: 1 }}>
             <Text style={{ fontSize: 22 }}>{item.icon}</Text>
-            <Text style={s.modalTitle}>{item.title}</Text>
+            <Text style={s.modalTitle}>{artTitle}</Text>
           </View>
           <TouchableOpacity onPress={() => router.back()} style={s.modalClose}>
             <Text style={{ color: '#fff', fontSize: 16, fontWeight: '700' }}>✕</Text>
@@ -199,10 +204,10 @@ export default function LearnScreen() {
             ) : item.image ? (
               <Image source={{ uri: imgUrl(item.image) }} style={s.cover} />
             ) : null}
-            {audioUrl ? <CustomAudioPlayer url={audioUrl} /> : null}
+            {audioUrl && lang !== 'en' ? <CustomAudioPlayer url={audioUrl} /> : null}
             <WebView
               originWhitelist={['*']}
-              source={{ html: `<!DOCTYPE html><html dir="rtl"><head><meta name="viewport" content="width=device-width,initial-scale=1"><style>body{font-family:-apple-system,sans-serif;color:#2C5F6E;padding:18px;line-height:1.7;font-size:15px;margin:0;}table{width:100%;border-collapse:collapse;margin:8px 0;direction:rtl;}td,th{padding:10px 8px;text-align:right;border-bottom:1px solid #F0E6D2;}thead tr{background:#F0E6D2;}thead th{font-weight:800;color:#2C5F6E;}tbody tr:nth-child(even){background:#FAF6EE;}</style></head><body>${item.text}</body></html>` }}
+              source={{ html: `<!DOCTYPE html><html dir="${en ? 'ltr' : 'rtl'}"><head><meta name="viewport" content="width=device-width,initial-scale=1"><style>body{font-family:-apple-system,sans-serif;color:#2C5F6E;padding:18px;line-height:1.7;font-size:15px;margin:0;}table{width:100%;border-collapse:collapse;margin:8px 0;direction:${en ? 'ltr' : 'rtl'};}td,th{padding:10px 8px;text-align:${en ? 'left' : 'right'};border-bottom:1px solid #F0E6D2;}thead tr{background:#F0E6D2;}thead th{font-weight:800;color:#2C5F6E;}tbody tr:nth-child(even){background:#FAF6EE;}</style></head><body>${artText}</body></html>` }}
               style={{ flex: 1 }}
             />
           </View>
@@ -224,23 +229,24 @@ export default function LearnScreen() {
             ) : item.image ? (
               <Image source={{ uri: imgUrl(item.image) }} style={s.cover} />
             ) : null}
-            {audioUrl ? <CustomAudioPlayer url={audioUrl} /> : null}
+            {audioUrl && lang !== 'en' ? <CustomAudioPlayer url={audioUrl} /> : null}
             <View style={{ padding: 20 }}>
-              {(item.text || '').split('\n\n').map((para: string, i: number) => {
+              {(artText || '').split('\n\n').map((para: string, i: number) => {
                 const isHeader = !para.includes('\n') && para.length < 60 && /[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/u.test(para);
+                const dir = { writingDirection: en ? 'ltr' as const : 'rtl' as const, textAlign: en ? 'left' as const : 'right' as const };
                 if (isHeader) {
                   return (
-                    <Text key={i} style={[s.text, { color: item.color || Colors.PRIMARY, fontWeight: '900', fontSize: 17, marginTop: 18, marginBottom: 8, lineHeight: 24 }]}>{para}</Text>
+                    <Text key={i} style={[s.text, dir, { color: item.color || Colors.PRIMARY, fontWeight: '900', fontSize: 17, marginTop: 18, marginBottom: 8, lineHeight: 24 }]}>{para}</Text>
                   );
                 }
-                return <Text key={i} style={s.text}>{para}</Text>;
+                return <Text key={i} style={[s.text, dir]}>{para}</Text>;
               })}
               {item.cta ? (
                 <TouchableOpacity
                   onPress={() => { router.back(); if (item.cta?.page) router.push(`/category/${item.cta.page}` as any); }}
                   style={[s.ctaBtn, { backgroundColor: item.color || Colors.PRIMARY }]}
                 >
-                  <Text style={s.ctaTxt}>{item.cta.label} ←</Text>
+                  <Text style={s.ctaTxt}>{(en && item.cta.labelEn ? item.cta.labelEn : item.cta.label)} {en ? '→' : '←'}</Text>
                 </TouchableOpacity>
               ) : null}
             </View>

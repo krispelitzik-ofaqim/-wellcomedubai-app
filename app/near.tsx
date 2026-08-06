@@ -7,6 +7,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { WebView } from 'react-native-webview';
 import { CATALOG } from '../data/catalog';
 import { Colors } from '../constants/colors';
+import { useI18n } from '../constants/i18n';
 
 const NEAR_CATS = [
   { key: 'restaurants', label: 'מסעדות', color: '#F4A261', icon: '🍽️' },
@@ -36,6 +37,7 @@ function haversineKm(lat1: number, lng1: number, lat2: number, lng2: number) {
 type Coords = { lat: number; lng: number };
 
 export default function NearMeScreen() {
+  const { t, lang } = useI18n();
   const [coords, setCoords] = useState<Coords | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -46,14 +48,14 @@ export default function NearMeScreen() {
     try {
       const { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
-        setError('אפשר הרשאת מיקום בהגדרות ונסה שוב');
+        setError(t('near.permMsg'));
         setLoading(false);
         return;
       }
       const pos = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.High });
       setCoords({ lat: pos.coords.latitude, lng: pos.coords.longitude });
     } catch (e: any) {
-      setError('לא הצלחנו לאתר את המיקום');
+      setError(t('near.errTitle'));
     } finally {
       setLoading(false);
     }
@@ -81,7 +83,7 @@ export default function NearMeScreen() {
         markers.push({ lat: it.lat, lng: it.lng, name: it.name, color: sec.color, dist: it._dist.toFixed(2) });
       });
     });
-    return `<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><style>html,body,#m{margin:0;padding:0;height:100%;width:100%;}</style></head><body><div id="m"></div><script>function init(){const map=new google.maps.Map(document.getElementById('m'),{center:{lat:${coords.lat},lng:${coords.lng}},zoom:13,mapTypeControl:false,streetViewControl:false,fullscreenControl:false});new google.maps.Marker({position:{lat:${coords.lat},lng:${coords.lng}},map,title:'אני כאן',icon:{path:google.maps.SymbolPath.CIRCLE,scale:11,fillColor:'#1A6B8A',fillOpacity:1,strokeColor:'#fff',strokeWeight:3}});const pts=${JSON.stringify(markers)};pts.forEach(p=>{const m=new google.maps.Marker({position:{lat:p.lat,lng:p.lng},map,icon:{path:google.maps.SymbolPath.CIRCLE,scale:7,fillColor:p.color,fillOpacity:1,strokeColor:'#fff',strokeWeight:2}});const iw=new google.maps.InfoWindow({content:'<div style="direction:rtl;font-family:-apple-system,sans-serif;"><b>'+p.name+'</b><br><span style="color:#E76F51;">'+p.dist+' ק"מ</span></div>'});m.addListener('click',()=>iw.open({anchor:m,map}));});}</script><script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDw09Bg7XaH7apEWJBcFtogVfrdUwF_gEM&language=he&callback=init" async defer></script></body></html>`;
+    return `<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><style>html,body,#m{margin:0;padding:0;height:100%;width:100%;}</style></head><body><div id="m"></div><script>function init(){const map=new google.maps.Map(document.getElementById('m'),{center:{lat:${coords.lat},lng:${coords.lng}},zoom:13,mapTypeControl:false,streetViewControl:false,fullscreenControl:false});new google.maps.Marker({position:{lat:${coords.lat},lng:${coords.lng}},map,title:'${lang === 'en' ? 'You are here' : 'אני כאן'}',icon:{path:google.maps.SymbolPath.CIRCLE,scale:11,fillColor:'#1A6B8A',fillOpacity:1,strokeColor:'#fff',strokeWeight:3}});const pts=${JSON.stringify(markers)};pts.forEach(p=>{const m=new google.maps.Marker({position:{lat:p.lat,lng:p.lng},map,icon:{path:google.maps.SymbolPath.CIRCLE,scale:7,fillColor:p.color,fillOpacity:1,strokeColor:'#fff',strokeWeight:2}});const iw=new google.maps.InfoWindow({content:'<div style="direction:rtl;font-family:-apple-system,sans-serif;"><b>'+p.name+'</b><br><span style="color:#E76F51;">'+p.dist+' ${lang === 'en' ? 'km' : 'ק"מ'}</span></div>'});m.addListener('click',()=>iw.open({anchor:m,map}));});}</script><script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDw09Bg7XaH7apEWJBcFtogVfrdUwF_gEM&language=${lang}&callback=init" async defer></script></body></html>`;
   }, [coords, sections]);
 
   return (
@@ -90,8 +92,8 @@ export default function NearMeScreen() {
       <LinearGradient colors={['#2C5F6E', '#2A9D8F']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={s.header}>
         <Text style={s.headerIcon}>📍</Text>
         <View style={{ flex: 1 }}>
-          <Text style={s.headerTitle}>קרוב אליך עכשיו</Text>
-          <Text style={s.headerSub}>2 הקרובים מכל קטגוריה (עוד 3 בלחיצה)</Text>
+          <Text style={s.headerTitle}>{t('near.title')}</Text>
+          <Text style={s.headerSub}>{t('near.sub')}</Text>
         </View>
         <TouchableOpacity onPress={() => router.back()} style={s.closeBtn}>
           <Text style={{ color: '#fff', fontSize: 18, fontWeight: '700' }}>✕</Text>
@@ -101,15 +103,15 @@ export default function NearMeScreen() {
       {loading ? (
         <View style={s.center}>
           <ActivityIndicator size="large" color={Colors.ACCENT} />
-          <Text style={s.centerTxt}>מבקש את המיקום שלך…</Text>
+          <Text style={s.centerTxt}>{t('near.locating')}</Text>
         </View>
       ) : error ? (
         <View style={s.center}>
           <Text style={s.errIcon}>📵</Text>
-          <Text style={s.errTitle}>לא הצלחנו לאתר את המיקום</Text>
+          <Text style={s.errTitle}>{t('near.errTitle')}</Text>
           <Text style={s.errSub}>{error}</Text>
           <TouchableOpacity onPress={requestLocation} style={s.retry}>
-            <Text style={{ color: '#fff', fontWeight: '700' }}>נסה שוב</Text>
+            <Text style={{ color: '#fff', fontWeight: '700' }}>{t('common.retry')}</Text>
           </TouchableOpacity>
         </View>
       ) : coords ? (
@@ -124,7 +126,7 @@ export default function NearMeScreen() {
             return (
               <View key={sec.key} style={{ marginTop: 18 }}>
                 <View style={[s.sectionHead, { backgroundColor: sec.color + '12', borderRightColor: sec.color }]}>
-                  <Text style={[s.sectionTitle, { color: sec.color }]}>{sec.icon} {sec.label}</Text>
+                  <Text style={[s.sectionTitle, { color: sec.color }]}>{sec.icon} {t('cat.' + sec.key).startsWith('cat.') ? sec.label : t('cat.' + sec.key)}</Text>
                 </View>
                 <View style={{ gap: 8, paddingHorizontal: 16, marginTop: 8 }}>
                   {visible.map((it: any) => (
@@ -134,14 +136,14 @@ export default function NearMeScreen() {
                         <Text style={s.rowName} numberOfLines={1}>{it.name}</Text>
                         {it.address ? <Text style={s.rowAddr} numberOfLines={1}>📍 {it.address}</Text> : null}
                         <View style={[s.distChip, { backgroundColor: sec.color }]}>
-                          <Text style={s.distTxt}>{it._dist.toFixed(1)} ק"מ</Text>
+                          <Text style={s.distTxt}>{it._dist.toFixed(1)} {t('common.km')}</Text>
                         </View>
                       </View>
                     </TouchableOpacity>
                   ))}
                   {hiddenCount > 0 && (
                     <TouchableOpacity onPress={() => setExpanded(prev => ({ ...prev, [sec.key]: true }))} style={[s.moreBtn, { borderColor: sec.color }]}>
-                      <Text style={[s.moreTxt, { color: sec.color }]}>עוד {hiddenCount}…</Text>
+                      <Text style={[s.moreTxt, { color: sec.color }]}>{lang === 'en' ? `${hiddenCount} more…` : `עוד ${hiddenCount}…`}</Text>
                     </TouchableOpacity>
                   )}
                 </View>

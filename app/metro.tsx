@@ -4,12 +4,14 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { WebView } from 'react-native-webview';
 import { router } from 'expo-router';
 import { Colors } from '../constants/colors';
+import { useI18n } from '../constants/i18n';
 import METRO from '../data/metro.json';
 import { openMapsChoice } from '../utils/maps';
 
 type LineId = 'red' | 'green' | 'all';
 
 export default function MetroScreen() {
+  const { t, lang } = useI18n();
   const [filter, setFilter] = useState<LineId>('all');
   const [query, setQuery] = useState('');
 
@@ -37,7 +39,7 @@ export default function MetroScreen() {
     <View style={s.container}>
       <SafeAreaView edges={['top']} style={{ backgroundColor: Colors.PRIMARY }} />
       <View style={s.header}>
-        <Text style={s.title}>מטרו דובאי</Text>
+        <Text style={s.title}>{t('metro.title')}</Text>
         <TouchableOpacity onPress={() => router.back()} style={s.closeBtn}>
           <Text style={{ color: '#fff', fontSize: 16, fontWeight: '700' }}>✕</Text>
         </TouchableOpacity>
@@ -50,7 +52,7 @@ export default function MetroScreen() {
       <View style={s.filterRow}>
         {(['all', 'red', 'green'] as const).map(id => {
           const active = filter === id;
-          const labelMap: Record<string, string> = { all: 'הכל', red: 'הקו האדום', green: 'הקו הירוק' };
+          const labelMap: Record<string, string> = { all: t('common.all'), red: t('metro.redLine'), green: t('metro.greenLine') };
           const colorMap: Record<string, string> = { all: Colors.TEXT, red: '#E63946', green: '#2A9D8F' };
           return (
             <TouchableOpacity key={id} onPress={() => setFilter(id)} style={[s.chip, active && { backgroundColor: colorMap[id] }]}>
@@ -61,7 +63,7 @@ export default function MetroScreen() {
       </View>
 
       <View style={s.hoursBox}>
-        <Text style={s.hoursTitle}>שעות פעילות</Text>
+        <Text style={s.hoursTitle}>{t('metro.hoursTitle')}</Text>
         {METRO.hours.map((h, i) => (
           <View key={i} style={s.hoursRow}>
             <Text style={s.hoursDay}>{h.day}</Text>
@@ -71,13 +73,13 @@ export default function MetroScreen() {
       </View>
 
       <TouchableOpacity style={s.plannerBtn} onPress={() => Linking.openURL('https://www.rta.ae/wps/portal/rta/ae/home/journey-planner')}>
-        <Text style={s.plannerBtnTxt}>תכנן מסלול ב-RTA ←</Text>
+        <Text style={s.plannerBtnTxt}>{t('metro.plannerBtn')}</Text>
       </TouchableOpacity>
 
       <View style={s.searchWrap}>
         <TextInput
           style={s.searchInput}
-          placeholder="חיפוש תחנה / אזור..."
+          placeholder={t('metro.searchPh')}
           placeholderTextColor="#AAB7BD"
           value={query}
           onChangeText={setQuery}
@@ -87,7 +89,7 @@ export default function MetroScreen() {
       <ScrollView contentContainerStyle={{ paddingBottom: 40 }}>
         {filtered.length === 0 ? (
           <View style={{ padding: 24, alignItems: 'center' }}>
-            <Text style={{ color: Colors.MUTED }}>לא נמצאו תחנות</Text>
+            <Text style={{ color: Colors.MUTED }}>{t('metro.noStations')}</Text>
           </View>
         ) : filtered.map(station => {
           const isInterchange = station.lines.length > 1;
@@ -100,10 +102,10 @@ export default function MetroScreen() {
             >
               <View style={[s.stationDot, { backgroundColor: primaryColor }]} />
               <View style={{ flex: 1 }}>
-                <Text style={s.stationName}>{station.nameHe}</Text>
-                <Text style={s.stationMeta}>{station.nameEn} · {station.area}{isInterchange ? ' · החלפה' : ''}</Text>
+                <Text style={s.stationName}>{lang === 'en' ? station.nameEn : station.nameHe}</Text>
+                <Text style={s.stationMeta}>{lang === 'en' ? station.nameHe : station.nameEn} · {station.area}{isInterchange ? ' · ' + t('metro.interchange') : ''}</Text>
               </View>
-              <Text style={s.navArrow}>נווט ←</Text>
+              <Text style={s.navArrow}>{t('metro.navigate')}</Text>
             </TouchableOpacity>
           );
         })}

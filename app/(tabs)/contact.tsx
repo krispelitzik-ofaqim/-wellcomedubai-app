@@ -4,16 +4,18 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams } from 'expo-router';
 import * as DocumentPicker from 'expo-document-picker';
 import { Colors } from '../../constants/colors';
+import { useI18n } from '../../constants/i18n';
 
 const TOPICS = [
-  { id: 'general',    label: 'שאלה כללית',           prefix: 'שלום, ' },
-  { id: 'expert',     label: 'המלצה על מומחה',       prefix: 'שלום, אני רוצה להמליץ על בעל מקצוע בדובאי. שם: ' },
-  { id: 'business',   label: 'שיתוף פעולה עסקי',     prefix: 'שלום, אני רוצה להציע שיתוף פעולה: ' },
-  { id: 'feedback',   label: 'משוב או הצעה',         prefix: 'שלום, יש לי משוב/הצעה: ' },
-  { id: 'bug',        label: 'דיווח על תקלה',         prefix: 'שלום, יש לי דיווח על תקלה באפליקציה: ' },
+  { id: 'general',    key: 'ct.tGeneral',  label: 'שאלה כללית',           prefix: 'שלום, ',                                                  prefixEn: 'Hello, ' },
+  { id: 'expert',     key: 'ct.tExpert',   label: 'המלצה על מומחה',       prefix: 'שלום, אני רוצה להמליץ על בעל מקצוע בדובאי. שם: ',          prefixEn: 'Hello, I would like to recommend a professional in Dubai. Name: ' },
+  { id: 'business',   key: 'ct.tBusiness', label: 'שיתוף פעולה עסקי',     prefix: 'שלום, אני רוצה להציע שיתוף פעולה: ',                       prefixEn: 'Hello, I would like to propose a collaboration: ' },
+  { id: 'feedback',   key: 'ct.tFeedback', label: 'משוב או הצעה',         prefix: 'שלום, יש לי משוב/הצעה: ',                                  prefixEn: 'Hello, I have feedback/a suggestion: ' },
+  { id: 'bug',        key: 'ct.tBug',      label: 'דיווח על תקלה',         prefix: 'שלום, יש לי דיווח על תקלה באפליקציה: ',                    prefixEn: 'Hello, I have a bug report about the app: ' },
 ];
 
 export default function ContactScreen() {
+  const { t, lang } = useI18n();
   const { topic } = useLocalSearchParams<{ topic?: string }>();
   const [active, setActive] = useState(topic || 'general');
   const [open, setOpen] = useState(false);
@@ -30,14 +32,15 @@ export default function ContactScreen() {
       const a = res.assets?.[0];
       if (a) setFile({ name: a.name, size: a.size });
     } catch (e) {
-      Alert.alert('שגיאה', 'לא הצלחנו לפתוח את בחירת הקובץ');
+      Alert.alert(t('loc.errTitle'), t('contact.fileErr'));
     }
   };
 
   const buildText = () => {
-    let txt = current.prefix + (message || '');
-    if (phone) txt += `\n\nטלפון לחזרה: ${phone}`;
-    if (file) txt += `\n\nמצורף קובץ: ${file.name}${file.size ? ` (${Math.round(file.size / 1024)}KB)` : ''}\n(יש לצרף ידנית להודעה)`;
+    const en = lang === 'en';
+    let txt = (en ? current.prefixEn : current.prefix) + (message || '');
+    if (phone) txt += `\n\n${en ? 'Callback phone' : 'טלפון לחזרה'}: ${phone}`;
+    if (file) txt += `\n\n${en ? 'Attached file' : 'מצורף קובץ'}: ${file.name}${file.size ? ` (${Math.round(file.size / 1024)}KB)` : ''}\n(${en ? 'please attach manually to the message' : 'יש לצרף ידנית להודעה'})`;
     return txt;
   };
 
@@ -45,32 +48,32 @@ export default function ContactScreen() {
     <View style={s.container}>
       <SafeAreaView edges={['top']} style={{ backgroundColor: Colors.PRIMARY }} />
       <View style={s.header}>
-        <Text style={s.title}>צור קשר</Text>
-        <Text style={s.sub}>כל שאלה, הצעה או חוויה</Text>
+        <Text style={s.title}>{t('ct.title')}</Text>
+        <Text style={s.sub}>{t('ct.sub')}</Text>
       </View>
 
       <ScrollView contentContainerStyle={s.body} keyboardShouldPersistTaps="handled">
-        <Text style={s.sectionLabel}>נושא הפנייה</Text>
+        <Text style={[s.sectionLabel, { writingDirection: lang === 'en' ? 'ltr' : 'rtl', textAlign: lang === 'en' ? 'left' : 'right' }]}>{t('ct.topicLabel')}</Text>
         <TouchableOpacity style={s.dropdown} onPress={() => setOpen(true)}>
           <Text style={s.dropdownArrow}>▾</Text>
-          <Text style={s.dropdownTxt}>{current.label}</Text>
+          <Text style={s.dropdownTxt}>{t(current.key)}</Text>
         </TouchableOpacity>
 
-        <Text style={s.sectionLabel}>טלפון</Text>
+        <Text style={[s.sectionLabel, { writingDirection: lang === 'en' ? 'ltr' : 'rtl', textAlign: lang === 'en' ? 'left' : 'right' }]}>{t('ct.phone')}</Text>
         <TextInput
           value={phone}
           onChangeText={setPhone}
-          placeholder="לדוגמה: 050-1234567"
+          placeholder={t('ct.phonePh')}
           placeholderTextColor="#AAB7BD"
           keyboardType="phone-pad"
           style={s.input}
         />
 
-        <Text style={s.sectionLabel}>הודעה (אופציונלי)</Text>
+        <Text style={[s.sectionLabel, { writingDirection: lang === 'en' ? 'ltr' : 'rtl', textAlign: lang === 'en' ? 'left' : 'right' }]}>{t('ct.msgLabel')}</Text>
         <TextInput
           value={message}
           onChangeText={setMessage}
-          placeholder="כתוב כאן את ההודעה שלך…"
+          placeholder={t('ct.msgPh')}
           placeholderTextColor="#AAB7BD"
           multiline
           numberOfLines={4}
@@ -79,9 +82,9 @@ export default function ContactScreen() {
 
         {showDiploma ? (
           <>
-            <Text style={s.sectionLabel}>תעודת הסמכה / דיפלומה (PDF או תמונה)</Text>
+            <Text style={[s.sectionLabel, { writingDirection: lang === 'en' ? 'ltr' : 'rtl', textAlign: lang === 'en' ? 'left' : 'right' }]}>{t('contact.diploma')}</Text>
             <TouchableOpacity style={s.uploadBtn} onPress={pickFile}>
-              <Text style={s.uploadTxt}>📎 {file ? 'החלף קובץ' : 'העלה קובץ מהנייד'}</Text>
+              <Text style={s.uploadTxt}>📎 {file ? t('contact.replaceFile') : t('ct.uploadFile')}</Text>
             </TouchableOpacity>
             {file ? (
               <View style={s.fileChip}>
@@ -93,13 +96,13 @@ export default function ContactScreen() {
         ) : null}
 
         <TouchableOpacity style={[s.btn, { backgroundColor: '#25D366' }]} onPress={() => Linking.openURL(`https://wa.me/972502844867?text=${encodeURIComponent(buildText())}`)}>
-          <Text style={s.btnTxt}>💬 שלח ב-WhatsApp</Text>
+          <Text style={s.btnTxt}>{t('ct.whatsapp')}</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={[s.btn, { backgroundColor: Colors.PRIMARY }]} onPress={() => Linking.openURL(`mailto:info@wellcomedubai.com?subject=${encodeURIComponent('WellCome Dubai — ' + current.label)}&body=${encodeURIComponent(buildText())}`)}>
-          <Text style={s.btnTxt}>✉️ שלח באימייל</Text>
+        <TouchableOpacity style={[s.btn, { backgroundColor: Colors.PRIMARY }]} onPress={() => Linking.openURL(`mailto:info@wellcomedubai.com?subject=${encodeURIComponent('WellCome Dubai — ' + t(current.key))}&body=${encodeURIComponent(buildText())}`)}>
+          <Text style={s.btnTxt}>{t('ct.email')}</Text>
         </TouchableOpacity>
         <TouchableOpacity style={[s.btn, { backgroundColor: Colors.WARM }]} onPress={() => Linking.openURL('https://wellcomedubai.com')}>
-          <Text style={s.btnTxt}>🌐 לאתר</Text>
+          <Text style={s.btnTxt}>{t('ct.website')}</Text>
         </TouchableOpacity>
       </ScrollView>
 
@@ -107,11 +110,11 @@ export default function ContactScreen() {
         <View style={s.modalBackdrop}>
           <Pressable onPress={() => setOpen(false)} style={StyleSheet.absoluteFill} />
           <View style={s.menu}>
-            <Text style={s.menuTitle}>בחר נושא</Text>
-            {TOPICS.map(t => (
-              <TouchableOpacity key={t.id} onPress={() => { setActive(t.id); setOpen(false); }} style={[s.menuItem, active === t.id && s.menuItemActive]}>
-                <Text style={[s.menuTxt, active === t.id && s.menuTxtActive]}>{t.label}</Text>
-                {active === t.id && <Text style={s.menuCheck}>✓</Text>}
+            <Text style={s.menuTitle}>{t('contact.pickTopic')}</Text>
+            {TOPICS.map(top => (
+              <TouchableOpacity key={top.id} onPress={() => { setActive(top.id); setOpen(false); }} style={[s.menuItem, active === top.id && s.menuItemActive]}>
+                <Text style={[s.menuTxt, active === top.id && s.menuTxtActive]}>{t(top.key)}</Text>
+                {active === top.id && <Text style={s.menuCheck}>✓</Text>}
               </TouchableOpacity>
             ))}
           </View>

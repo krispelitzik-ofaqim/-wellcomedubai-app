@@ -9,22 +9,23 @@ import { WebView } from 'react-native-webview';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import { Colors } from '../constants/colors';
+import { useI18n } from '../constants/i18n';
 import { RE_ARTICLES, RE_INVESTMENTS } from '../constants/realestate';
 
 const TABS = [
-  { id: 'sale',     line1: 'דירות', line2: 'למכירה', color: Colors.PRIMARY },
-  { id: 'rent',     line1: 'דירות', line2: 'להשכרה', color: Colors.SECONDARY },
-  { id: 'invest',   line1: 'פורטל', line2: 'הנדל"ן',  color: Colors.ACCENT },
-  { id: 'business', line1: 'פורטל', line2: 'העסקים', color: Colors.GOLD },
-  { id: 'israeli',  line1: 'השקעות', line2: 'ישראליות', color: Colors.PINK },
+  { id: 'sale',     line1: 'דירות', line2: 'למכירה', line1En: 'Apartments', line2En: 'For Sale', color: Colors.PRIMARY },
+  { id: 'rent',     line1: 'דירות', line2: 'להשכרה', line1En: 'Apartments', line2En: 'For Rent', color: Colors.SECONDARY },
+  { id: 'invest',   line1: 'פורטל', line2: 'הנדל"ן',  line1En: 'Real Estate', line2En: 'Portal', color: Colors.ACCENT },
+  { id: 'business', line1: 'פורטל', line2: 'העסקים', line1En: 'Business', line2En: 'Portal', color: Colors.GOLD },
+  { id: 'israeli',  line1: 'השקעות', line2: 'ישראליות', line1En: 'Israeli', line2En: 'Investments', color: Colors.PINK },
 ];
 
 const STAT_INDICATORS = [
-  { code: 'NY.GDP.PCAP.CD',    label: 'תמ"ג לנפש',     unit: '$' as const, color: '#1A6B8A', grad: ['#1A6B8A', '#2A9D8F'], icon: '💵' },
-  { code: 'NY.GDP.MKTP.KD.ZG', label: 'צמיחת תמ"ג',   unit: '%' as const, color: '#2A9D8F', grad: ['#2A9D8F', '#5B9DC7'], icon: '📈' },
-  { code: 'FP.CPI.TOTL.ZG',    label: 'אינפלציה',     unit: '%' as const, color: '#E76F51', grad: ['#E76F51', '#F4A261'], icon: '🔥' },
-  { code: 'ST.INT.ARVL',       label: 'תיירים שנתיים', unit: 'M' as const, color: '#F4A261', grad: ['#F4A261', '#B8923A'], icon: '✈️' },
-  { code: 'FR.INR.LEND',       label: 'ריבית בנקים',   unit: '%' as const, color: '#B85C8E', grad: ['#B85C8E', '#5B9DC7'], icon: '🏦' },
+  { code: 'NY.GDP.PCAP.CD',    label: 'תמ"ג לנפש',     labelEn: 'GDP per capita',  unit: '$' as const, color: '#1A6B8A', grad: ['#1A6B8A', '#2A9D8F'], icon: '💵' },
+  { code: 'NY.GDP.MKTP.KD.ZG', label: 'צמיחת תמ"ג',   labelEn: 'GDP growth',      unit: '%' as const, color: '#2A9D8F', grad: ['#2A9D8F', '#5B9DC7'], icon: '📈' },
+  { code: 'FP.CPI.TOTL.ZG',    label: 'אינפלציה',     labelEn: 'Inflation',       unit: '%' as const, color: '#E76F51', grad: ['#E76F51', '#F4A261'], icon: '🔥' },
+  { code: 'ST.INT.ARVL',       label: 'תיירים שנתיים', labelEn: 'Annual tourists', unit: 'M' as const, color: '#F4A261', grad: ['#F4A261', '#B8923A'], icon: '✈️' },
+  { code: 'FR.INR.LEND',       label: 'ריבית בנקים',   labelEn: 'Bank lending rate', unit: '%' as const, color: '#B85C8E', grad: ['#B85C8E', '#5B9DC7'], icon: '🏦' },
 ];
 
 const ISRAELI_TO_UAE: Record<string, number> = { '2021': 200000, '2022': 450000, '2023': 600000, '2024': 650000, '2025': 700000 };
@@ -98,6 +99,7 @@ type StatRow = { year: string; value: number };
 type StatSlide = { icon: string; label: string; sublabel: string; grad: [string, string]; rows: StatRow[]; unit: '$' | '%' | 'M' | 'K' };
 
 function StatSlideCard({ slide }: { slide: StatSlide }) {
+  const { t } = useI18n();
   const max = Math.max(...slide.rows.map(r => Math.abs(r.value || 0))) || 1;
   return (
     <LinearGradient colors={slide.grad} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={ss.slide}>
@@ -109,7 +111,7 @@ function StatSlideCard({ slide }: { slide: StatSlide }) {
         </View>
       </View>
       {slide.rows.length === 0 ? (
-        <Text style={ss.slideEmpty}>אין נתונים</Text>
+        <Text style={ss.slideEmpty}>{t('common.notFound')}</Text>
       ) : slide.rows.map((r, i) => {
         const pct = Math.min(100, (Math.abs(r.value || 0) / max) * 100);
         return (
@@ -127,6 +129,7 @@ function StatSlideCard({ slide }: { slide: StatSlide }) {
 }
 
 function UAEStatsCarousel() {
+  const { t, lang } = useI18n();
   const [stats, setStats] = useState<StatSlide[] | null>(null);
   const sp = useScrollProgress();
 
@@ -148,8 +151,8 @@ function UAEStatsCarousel() {
       if (cancelled) return;
       const uaeSlides: StatSlide[] = fetched.map(({ ind, rows }) => ({
         icon: ind.icon,
-        label: ind.label,
-        sublabel: 'איחוד האמירויות',
+        label: lang === 'en' ? ind.labelEn : ind.label,
+        sublabel: t('re.uae'),
         grad: ind.grad as [string, string],
         rows: ind.code === 'FR.INR.LEND' && rows.length === 0 ? LENDING_FALLBACK : rows,
         unit: ind.unit,
@@ -157,8 +160,8 @@ function UAEStatsCarousel() {
       const israeliRows = Object.entries(ISRAELI_TO_UAE).reverse().slice(0, 4).map(([y, v]) => ({ year: y, value: v }));
       const israeli: StatSlide = {
         icon: '🇮🇱',
-        label: 'ישראלים בדובאי',
-        sublabel: 'תיירות ישראלית',
+        label: t('re.israelisInDubai'),
+        sublabel: t('re.israeliTourism'),
         grad: ['#B85C8E', '#5B9DC7'],
         rows: israeliRows,
         unit: 'K',
@@ -171,7 +174,7 @@ function UAEStatsCarousel() {
   if (!stats) {
     return (
       <View style={{ paddingVertical: 24, alignItems: 'center' }}>
-        <Text style={{ color: Colors.MUTED, fontSize: 13 }}>⏳ טוען נתונים…</Text>
+        <Text style={{ color: Colors.MUTED, fontSize: 13 }}>{t('re.loadingData')}</Text>
       </View>
     );
   }
@@ -209,28 +212,29 @@ const ss = StyleSheet.create({
 });
 
 const TOP_AREAS = [
-  { name: 'Dubai Marina', yield: '7-9%', entry: 'AED 900K', note: 'ביקוש שוכרים גבוה' },
-  { name: 'JVC', yield: '9-11%', entry: 'AED 700K', note: 'כניסה זולה — הפופולרי בישראלים' },
-  { name: 'Downtown', yield: '5-7%', entry: 'AED 1.5M', note: 'יוקרה + עליית הון' },
-  { name: 'Damac Hills 2', yield: '10-12%', entry: 'AED 800K', note: 'חדש וצומח' },
+  { name: 'Dubai Marina', yield: '7-9%', entry: 'AED 900K', note: 'ביקוש שוכרים גבוה', noteEn: 'High tenant demand' },
+  { name: 'JVC', yield: '9-11%', entry: 'AED 700K', note: 'כניסה זולה — הפופולרי בישראלים', noteEn: 'Low entry — popular with Israelis' },
+  { name: 'Downtown', yield: '5-7%', entry: 'AED 1.5M', note: 'יוקרה + עליית הון', noteEn: 'Luxury + capital appreciation' },
+  { name: 'Damac Hills 2', yield: '10-12%', entry: 'AED 800K', note: 'חדש וצומח', noteEn: 'New and growing' },
 ];
 
 const SECTORS = [
-  { icon: '🛡️', name: 'סייבר וביטחון', desc: 'Check Point, Cybereason, Sygnia — משרדים ב-DIFC.', kpi: '12+ חברות' },
-  { icon: '💳', name: 'פינטק', desc: 'Pagaya, eToro, Rapyd — שער למזרח התיכון.', kpi: '8+ חברות' },
-  { icon: '💧', name: 'טכנולוגיית מים', desc: 'IDE, Watergen — אמירויות שוק טבעי.', kpi: '5+ פרויקטים' },
-  { icon: '🌱', name: 'חקלאות מדברית', desc: 'Netafim, Plantish — שיתופי פעולה בחממות.', kpi: '3+ JVs' },
-  { icon: '🏥', name: 'רפואה', desc: 'מחקר, חיסונים, תיירות מרפא.', kpi: 'גדל 40%/שנה' },
+  { icon: '🛡️', name: 'סייבר וביטחון', nameEn: 'Cyber & Security', desc: 'Check Point, Cybereason, Sygnia — משרדים ב-DIFC.', descEn: 'Check Point, Cybereason, Sygnia — offices in DIFC.', kpi: '12+ חברות', kpiEn: '12+ companies' },
+  { icon: '💳', name: 'פינטק', nameEn: 'Fintech', desc: 'Pagaya, eToro, Rapyd — שער למזרח התיכון.', descEn: 'Pagaya, eToro, Rapyd — a gateway to the Middle East.', kpi: '8+ חברות', kpiEn: '8+ companies' },
+  { icon: '💧', name: 'טכנולוגיית מים', nameEn: 'Water Tech', desc: 'IDE, Watergen — אמירויות שוק טבעי.', descEn: 'IDE, Watergen — the UAE is a natural market.', kpi: '5+ פרויקטים', kpiEn: '5+ projects' },
+  { icon: '🌱', name: 'חקלאות מדברית', nameEn: 'Desert Agriculture', desc: 'Netafim, Plantish — שיתופי פעולה בחממות.', descEn: 'Netafim, Plantish — greenhouse collaborations.', kpi: '3+ JVs', kpiEn: '3+ JVs' },
+  { icon: '🏥', name: 'רפואה', nameEn: 'Medical', desc: 'מחקר, חיסונים, תיירות מרפא.', descEn: 'Research, vaccines, medical tourism.', kpi: 'גדל 40%/שנה', kpiEn: 'Grows 40%/yr' },
 ];
 
 const FUNDS = [
-  { tag: 'VC', name: 'OurCrowd', desc: 'משרד דובאי מאז 2021' },
-  { tag: 'VC', name: 'Pitango', desc: 'נציגות אמירויות לחיבור פורטפוליו' },
-  { tag: 'CVC', name: 'G42 Israeli Fund', desc: 'מיליארדי דולרים בסטארטאפים ישראליים' },
-  { tag: 'PE', name: 'IBI Tech Fund', desc: 'נדל"ן + פינטק' },
+  { tag: 'VC', name: 'OurCrowd', desc: 'משרד דובאי מאז 2021', descEn: 'Dubai office since 2021' },
+  { tag: 'VC', name: 'Pitango', desc: 'נציגות אמירויות לחיבור פורטפוליו', descEn: 'UAE representation to connect its portfolio' },
+  { tag: 'CVC', name: 'G42 Israeli Fund', desc: 'מיליארדי דולרים בסטארטאפים ישראליים', descEn: 'Billions of dollars in Israeli startups' },
+  { tag: 'PE', name: 'IBI Tech Fund', desc: 'נדל"ן + פינטק', descEn: 'Real estate + fintech' },
 ];
 
 export default function RealEstateScreen() {
+  const { t, lang } = useI18n();
   const [tab, setTab] = useState<'sale' | 'rent' | 'invest' | 'israeli' | 'business'>('invest');
 
   return (
@@ -240,7 +244,7 @@ export default function RealEstateScreen() {
         <SafeAreaView edges={['top']} style={{ backgroundColor: '#0E2A38' }} />
         <LinearGradient colors={['#0E2A38', '#1A4A5E']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}>
           <View style={s.header}>
-            <Text style={[s.title, { flex: 1 }]}>פורטל הנדל"ן בדובאי</Text>
+            <Text style={[s.title, { flex: 1 }]}>{t('re.title')}</Text>
             <TouchableOpacity onPress={() => router.back()} style={s.closeBtn}>
               <Text style={{ color: '#fff', fontSize: 16, fontWeight: '700' }}>✕</Text>
             </TouchableOpacity>
@@ -252,12 +256,12 @@ export default function RealEstateScreen() {
             </View>
             <View style={s.kpiGrid}>
               <View style={s.kpiBox}>
-                <Text style={s.kpiLabel} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.7}>מחיר ממוצע למ"ר</Text>
+                <Text style={s.kpiLabel} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.7}>{t('re.priceAvg')}</Text>
                 <Text style={s.kpiVal} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.6}>AED 1,580</Text>
                 <Text style={[s.kpiDelta, { color: '#4ADE80' }]} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.7}>▲ 19.8% YoY</Text>
               </View>
               <View style={s.kpiBox}>
-                <Text style={s.kpiLabel} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.7}>תשואה ממוצעת</Text>
+                <Text style={s.kpiLabel} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.7}>{t('re.yieldAvg')}</Text>
                 <Text style={s.kpiVal} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.6}>8.2%</Text>
                 <Text style={[s.kpiDelta, { color: '#4ADE80' }]} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.7}>▲ 0.6pt YoY</Text>
               </View>
@@ -272,17 +276,17 @@ export default function RealEstateScreen() {
 
         {/* Flat tabs (sticky) — single row, 5 buttons */}
         <View style={s.tabsStrip}>
-          {TABS.map(t => {
-            const isActive = tab === t.id;
+          {TABS.map(tb => {
+            const isActive = tab === tb.id;
             return (
               <TouchableOpacity
-                key={t.id}
+                key={tb.id}
                 style={s.tabBtn}
-                onPress={() => setTab(t.id as any)}
+                onPress={() => setTab(tb.id as any)}
               >
-                <Text style={[s.tabL1, { color: isActive ? t.color : Colors.MUTED, fontWeight: isActive ? '900' : '600' }]} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.6}>{t.line1}</Text>
-                <Text style={[s.tabL2, { color: isActive ? t.color : Colors.MUTED, fontWeight: isActive ? '900' : '600' }]} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.6}>{t.line2}</Text>
-                {isActive && <View style={[s.tabUnderline, { backgroundColor: t.color }]} />}
+                <Text style={[s.tabL1, { color: isActive ? tb.color : Colors.MUTED, fontWeight: isActive ? '900' : '600' }]} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.6}>{lang === 'en' ? tb.line1En : tb.line1}</Text>
+                <Text style={[s.tabL2, { color: isActive ? tb.color : Colors.MUTED, fontWeight: isActive ? '900' : '600' }]} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.6}>{lang === 'en' ? tb.line2En : tb.line2}</Text>
+                {isActive && <View style={[s.tabUnderline, { backgroundColor: tb.color }]} />}
               </TouchableOpacity>
             );
           })}
@@ -301,23 +305,26 @@ export default function RealEstateScreen() {
 }
 
 function InvestContent() {
+  const { t, lang } = useI18n();
   const [news, setNews] = useState<any[]>([]);
   const [preview, setPreview] = useState<any | null>(null);
   const newsSp = useScrollProgress();
 
   useEffect(() => {
-    const rss = 'https://news.google.com/rss/search?q=' + encodeURIComponent('דובאי נדלן') + '&hl=he&gl=IL&ceid=IL:he';
+    const rss = lang === 'en'
+      ? 'https://news.google.com/rss/search?q=' + encodeURIComponent('Dubai real estate') + '&hl=en&gl=AE&ceid=AE:en'
+      : 'https://news.google.com/rss/search?q=' + encodeURIComponent('דובאי נדלן') + '&hl=he&gl=IL&ceid=IL:he';
     fetch('https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent(rss))
       .then(r => r.json())
       .then(j => setNews((j.items || []).slice(0, 8)))
       .catch(() => {});
-  }, []);
+  }, [lang]);
 
   return (
     <>
-      <Text style={s.sectionTitle}>חדשות נדל״ן בדובאי</Text>
+      <Text style={s.sectionTitle}>{t('re.newsRE')}</Text>
       {news.length === 0 ? (
-        <View style={s.placeholder}><Text style={s.placeholderSub}>⏳ טוען חדשות...</Text></View>
+        <View style={s.placeholder}><Text style={s.placeholderSub}>{t('re.loadingNews')}</Text></View>
       ) : (
         <View>
           <ScrollView
@@ -353,8 +360,8 @@ function InvestContent() {
           <View style={s.modalCard}>
             <LinearGradient colors={['#0E2A38', '#1A4A5E']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={s.modalHead}>
               <View style={{ flexDirection: 'row-reverse', alignItems: 'center', gap: 8 }}>
-                <Text style={s.modalKicker}>חדשות</Text>
-                {preview?.pubDate ? <Text style={s.modalDate}>{new Date(preview.pubDate).toLocaleDateString('he-IL', { day: 'numeric', month: 'long', year: 'numeric' })}</Text> : null}
+                <Text style={s.modalKicker}>{t('re.modalNews')}</Text>
+                {preview?.pubDate ? <Text style={s.modalDate}>{new Date(preview.pubDate).toLocaleDateString(lang === 'en' ? 'en-US' : 'he-IL', { day: 'numeric', month: 'long', year: 'numeric' })}</Text> : null}
               </View>
               <TouchableOpacity onPress={() => setPreview(null)} style={s.modalClose}>
                 <Text style={{ color: '#fff', fontSize: 18 }}>×</Text>
@@ -369,7 +376,7 @@ function InvestContent() {
                 const src = preview?.author || ((preview?.link || '').match(/\/\/(?:www\.)?([^\/]+)/)?.[1] || '');
                 return src ? <Text style={s.modalSource}>📰 {src}</Text> : null;
               })()}
-              <Text style={s.modalSummary}>{((preview?.description || preview?.content || '') as string).replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').replace(/&quot;/g, '"').replace(/&amp;/g, '&').replace(/\s+/g, ' ').trim() || 'אין תקציר זמין.'}</Text>
+              <Text style={s.modalSummary}>{((preview?.description || preview?.content || '') as string).replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').replace(/&quot;/g, '"').replace(/&amp;/g, '&').replace(/\s+/g, ' ').trim() || t('re.noSummary')}</Text>
               {preview?.categories?.length ? (
                 <View style={s.modalChips}>
                   {(preview.categories as string[]).slice(0, 4).map((c, i) => (
@@ -379,49 +386,49 @@ function InvestContent() {
               ) : null}
               <View style={s.modalDivider} />
               <TouchableOpacity onPress={() => preview && Linking.openURL(preview.link)} style={s.modalLinkBtn}>
-                <Text style={s.modalLinkBtnTxt}>לכתבה המלאה במקור ←</Text>
+                <Text style={s.modalLinkBtnTxt}>{t('re.fullArticle')}</Text>
               </TouchableOpacity>
             </ScrollView>
           </View>
         </View>
       </Modal>
 
-      <Text style={s.sectionTitle}>מדדים כלכליים — UAE</Text>
+      <Text style={s.sectionTitle}>{t('re.indicators')}</Text>
       <UAEStatsCarousel />
 
-      <Text style={s.sectionTitle}>מאמרים ומדריכים</Text>
+      <Text style={s.sectionTitle}>{t('re.articles')}</Text>
       {RE_ARTICLES.map(a => (
         <View key={a.id} style={s.articleCard}>
           <View style={s.articleHeader}>
             <Text style={{ fontSize: 22 }}>{a.icon}</Text>
-            <Text style={s.articleTitle}>{a.title}</Text>
+            <Text style={[s.articleTitle, { writingDirection: lang === 'en' ? 'ltr' : 'rtl', textAlign: lang === 'en' ? 'left' : 'right' }]}>{lang === 'en' ? (a.titleEn || a.title) : a.title}</Text>
           </View>
-          <Text style={s.articleBody}>{a.body}</Text>
+          <Text style={[s.articleBody, { writingDirection: lang === 'en' ? 'ltr' : 'rtl', textAlign: lang === 'en' ? 'left' : 'right' }]}>{lang === 'en' ? (a.bodyEn || a.body) : a.body}</Text>
         </View>
       ))}
 
       <View style={s.whyBanner}>
-        <Text style={s.whyKicker}>למה דובאי?</Text>
-        <Text style={s.whyTitle}>היעד החם בעולם להשקעות נדל"ן</Text>
+        <Text style={s.whyKicker}>{t('re.whyKicker')}</Text>
+        <Text style={s.whyTitle}>{t('re.whyTitle')}</Text>
         <View style={s.whyGrid}>
-          <Text style={s.whyItem}>✓ 0% מס הכנסה אישי</Text>
-          <Text style={s.whyItem}>✓ 4% מס רכישה חד-פעמי</Text>
-          <Text style={s.whyItem}>✓ תשואות 6-12%</Text>
-          <Text style={s.whyItem}>✓ ויזת משקיע מ-AED 750K</Text>
+          <Text style={s.whyItem}>{t('re.why1')}</Text>
+          <Text style={s.whyItem}>{t('re.why2')}</Text>
+          <Text style={s.whyItem}>{t('re.why3')}</Text>
+          <Text style={s.whyItem}>{t('re.why4')}</Text>
         </View>
       </View>
 
-      <Text style={s.sectionTitle}>אזורים מובילים — מפה חיה</Text>
+      <Text style={s.sectionTitle}>{t('re.topAreasMap')}</Text>
       <View style={s.investMapWrap}>
         <WebView
           originWhitelist={['*']}
-          source={{ html: `<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><style>html,body,#m{margin:0;padding:0;height:100%;width:100%;}</style></head><body><div id="m"></div><script>function init(){const map=new google.maps.Map(document.getElementById('m'),{center:{lat:25.18,lng:55.25},zoom:11,mapTypeControl:false,streetViewControl:false,fullscreenControl:false});const pts=${JSON.stringify(RE_INVESTMENTS.filter((i: any) => i.lat && i.lng).map((i: any, idx: number) => ({ lat: i.lat, lng: i.lng, name: i.area, num: idx + 1, yield: i.yield })))};const bounds=new google.maps.LatLngBounds();pts.forEach(p=>{const m=new google.maps.Marker({position:{lat:p.lat,lng:p.lng},map,label:{text:String(p.num),color:'#fff',fontWeight:'800',fontSize:'12px'},icon:{path:google.maps.SymbolPath.CIRCLE,scale:14,fillColor:'#E76F51',fillOpacity:1,strokeColor:'#fff',strokeWeight:2}});bounds.extend({lat:p.lat,lng:p.lng});const iw=new google.maps.InfoWindow({content:'<div style="direction:rtl;font-family:-apple-system,sans-serif;"><b>'+p.num+'. '+p.name+'</b><br><span style="color:#E76F51;">תשואה '+p.yield+'</span></div>'});m.addListener('click',()=>iw.open({anchor:m,map}));});if(pts.length>1)map.fitBounds(bounds,30);}</script><script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDw09Bg7XaH7apEWJBcFtogVfrdUwF_gEM&language=he&callback=init" async defer></script></body></html>` }}
+          source={{ html: `<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><style>html,body,#m{margin:0;padding:0;height:100%;width:100%;}</style></head><body><div id="m"></div><script>function init(){const map=new google.maps.Map(document.getElementById('m'),{center:{lat:25.18,lng:55.25},zoom:11,mapTypeControl:false,streetViewControl:false,fullscreenControl:false});const pts=${JSON.stringify(RE_INVESTMENTS.filter((i: any) => i.lat && i.lng).map((i: any, idx: number) => ({ lat: i.lat, lng: i.lng, name: i.area, num: idx + 1, yield: i.yield })))};const bounds=new google.maps.LatLngBounds();pts.forEach(p=>{const m=new google.maps.Marker({position:{lat:p.lat,lng:p.lng},map,label:{text:String(p.num),color:'#fff',fontWeight:'800',fontSize:'12px'},icon:{path:google.maps.SymbolPath.CIRCLE,scale:14,fillColor:'#E76F51',fillOpacity:1,strokeColor:'#fff',strokeWeight:2}});bounds.extend({lat:p.lat,lng:p.lng});const iw=new google.maps.InfoWindow({content:'<div style="direction:rtl;font-family:-apple-system,sans-serif;"><b>'+p.num+'. '+p.name+'</b><br><span style="color:#E76F51;">${lang === 'en' ? 'Yield' : 'תשואה'} '+p.yield+'</span></div>'});m.addListener('click',()=>iw.open({anchor:m,map}));});if(pts.length>1)map.fitBounds(bounds,30);}</script><script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDw09Bg7XaH7apEWJBcFtogVfrdUwF_gEM&language=${lang}&callback=init" async defer></script></body></html>` }}
           style={{ flex: 1 }}
           scrollEnabled={false}
         />
       </View>
 
-      <Text style={s.sectionTitle}>אזורי השקעה — לחץ על סמן במפה לפרטים</Text>
+      <Text style={s.sectionTitle}>{t('re.investAreas')}</Text>
       {RE_INVESTMENTS.map((inv, i) => (
         <View key={inv.area} style={s.investCard}>
           <View style={s.investHeader}>
@@ -429,8 +436,8 @@ function InvestContent() {
             <Text style={s.investArea}>{inv.area}</Text>
             <View style={s.yieldBadge}><Text style={s.yieldTxt}>⚡ {inv.yield}</Text></View>
           </View>
-          <Text style={s.investEntry}>כניסה מ-<Text style={{ fontWeight: '900', color: Colors.PRIMARY }}>{inv.entry}</Text></Text>
-          <Text style={s.investHl}>{inv.highlight}</Text>
+          <Text style={s.investEntry}>{t('re.entryFrom')}<Text style={{ fontWeight: '900', color: Colors.PRIMARY }}>{inv.entry}</Text></Text>
+          <Text style={[s.investHl, { writingDirection: lang === 'en' ? 'ltr' : 'rtl', textAlign: lang === 'en' ? 'left' : 'right' }]}>{lang === 'en' ? (inv.highlightEn || inv.highlight) : inv.highlight}</Text>
         </View>
       ))}
     </>
@@ -505,24 +512,27 @@ function CurrencyTicker() {
 }
 
 function BusinessContent() {
+  const { t, lang } = useI18n();
   const [news, setNews] = useState<any[]>([]);
   const [preview, setPreview] = useState<any | null>(null);
   const newsSp = useScrollProgress();
 
   useEffect(() => {
-    const rss = 'https://news.google.com/rss/search?q=' + encodeURIComponent('דובאי עסקים כלכלה') + '&hl=he&gl=IL&ceid=IL:he';
+    const rss = lang === 'en'
+      ? 'https://news.google.com/rss/search?q=' + encodeURIComponent('Dubai business economy') + '&hl=en&gl=AE&ceid=AE:en'
+      : 'https://news.google.com/rss/search?q=' + encodeURIComponent('דובאי עסקים כלכלה') + '&hl=he&gl=IL&ceid=IL:he';
     fetch('https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent(rss))
       .then(r => r.json())
       .then(j => setNews((j.items || []).slice(0, 10)))
       .catch(() => {});
-  }, []);
+  }, [lang]);
 
   return (
     <>
       <CurrencyTicker />
-      <Text style={s.sectionTitle}>חדשות עסקים מדובאי</Text>
+      <Text style={s.sectionTitle}>{t('re.newsBiz')}</Text>
       {news.length === 0 ? (
-        <View style={s.placeholder}><Text style={s.placeholderSub}>⏳ טוען חדשות...</Text></View>
+        <View style={s.placeholder}><Text style={s.placeholderSub}>{t('re.loadingNews')}</Text></View>
       ) : (
         <View>
           <ScrollView
@@ -558,8 +568,8 @@ function BusinessContent() {
           <View style={s.modalCard}>
             <LinearGradient colors={['#0E2A38', '#1A4A5E']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={s.modalHead}>
               <View style={{ flexDirection: 'row-reverse', alignItems: 'center', gap: 8 }}>
-                <Text style={s.modalKicker}>עסקים</Text>
-                {preview?.pubDate ? <Text style={s.modalDate}>{new Date(preview.pubDate).toLocaleDateString('he-IL', { day: 'numeric', month: 'long', year: 'numeric' })}</Text> : null}
+                <Text style={s.modalKicker}>{t('re.modalBiz')}</Text>
+                {preview?.pubDate ? <Text style={s.modalDate}>{new Date(preview.pubDate).toLocaleDateString(lang === 'en' ? 'en-US' : 'he-IL', { day: 'numeric', month: 'long', year: 'numeric' })}</Text> : null}
               </View>
               <TouchableOpacity onPress={() => setPreview(null)} style={s.modalClose}>
                 <Text style={{ color: '#fff', fontSize: 18 }}>×</Text>
@@ -574,38 +584,39 @@ function BusinessContent() {
                 const src = preview?.author || ((preview?.link || '').match(/\/\/(?:www\.)?([^\/]+)/)?.[1] || '');
                 return src ? <Text style={s.modalSource}>📰 {src}</Text> : null;
               })()}
-              <Text style={s.modalSummary}>{((preview?.description || preview?.content || '') as string).replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').replace(/&quot;/g, '"').replace(/&amp;/g, '&').replace(/\s+/g, ' ').trim() || 'אין תקציר זמין.'}</Text>
+              <Text style={s.modalSummary}>{((preview?.description || preview?.content || '') as string).replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').replace(/&quot;/g, '"').replace(/&amp;/g, '&').replace(/\s+/g, ' ').trim() || t('re.noSummary')}</Text>
               <View style={s.modalDivider} />
               <TouchableOpacity onPress={() => preview && Linking.openURL(preview.link)} style={s.modalLinkBtn}>
-                <Text style={s.modalLinkBtnTxt}>לכתבה המלאה במקור ←</Text>
+                <Text style={s.modalLinkBtnTxt}>{t('re.fullArticle')}</Text>
               </TouchableOpacity>
             </ScrollView>
           </View>
         </View>
       </Modal>
 
-      <TradingChart title="זהב (XAU/USD)" symbol="OANDA:XAUUSD" />
-      <TradingChart title="כסף (XAG/USD)" symbol="OANDA:XAGUSD" />
-      <TradingChart title="נפט (US Oil)" symbol="TVC:USOIL" />
+      <TradingChart title={t('re.chartGold')} symbol="OANDA:XAUUSD" />
+      <TradingChart title={t('re.chartSilver')} symbol="OANDA:XAGUSD" />
+      <TradingChart title={t('re.chartOil')} symbol="TVC:USOIL" />
 
       <View style={s.disclaimer}>
-        <Text style={s.disclaimerTxt}>⚠️ הנתונים מסופקים על ידי TradingView לצרכי מידע בלבד. אינם המלצה להשקעה.</Text>
+        <Text style={s.disclaimerTxt}>{t('re.disclaimer')}</Text>
       </View>
     </>
   );
 }
 
 const BIG_PICTURE_STATS = [
-  { val: '1,000+', label: 'חברות ישראליות עם נציגות בדובאי', color: '#1A6B8A' },
-  { val: '$2.5B+', label: 'השקעות הדדיות מאז הסכמי אברהם', color: '#2A9D8F' },
-  { val: '600K+', label: 'ישראלים מבקרים בדובאי בשנה', color: '#E76F51' },
-  { val: '3,000', label: 'ישראלים חיים בדובאי כיום', color: '#7FA77F' },
-  { val: '70+', label: 'טיסות שבועיות מישראל', color: '#B85C8E' },
-  { val: '3:00', label: 'שעות טיסה — בלי ויזה', color: '#5B9DC7' },
-  { val: '8-12%', label: 'תשואת נדל"ן ממוצעת בפרויקטים פופולריים', color: '#B8923A' },
+  { val: '1,000+', label: 'חברות ישראליות עם נציגות בדובאי', labelEn: 'Israeli companies with a Dubai presence', color: '#1A6B8A' },
+  { val: '$2.5B+', label: 'השקעות הדדיות מאז הסכמי אברהם', labelEn: 'Mutual investment since the Abraham Accords', color: '#2A9D8F' },
+  { val: '600K+', label: 'ישראלים מבקרים בדובאי בשנה', labelEn: 'Israelis visiting Dubai per year', color: '#E76F51' },
+  { val: '3,000', label: 'ישראלים חיים בדובאי כיום', labelEn: 'Israelis living in Dubai today', color: '#7FA77F' },
+  { val: '70+', label: 'טיסות שבועיות מישראל', labelEn: 'Weekly flights from Israel', color: '#B85C8E' },
+  { val: '3:00', label: 'שעות טיסה — בלי ויזה', labelEn: 'Flight hours — visa-free', color: '#5B9DC7' },
+  { val: '8-12%', label: 'תשואת נדל"ן ממוצעת בפרויקטים פופולריים', labelEn: 'Average real estate yield in popular projects', color: '#B8923A' },
 ];
 
 function IsraeliContent() {
+  const { t, lang } = useI18n();
   const slideW = SCREEN_W - 36;
   const [activeSlide, setActiveSlide] = useState(0);
   const onSlideScroll = (e: any) => {
@@ -617,28 +628,28 @@ function IsraeliContent() {
   const slides = [
     <View key="big" style={[s.bigCard, { width: slideW }]}>
       <View style={{ flexDirection: 'row-reverse', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
-        <Text style={s.bigCardTitle}>התמונה הגדולה</Text>
+        <Text style={s.bigCardTitle}>{t('re.bigPicture')}</Text>
         <View style={s.yearChip}><Text style={s.yearChipTxt}>2026</Text></View>
       </View>
       <ScrollView showsVerticalScrollIndicator={false} nestedScrollEnabled>
         {BIG_PICTURE_STATS.map((st, i) => (
           <View key={i} style={[s.statRow, i === BIG_PICTURE_STATS.length - 1 && { borderBottomWidth: 0 }]}>
             <Text style={[s.statVal, { color: st.color }]}>{st.val}</Text>
-            <Text style={s.statLabel}>{st.label}</Text>
+            <Text style={[s.statLabel, { writingDirection: lang === 'en' ? 'ltr' : 'rtl' }]}>{lang === 'en' ? st.labelEn : st.label}</Text>
           </View>
         ))}
       </ScrollView>
     </View>,
     <View key="areas" style={[s.bigCard, { width: slideW }]}>
-      <Text style={s.bigCardTitle}>🏙️ אזורים שישראלים קונים בהם</Text>
-      <Text style={s.bigCardSub}>דירוג לפי תשואה ופופולריות</Text>
+      <Text style={s.bigCardTitle}>{t('re.areasBuy')}</Text>
+      <Text style={s.bigCardSub}>{t('re.rankByYield')}</Text>
       <ScrollView showsVerticalScrollIndicator={false} nestedScrollEnabled>
         {TOP_AREAS.map((a, i) => (
           <View key={i} style={[s.areaRow, i === TOP_AREAS.length - 1 && { borderBottomWidth: 0 }]}>
             <View style={s.areaNum}><Text style={s.areaNumTxt}>{i + 1}</Text></View>
             <View style={{ flex: 1 }}>
               <Text style={s.areaName}>{a.name}</Text>
-              <Text style={s.areaNote}>{a.note}</Text>
+              <Text style={[s.areaNote, { writingDirection: lang === 'en' ? 'ltr' : 'rtl' }]}>{lang === 'en' ? a.noteEn : a.note}</Text>
             </View>
             <View style={{ alignItems: 'flex-end' }}>
               <Text style={s.areaYield}>{a.yield}</Text>
@@ -649,33 +660,33 @@ function IsraeliContent() {
       </ScrollView>
     </View>,
     <View key="sectors" style={[s.bigCard, { width: slideW }]}>
-      <Text style={s.bigCardTitle}>🚀 ענפים פורחים</Text>
-      <Text style={s.bigCardSub}>5 הסקטורים המובילים</Text>
+      <Text style={s.bigCardTitle}>{t('re.sectors')}</Text>
+      <Text style={s.bigCardSub}>{t('re.top5')}</Text>
       <ScrollView showsVerticalScrollIndicator={false} nestedScrollEnabled>
         {SECTORS.map((sec, i) => (
           <View key={i} style={[s.sectorRow, i === SECTORS.length - 1 && { borderBottomWidth: 0 }]}>
             <Text style={{ fontSize: 20 }}>{sec.icon}</Text>
             <View style={{ flex: 1 }}>
               <View style={{ flexDirection: 'row-reverse', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Text style={s.sectorName}>{sec.name}</Text>
-                <View style={s.kpiChip}><Text style={s.kpiChipTxt}>{sec.kpi}</Text></View>
+                <Text style={s.sectorName}>{lang === 'en' ? sec.nameEn : sec.name}</Text>
+                <View style={s.kpiChip}><Text style={s.kpiChipTxt}>{lang === 'en' ? sec.kpiEn : sec.kpi}</Text></View>
               </View>
-              <Text style={s.sectorDesc}>{sec.desc}</Text>
+              <Text style={[s.sectorDesc, { writingDirection: lang === 'en' ? 'ltr' : 'rtl' }]}>{lang === 'en' ? sec.descEn : sec.desc}</Text>
             </View>
           </View>
         ))}
       </ScrollView>
     </View>,
     <View key="funds" style={[s.bigCard, { width: slideW }]}>
-      <Text style={s.bigCardTitle}>💼 קרנות וגופי השקעה</Text>
-      <Text style={s.bigCardSub}>משרדים פעילים בדובאי / DIFC</Text>
+      <Text style={s.bigCardTitle}>{t('re.funds')}</Text>
+      <Text style={s.bigCardSub}>{t('re.activeOffices')}</Text>
       <ScrollView showsVerticalScrollIndicator={false} nestedScrollEnabled>
         {FUNDS.map((f, i) => (
           <View key={i} style={[s.fundRow, i === FUNDS.length - 1 && { borderBottomWidth: 0 }]}>
             <View style={s.fundTag}><Text style={s.fundTagTxt}>{f.tag}</Text></View>
             <View style={{ flex: 1 }}>
               <Text style={s.fundName}>{f.name}</Text>
-              <Text style={s.fundDesc}>{f.desc}</Text>
+              <Text style={[s.fundDesc, { writingDirection: lang === 'en' ? 'ltr' : 'rtl' }]}>{lang === 'en' ? f.descEn : f.desc}</Text>
             </View>
           </View>
         ))}
@@ -704,7 +715,7 @@ function IsraeliContent() {
       </View>
 
       <TouchableOpacity style={s.submitProject} onPress={() => router.push('/submit-project' as any)}>
-        <Text style={s.submitProjectTxt}>📤 העלה פרויקט חדש</Text>
+        <Text style={s.submitProjectTxt}>{t('re.uploadProject')}</Text>
         <Text style={s.submitProjectArrow}>‹</Text>
       </TouchableOpacity>
 
@@ -714,6 +725,7 @@ function IsraeliContent() {
 }
 
 function UserProjectsList() {
+  const { t } = useI18n();
   const [projects, setProjects] = useState<any[] | null>(null);
 
   useEffect(() => {
@@ -729,7 +741,7 @@ function UserProjectsList() {
 
   return (
     <View style={{ marginTop: 24 }}>
-      <Text style={[s.sectionTitle, { marginTop: 0, marginBottom: 12, fontSize: 17 }]}>פרויקטים מיזמים</Text>
+      <Text style={[s.sectionTitle, { marginTop: 0, marginBottom: 12, fontSize: 17 }]}>{t('re.devProjects')}</Text>
       <View style={{ gap: 14 }}>
         {projects.map(p => <ProjectCard key={p.id} project={p} />)}
       </View>
@@ -738,20 +750,21 @@ function UserProjectsList() {
 }
 
 function ProjectCard({ project: p }: { project: any }) {
+  const { t } = useI18n();
   const photo = p.photos?.[0] ? (p.photos[0].startsWith('http') ? p.photos[0] : 'https://wellcomedubaicom-production.up.railway.app' + p.photos[0]) : '';
   return (
     <TouchableOpacity activeOpacity={0.9} style={s.projectCard} onPress={() => Linking.openURL('https://wellcomedubai.com/#realestate')}>
-      {photo ? <Image source={{ uri: photo }} style={s.projectImg} /> : <View style={[s.projectImg, { backgroundColor: '#0E2A38', alignItems: 'center', justifyContent: 'center' }]}><Text style={{ color: '#fff', opacity: 0.5 }}>אין מדיה</Text></View>}
+      {photo ? <Image source={{ uri: photo }} style={s.projectImg} /> : <View style={[s.projectImg, { backgroundColor: '#0E2A38', alignItems: 'center', justifyContent: 'center' }]}><Text style={{ color: '#fff', opacity: 0.5 }}>{t('re.noMedia')}</Text></View>}
       <View style={s.projectBody}>
         <View style={{ flexDirection: 'row-reverse', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
           <Text style={s.projectTitle} numberOfLines={1}>{p.title}</Text>
           {p.yieldPct ? <View style={s.projectYield}><Text style={s.projectYieldTxt}>{p.yieldPct}%</Text></View> : null}
         </View>
         {p.developer ? <Text style={s.projectMeta}>🏢 {p.developer}</Text> : null}
-        <Text style={s.projectMeta}>📍 {p.area}{p.delivery ? ` · 📅 מסירה ${p.delivery}` : ''}</Text>
+        <Text style={s.projectMeta}>📍 {p.area}{p.delivery ? ` · 📅 ${t('re.delivery')} ${p.delivery}` : ''}</Text>
         <View style={{ flexDirection: 'row-reverse', justifyContent: 'space-between', alignItems: 'center', marginTop: 8 }}>
-          <Text style={s.projectPrice}>החל מ-AED {p.price}</Text>
-          <Text style={s.projectCta}>פרטים מלאים ←</Text>
+          <Text style={s.projectPrice}>{t('re.priceFrom')}{p.price}</Text>
+          <Text style={s.projectCta}>{t('re.fullDetails')}</Text>
         </View>
       </View>
     </TouchableOpacity>
@@ -759,6 +772,8 @@ function ProjectCard({ project: p }: { project: any }) {
 }
 
 function ListingsPlaceholder({ type }: { type: 'sale' | 'rent' }) {
+  const { t } = useI18n();
+  const typeLabel = type === 'sale' ? t('re.forSale') : t('re.forRent');
   const [listings, setListings] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -772,18 +787,18 @@ function ListingsPlaceholder({ type }: { type: 'sale' | 'rent' }) {
   }, [type]);
 
   if (loading) {
-    return <View style={s.placeholder}><Text style={s.placeholderSub}>⏳ טוען מודעות...</Text></View>;
+    return <View style={s.placeholder}><Text style={s.placeholderSub}>{t('re.loadingAds')}</Text></View>;
   }
 
   return (
     <View>
       <TouchableOpacity style={s.publishBtn} onPress={() => Linking.openURL('https://wellcomedubai.com/#realestate')}>
-        <Text style={s.publishTxt}>פרסם מודעה חדשה — {type === 'sale' ? 'למכירה' : 'להשכרה'}</Text>
+        <Text style={s.publishTxt}>{t('re.publishAd')}{typeLabel}</Text>
         <Text style={s.publishArrow}>‹</Text>
       </TouchableOpacity>
       {listings.length === 0 ? (
         <View style={s.placeholder}>
-          <Text style={s.placeholderSub}>אין מודעות {type === 'sale' ? 'למכירה' : 'להשכרה'} כרגע. תהיה הראשון!</Text>
+          <Text style={s.placeholderSub}>{t('re.noAdsPre')}{typeLabel}{t('re.noAdsPost')}</Text>
         </View>
       ) : listings.map(l => {
         const photo = l.photos?.[0] ? (l.photos[0].startsWith('http') ? l.photos[0] : 'https://wellcomedubaicom-production.up.railway.app' + l.photos[0]) : '';
@@ -800,7 +815,7 @@ function ListingsPlaceholder({ type }: { type: 'sale' | 'rent' }) {
                   <Text style={s.actionTxt}>💬 WhatsApp</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={[s.actionBtn, { backgroundColor: Colors.PRIMARY }]} onPress={() => Linking.openURL(`tel:${l.phone}`)}>
-                  <Text style={s.actionTxt}>📞 חייג</Text>
+                  <Text style={s.actionTxt}>{t('re.call')}</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -812,6 +827,7 @@ function ListingsPlaceholder({ type }: { type: 'sale' | 'rent' }) {
 }
 
 function BrokersBanner() {
+  const { t } = useI18n();
   return (
     <TouchableOpacity activeOpacity={0.85} onPress={() => router.push('/brokers' as any)} style={s.brokersBanner}>
       <ImageBackground
@@ -821,8 +837,8 @@ function BrokersBanner() {
       >
         <View style={s.brokersOverlay}>
           <Text style={s.brokersKicker}>PREMIUM SERVICE</Text>
-          <Text style={s.brokersTitle}>מתווכים / רוא"ח / עורכי דין</Text>
-          <Text style={s.brokersSub}>דוברי עברית · ניסיון עם ישראלים</Text>
+          <Text style={s.brokersTitle}>{t('brokers.title')}</Text>
+          <Text style={s.brokersSub}>{t('re.brokersSub')}</Text>
         </View>
       </ImageBackground>
     </TouchableOpacity>

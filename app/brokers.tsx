@@ -4,40 +4,63 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Colors } from '../constants/colors';
+import { useI18n } from '../constants/i18n';
 
 const CRITERIA_SECTIONS = [
   {
-    title: 'סוכן נדל"ן', color: '#1A6B8A',
+    title: 'סוכן נדל"ן', titleEn: 'Real Estate Agent', color: '#1A6B8A',
     items: [
       'ניסיון מוכח בנדל"ן בדובאי — מעל שנתיים',
       'רישיון RERA תקף (Real Estate Regulatory Agency)',
       'הצגת חוזה מכר/השכרה שביצע',
     ],
+    itemsEn: [
+      'Proven Dubai real estate experience — over two years',
+      'Valid RERA license (Real Estate Regulatory Agency)',
+      'Shows a sale/rental contract they closed',
+    ],
   },
   {
-    title: 'רואה חשבון', color: '#2A9D8F',
+    title: 'רואה חשבון', titleEn: 'Accountant', color: '#2A9D8F',
     items: [
       'תעודת דיפלומה ורישיון רו"ח תקף (UAE)',
       'חברות בלשכת רו"ח / ICAEW / ACCA או שווה ערך',
       'ניסיון מוכח עם חברות / יחידים זרים',
     ],
+    itemsEn: [
+      'Diploma and a valid accountant license (UAE)',
+      'Membership in an accountants body / ICAEW / ACCA or equivalent',
+      'Proven experience with foreign companies / individuals',
+    ],
   },
   {
-    title: 'עורך דין', color: '#B85C8E',
+    title: 'עורך דין', titleEn: 'Lawyer', color: '#B85C8E',
     items: [
       'תעודת דיפלומה במשפטים ורישיון לשכת עורכי דין',
       'הסמכה לפעול באמירויות (Bar Admission)',
       'הצגת תיק/עסקה שטיפל',
     ],
+    itemsEn: [
+      'Law diploma and a bar association license',
+      'Authorization to practice in the UAE (Bar Admission)',
+      'Shows a case/deal they handled',
+    ],
   },
   {
-    title: 'משותף לכולם', color: '#1A4A5E',
+    title: 'משותף לכולם', titleEn: 'Common to all', color: '#1A4A5E',
     items: [
       'דובר עברית או רקע בעבודה עם ישראלים',
       'ערוץ תקשורת מוסדר (אתר/לינקדאין/וואטסאפ)',
       'שיחת אימות אישית',
       '2 ממליצים לפחות',
       'הצגת תעודת זהות וקבלות מסים',
+    ],
+    itemsEn: [
+      'Hebrew speaker or a background working with Israelis',
+      'An established communication channel (website/LinkedIn/WhatsApp)',
+      'A personal verification call',
+      'At least 2 references',
+      'Shows ID and tax receipts',
     ],
   },
 ];
@@ -54,12 +77,15 @@ const EXPERTS = [
 ];
 
 const GROUPS = [
-  { type: 'broker', label: 'סוכני נדל"ן', color: Colors.PRIMARY },
-  { type: 'accountant', label: 'רואי חשבון', color: Colors.SECONDARY },
-  { type: 'lawyer', label: 'עורכי דין', color: Colors.PINK },
+  { type: 'broker', label: 'סוכני נדל"ן', labelEn: 'Real Estate Agents', color: Colors.PRIMARY },
+  { type: 'accountant', label: 'רואי חשבון', labelEn: 'Accountants', color: Colors.SECONDARY },
+  { type: 'lawyer', label: 'עורכי דין', labelEn: 'Lawyers', color: Colors.PINK },
 ];
 
 export default function BrokersScreen() {
+  const { t, lang } = useI18n();
+  const trLangs = (arr: string[]) => arr.map(l => t('lang.' + l)).map(x => x.startsWith('lang.') ? x.slice(5) : x);
+  const trYears = (y: string) => lang === 'en' ? y.replace('שנים', t('brokers.years')) : y;
   const [criteriaOpen, setCriteriaOpen] = useState(false);
 
   const recommend = () => {
@@ -70,7 +96,7 @@ export default function BrokersScreen() {
     <View style={s.container}>
       <SafeAreaView edges={['top']} style={{ backgroundColor: Colors.PRIMARY }} />
       <View style={s.header}>
-        <Text style={[s.title, { flex: 1 }]}>מתווכים / רוא"ח / עורכי דין</Text>
+        <Text style={[s.title, { flex: 1 }]}>{t('brokers.title')}</Text>
         <TouchableOpacity onPress={() => router.back()} style={s.headerClose}>
           <Text style={{ color: '#fff', fontSize: 16, fontWeight: '700' }}>✕</Text>
         </TouchableOpacity>
@@ -78,10 +104,10 @@ export default function BrokersScreen() {
 
       <View style={s.actionRow}>
         <TouchableOpacity onPress={() => setCriteriaOpen(true)} style={[s.actionBtn, s.actionBtnSecondary]}>
-          <Text style={s.actionTxtSec}>✓ נדרש לאימות</Text>
+          <Text style={s.actionTxtSec}>{t('brokers.verify')}</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={recommend} style={[s.actionBtn, s.actionBtnPrimary]}>
-          <Text style={s.actionTxtPri}>+ המלץ על איש מומחה</Text>
+          <Text style={s.actionTxtPri}>{t('brokers.recommend')}</Text>
         </TouchableOpacity>
       </View>
 
@@ -90,7 +116,7 @@ export default function BrokersScreen() {
           <Pressable onPress={() => setCriteriaOpen(false)} style={StyleSheet.absoluteFill} />
           <View style={s.criteriaCard}>
             <LinearGradient colors={['#1A6B8A', '#2A9D8F']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={s.criteriaHead}>
-              <Text style={s.criteriaHeadTxt}>✓ נדרש לאימות</Text>
+              <Text style={s.criteriaHeadTxt}>{t('brokers.verify')}</Text>
               <TouchableOpacity onPress={() => setCriteriaOpen(false)} style={s.criteriaClose}>
                 <Text style={{ color: '#fff', fontSize: 16, fontWeight: '700' }}>✕</Text>
               </TouchableOpacity>
@@ -99,16 +125,16 @@ export default function BrokersScreen() {
               {CRITERIA_SECTIONS.map((sec, si) => (
                 <View key={si} style={{ marginBottom: 14 }}>
                   <View style={[s.criteriaSecHead, { borderBottomColor: '#F0E6D2' }]}>
-                    <Text style={[s.criteriaSecTitle, { color: sec.color }]}>{sec.title}</Text>
+                    <Text style={[s.criteriaSecTitle, { color: sec.color, writingDirection: lang === 'en' ? 'ltr' : 'rtl', textAlign: lang === 'en' ? 'left' : 'right' }]}>{lang === 'en' ? sec.titleEn : sec.title}</Text>
                   </View>
-                  {sec.items.map((it, i) => (
-                    <Text key={i} style={s.criteriaItem}>• {it}</Text>
+                  {(lang === 'en' ? sec.itemsEn : sec.items).map((it, i) => (
+                    <Text key={i} style={[s.criteriaItem, { writingDirection: lang === 'en' ? 'ltr' : 'rtl', textAlign: lang === 'en' ? 'left' : 'right' }]}>• {it}</Text>
                   ))}
                 </View>
               ))}
             </ScrollView>
             <TouchableOpacity onPress={() => setCriteriaOpen(false)} style={s.criteriaCta}>
-              <Text style={s.criteriaCtaTxt}>הבנתי</Text>
+              <Text style={s.criteriaCtaTxt}>{t('brokers.gotIt')}</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -120,7 +146,7 @@ export default function BrokersScreen() {
           if (!items.length) return null;
           return (
             <View key={g.type}>
-              <Text style={[s.groupTitle, { color: g.color }]}>{g.label}</Text>
+              <Text style={[s.groupTitle, { color: g.color, writingDirection: lang === 'en' ? 'ltr' : 'rtl' }]}>{lang === 'en' ? g.labelEn : g.label}</Text>
               <View>
                 {items.map((b, i) => (
                   <View key={b.id} style={[s.row, i === items.length - 1 && { borderBottomWidth: 0 }]}>
@@ -128,9 +154,9 @@ export default function BrokersScreen() {
                     <View style={{ flex: 1, minWidth: 0 }}>
                       <View style={{ flexDirection: 'row-reverse', flexWrap: 'wrap', gap: 6, alignItems: 'baseline' }}>
                         <Text style={s.name}>{b.name}</Text>
-                        <Text style={s.company}>{b.company} · {b.years}</Text>
+                        <Text style={s.company}>{b.company} · {trYears(b.years)}</Text>
                       </View>
-                      <Text style={s.subtitle} numberOfLines={1}>{b.specialty} · {b.langs.slice(0,2).join('/')}</Text>
+                      <Text style={s.subtitle} numberOfLines={1}>{b.specialty} · {trLangs(b.langs).slice(0,2).join('/')}</Text>
                     </View>
                     <View style={s.actions}>
                       <TouchableOpacity style={[s.iconBtn, { backgroundColor: '#25D366' }]} onPress={() => Linking.openURL(`https://wa.me/${b.whatsapp}`)}>

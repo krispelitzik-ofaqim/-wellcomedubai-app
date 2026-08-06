@@ -4,10 +4,12 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import * as ImagePicker from 'expo-image-picker';
 import { Colors } from '../constants/colors';
+import { useI18n } from '../constants/i18n';
 
 const RE_API = 'https://wellcomedubaicom-production.up.railway.app';
 
 export default function SubmitProject() {
+  const { t } = useI18n();
   const [title, setTitle] = useState('');
   const [developer, setDeveloper] = useState('');
   const [type, setType] = useState('residential');
@@ -30,7 +32,7 @@ export default function SubmitProject() {
 
   const submit = async () => {
     if (!title || !developer || !area || !price || !phone || !email) {
-      Alert.alert('שדות חסרים', 'מלא את כל שדות החובה');
+      Alert.alert(t('sp.missTitle'), t('sp.missMsg'));
       return;
     }
     setSubmitting(true);
@@ -55,9 +57,9 @@ export default function SubmitProject() {
       });
       const r = await fetch(`${RE_API}/api/listings`, { method: 'POST', body: fd as any });
       if (!r.ok) throw new Error('upload failed');
-      Alert.alert('✓ נשלח לאישור', 'הפרויקט יופיע באתר לאחר אישור מנהל', [{ text: 'אישור', onPress: () => router.back() }]);
+      Alert.alert(t('sp.sentTitle'), t('sp.sentMsg'), [{ text: t('itin.confirm'), onPress: () => router.back() }]);
     } catch (e) {
-      Alert.alert('שגיאה', 'בעיה בשליחה — נסה שוב');
+      Alert.alert(t('loc.errTitle'), t('sp.errMsg'));
     } finally {
       setSubmitting(false);
     }
@@ -76,42 +78,42 @@ export default function SubmitProject() {
         </TouchableOpacity>
       </View>
       <View style={s.header}>
-        <Text style={[s.title, { flex: 1 }]}>העלה פרויקט נדל"ן</Text>
+        <Text style={[s.title, { flex: 1 }]}>{t('sp.title')}</Text>
       </View>
 
       <ScrollView contentContainerStyle={{ padding: 14, paddingBottom: 40 }}>
-        <Section title="פרטי הפרויקט">
-          <Field label="* שם הפרויקט" value={title} onChange={setTitle} placeholder="Marina Heights" />
-          <Field label="* יזם / חברה" value={developer} onChange={setDeveloper} placeholder="Emaar" />
+        <Section title={t('sp.secDetails')}>
+          <Field label={t('sp.name')} value={title} onChange={setTitle} placeholder="Marina Heights" />
+          <Field label={t('sp.developer')} value={developer} onChange={setDeveloper} placeholder="Emaar" />
           <View style={s.typeRow}>
             {[
-              { id: 'residential', label: 'מגורים' },
-              { id: 'commercial', label: 'משרדים' },
-              { id: 'mixed', label: 'מעורב' },
-              { id: 'hotel', label: 'מלונאות' },
-            ].map(t => (
-              <TouchableOpacity key={t.id} style={[s.typeChip, type === t.id && { backgroundColor: Colors.PRIMARY }]} onPress={() => setType(t.id)}>
-                <Text style={[s.typeChipTxt, type === t.id && { color: '#fff' }]}>{t.label}</Text>
+              { id: 'residential', label: t('sp.tRes') },
+              { id: 'commercial', label: t('sp.tCom') },
+              { id: 'mixed', label: t('sp.tMixed') },
+              { id: 'hotel', label: t('sp.tHotel') },
+            ].map(ty => (
+              <TouchableOpacity key={ty.id} style={[s.typeChip, type === ty.id && { backgroundColor: Colors.PRIMARY }]} onPress={() => setType(ty.id)}>
+                <Text style={[s.typeChipTxt, type === ty.id && { color: '#fff' }]}>{ty.label}</Text>
               </TouchableOpacity>
             ))}
           </View>
-          <Field label="* אזור" value={area} onChange={setArea} placeholder="Marina, Downtown, JVC..." />
+          <Field label={t('sp.area')} value={area} onChange={setArea} placeholder="Marina, Downtown, JVC..." />
         </Section>
 
-        <Section title="מסחר ופיננסים">
-          <Field label="* מחיר התחלה (AED)" value={price} onChange={setPrice} placeholder="800000" keyboard="numeric" />
-          <Field label="תשואה צפויה %" value={yieldPct} onChange={setYieldPct} placeholder="9" keyboard="numeric" />
-          <Field label="מס׳ יחידות" value={units} onChange={setUnits} placeholder="240" keyboard="numeric" />
-          <Field label="מסירה" value={delivery} onChange={setDelivery} placeholder="Q4 2027" />
+        <Section title={t('sp.secFinance')}>
+          <Field label={t('sp.price')} value={price} onChange={setPrice} placeholder="800000" keyboard="numeric" />
+          <Field label={t('sp.yield')} value={yieldPct} onChange={setYieldPct} placeholder="9" keyboard="numeric" />
+          <Field label={t('sp.units')} value={units} onChange={setUnits} placeholder="240" keyboard="numeric" />
+          <Field label={t('sp.delivery')} value={delivery} onChange={setDelivery} placeholder="Q4 2027" />
         </Section>
 
-        <Section title="תיאור">
-          <TextInput multiline numberOfLines={4} value={desc} onChangeText={setDesc} placeholder="תיאור מלא של הפרויקט..." style={[s.input, { height: 100, textAlignVertical: 'top' }]} />
+        <Section title={t('sp.secDesc')}>
+          <TextInput multiline numberOfLines={4} value={desc} onChangeText={setDesc} placeholder={t('sp.descPh')} style={[s.input, { height: 100, textAlignVertical: 'top' }]} />
         </Section>
 
-        <Section title="תמונות">
+        <Section title={t('sp.secPhotos')}>
           <TouchableOpacity onPress={pickPhotos} style={s.uploadBtn}>
-            <Text style={s.uploadTxt}>בחר תמונות (עד 8)</Text>
+            <Text style={s.uploadTxt}>{t('sp.pickImages')}</Text>
           </TouchableOpacity>
           {photos.length > 0 && (
             <ScrollView horizontal style={{ marginTop: 8 }} contentContainerStyle={{ gap: 6 }}>
@@ -122,26 +124,26 @@ export default function SubmitProject() {
           )}
         </Section>
 
-        <Section title="סגנון הצגה">
+        <Section title={t('sp.secStyle')}>
           <View style={s.typeRow}>
             <TouchableOpacity style={[s.hlChip, highlight === 'emphasized' && { backgroundColor: Colors.WARM, borderColor: Colors.WARM }]} onPress={() => setHighlight('emphasized')}>
-              <Text style={[s.hlChipTxt, highlight === 'emphasized' && { color: '#fff' }]}>⭐ מודגש</Text>
+              <Text style={[s.hlChipTxt, highlight === 'emphasized' && { color: '#fff' }]}>{t('sp.emphasized')}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={[s.hlChip, highlight === 'negative' && { backgroundColor: '#0A1F3D', borderColor: '#1E3A8A' }]} onPress={() => setHighlight('negative')}>
-              <Text style={[s.hlChipTxt, highlight === 'negative' && { color: '#fff' }]}>🎴 נגטיב</Text>
+              <Text style={[s.hlChipTxt, highlight === 'negative' && { color: '#fff' }]}>{t('sp.negative')}</Text>
             </TouchableOpacity>
           </View>
         </Section>
 
-        <Section title="יצירת קשר">
-          <Field label="* WhatsApp / טלפון" value={phone} onChange={setPhone} placeholder="+971..." keyboard="phone-pad" />
-          <Field label="* אימייל" value={email} onChange={setEmail} placeholder="email@example.com" keyboard="email-address" />
+        <Section title={t('sp.secContact')}>
+          <Field label={t('sp.phone')} value={phone} onChange={setPhone} placeholder="+971..." keyboard="phone-pad" />
+          <Field label={t('sp.email')} value={email} onChange={setEmail} placeholder="email@example.com" keyboard="email-address" />
         </Section>
 
         <TouchableOpacity onPress={submit} disabled={submitting} style={[s.submitBtn, submitting && { opacity: 0.5 }]}>
-          <Text style={s.submitTxt}>{submitting ? 'שולח...' : 'שלח לאישור'}</Text>
+          <Text style={s.submitTxt}>{submitting ? t('sp.submitting') : t('sp.submit')}</Text>
         </TouchableOpacity>
-        <Text style={s.disclaimer}>* שדות חובה. הפרויקט יופיע באתר לאחר אישור מנהל.</Text>
+        <Text style={s.disclaimer}>{t('sp.disclaimer')}</Text>
       </ScrollView>
     </View>
   );

@@ -7,6 +7,7 @@ import { router } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ImagePicker from 'expo-image-picker';
 import { Colors } from '../constants/colors';
+import { useI18n } from '../constants/i18n';
 import { ITINERARIES } from '../data/itineraries';
 import { STAR_HUBS, type StarHub } from '../data/star-hubs';
 import { CATALOG } from '../data/catalog';
@@ -56,13 +57,17 @@ const MYTRIP_START_KEY = 'mytrip_start_v1';
 const MYTRIP_ORDER_KEY = 'mytrip_order_v1';
 
 const HEB_DAYS = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי', 'שבת'];
+const EN_DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 const HEB_MONTHS_SHORT = ['ינו', 'פבר', 'מרץ', 'אפר', 'מאי', 'יוני', 'יולי', 'אוג', 'ספט', 'אוק', 'נוב', 'דצמ'];
+const EN_MONTHS_SHORT = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const dayName = (dow: number, lang: string) => (lang === 'en' ? EN_DAYS : HEB_DAYS)[dow];
+const monthShort = (m: number, lang: string) => (lang === 'en' ? EN_MONTHS_SHORT : HEB_MONTHS_SHORT)[m];
 
-function formatDayDate(startDate: Date | null, dayNum: number) {
-  if (!startDate) return `יום ${dayNum}`;
+function formatDayDate(startDate: Date | null, dayNum: number, lang: string = 'he') {
+  if (!startDate) return `${lang === 'en' ? 'Day' : 'יום'} ${dayNum}`;
   const d = new Date(startDate);
   d.setDate(d.getDate() + (dayNum - 1));
-  return `${HEB_DAYS[d.getDay()]} ${d.getDate()}/${d.getMonth() + 1}`;
+  return `${dayName(d.getDay(), lang)} ${d.getDate()}/${d.getMonth() + 1}`;
 }
 const CAT_LABELS: Record<string, { label: string; icon: string; color: string }> = {
   hotels:      { label: 'מלון',      icon: '🏨', color: Colors.GOLD },
@@ -77,12 +82,13 @@ const CAT_LABELS: Record<string, { label: string; icon: string; color: string }>
 };
 
 function RateRow({ storageKey, color }: { storageKey: string; color: string }) {
+  const { t } = useI18n();
   const [rate, setRate] = useState(0);
   useEffect(() => { AsyncStorage.getItem(storageKey).then(v => v && setRate(parseInt(v, 10))); }, [storageKey]);
   const pick = (n: number) => { setRate(n); AsyncStorage.setItem(storageKey, String(n)); };
   return (
     <View style={s.rateBox}>
-      <Text style={s.rateLabel}>דרג את הסיור</Text>
+      <Text style={s.rateLabel}>{t('itin.rate')}</Text>
       <View style={s.rateStars}>
         {[5, 4, 3, 2, 1].map(n => (
           <TouchableOpacity key={n} onPress={() => pick(n)}>
@@ -90,18 +96,19 @@ function RateRow({ storageKey, color }: { storageKey: string; color: string }) {
           </TouchableOpacity>
         ))}
       </View>
-      {rate > 0 ? <Text style={[s.rateThanks, { color }]}>תודה על הדירוג!</Text> : null}
+      {rate > 0 ? <Text style={[s.rateThanks, { color }]}>{t('itin.rateThanks')}</Text> : null}
     </View>
   );
 }
 
 function AlbumRow({ storageKey, color }: { storageKey: string; color: string }) {
+  const { t } = useI18n();
   const [open, setOpen] = useState(false);
   const [photos, setPhotos] = useState<string[]>([]);
   useEffect(() => { AsyncStorage.getItem(storageKey).then(v => { if (v) try { setPhotos(JSON.parse(v)); } catch {} }); }, [storageKey]);
   const add = async () => {
     const perm = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (!perm.granted) { Alert.alert('נדרשת הרשאה', 'אנא אפשר גישה לתמונות'); return; }
+    if (!perm.granted) { Alert.alert(t('itin.permTitle'), t('itin.permMsg')); return; }
     const res = await ImagePicker.launchImageLibraryAsync({ mediaTypes: ImagePicker.MediaTypeOptions.Images, allowsMultipleSelection: true, quality: 0.7 });
     if (res.canceled) return;
     const uris = res.assets.map(a => a.uri);
@@ -112,20 +119,20 @@ function AlbumRow({ storageKey, color }: { storageKey: string; color: string }) 
   return (
     <View style={s.albumBox}>
       <TouchableOpacity onPress={() => setOpen(o => !o)} style={s.albumHead}>
-        <Text style={s.albumTitle}>📸 אלבום הגולשים{photos.length ? ` (${photos.length})` : ''}</Text>
+        <Text style={s.albumTitle}>{t('itin.album')}{photos.length ? ` (${photos.length})` : ''}</Text>
         <Text style={[s.albumChev, { color }]}>{open ? '▲' : '▼'}</Text>
       </TouchableOpacity>
       {open ? (
         <View style={{ padding: 10 }}>
           <TouchableOpacity onPress={add} style={[s.albumAddBtn, { backgroundColor: color }]}>
-            <Text style={s.albumAddTxt}>+ העלה תמונה</Text>
+            <Text style={s.albumAddTxt}>{t('itin.uploadPhoto')}</Text>
           </TouchableOpacity>
           {photos.length ? (
             <View style={s.photoGrid}>
               {photos.map((p, i) => <Image key={i} source={{ uri: p }} style={s.photoThumb} />)}
             </View>
           ) : (
-            <Text style={s.albumEmpty}>עדיין אין תמונות באלבום</Text>
+            <Text style={s.albumEmpty}>{t('itin.albumEmpty')}</Text>
           )}
         </View>
       ) : null}
@@ -136,9 +143,16 @@ function AlbumRow({ storageKey, color }: { storageKey: string; color: string }) 
 const { width: SCREEN_W } = Dimensions.get('window');
 
 function ItineraryCard({ it, idx }: { it: any; idx: number }) {
+  const { t, lang } = useI18n();
   const [slide, setSlide] = useState(0);
   const ref = useRef<FlatList>(null);
   const stops = it.stops || [];
+  const en = lang === 'en';
+  const itTitle = en ? (it.titleEn || it.title) : it.title;
+  const itDuration = en ? (it.durationEn || it.duration) : it.duration;
+  const itBestFor = en ? (it.bestForEn || it.bestFor) : it.bestFor;
+  const stopName = (st: any) => en ? (st.nameEn || st.name) : st.name;
+  const stopDesc = (st: any) => en ? (st.descEn || st.desc) : st.desc;
   const [openStop, setOpenStop] = useState<number | null>(null);
   const [mapBig, setMapBig] = useState(false);
   const [expanded, setExpanded] = useState(false);
@@ -161,8 +175,8 @@ function ItineraryCard({ it, idx }: { it: any; idx: number }) {
           <Text style={s.accBadgeIcon}>{it.icon}</Text>
         </View>
         <View style={{ flex: 1, paddingHorizontal: 12 }}>
-          <Text style={s.accTitle} numberOfLines={2}>{it.title}</Text>
-          <Text style={s.accMeta}>{it.duration} · {stops.length} תחנות</Text>
+          <Text style={[s.accTitle, { writingDirection: en ? 'ltr' : 'rtl', textAlign: en ? 'left' : 'right' }]} numberOfLines={2}>{itTitle}</Text>
+          <Text style={[s.accMeta, { writingDirection: en ? 'ltr' : 'rtl', textAlign: en ? 'left' : 'right' }]}>{itDuration} · {stops.length} {t('itin.stops')}</Text>
         </View>
         <Text style={[s.accChev, { color: it.color }]}>{expanded ? '▲' : '▼'}</Text>
       </TouchableOpacity>
@@ -186,9 +200,9 @@ function ItineraryCard({ it, idx }: { it: any; idx: number }) {
               <Text style={s.slideTopLeftTxt}>{j + 1}/{stops.length} · {stop.time}</Text>
             </View>
             <View style={s.slideBottom}>
-              <Text style={s.slideTitle}>{it.title}</Text>
-              <Text style={s.slideMeta}>{it.duration} · {it.bestFor}</Text>
-              <Text style={s.slideStop}>{stop.name}</Text>
+              <Text style={s.slideTitle}>{itTitle}</Text>
+              <Text style={s.slideMeta}>{itDuration} · {itBestFor}</Text>
+              <Text style={s.slideStop}>{stopName(stop)}</Text>
             </View>
           </View>
         )}
@@ -215,12 +229,12 @@ function ItineraryCard({ it, idx }: { it: any; idx: number }) {
         const points = stops.filter((s: any) => s.lat && s.lng);
         if (points.length < 2) return null;
         const pts = points.map((p: any, i: number) => ({ lat: p.lat, lng: p.lng, name: p.name, num: i + 1 }));
-        const html = `<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><style>html,body,#m{margin:0;padding:0;height:100%;width:100%;}.gm-style-iw{direction:rtl;}</style></head><body><div id="m"></div><script>const pts=${JSON.stringify(pts)};function init(){const map=new google.maps.Map(document.getElementById('m'),{center:{lat:pts[0].lat,lng:pts[0].lng},zoom:12,mapTypeControl:false,streetViewControl:false,fullscreenControl:false});const bounds=new google.maps.LatLngBounds();pts.forEach(p=>{const m=new google.maps.Marker({position:{lat:p.lat,lng:p.lng},map,label:{text:String(p.num),color:'#fff',fontWeight:'800'},icon:{path:google.maps.SymbolPath.CIRCLE,scale:14,fillColor:'#E76F51',fillOpacity:1,strokeColor:'#fff',strokeWeight:2}});bounds.extend({lat:p.lat,lng:p.lng});const iw=new google.maps.InfoWindow({content:'<div style="direction:rtl;font-family:-apple-system,sans-serif;"><b>'+p.num+'. '+p.name+'</b></div>'});m.addListener('click',()=>iw.open({anchor:m,map}));});new google.maps.Polyline({path:pts.map(p=>({lat:p.lat,lng:p.lng})),strokeColor:'#E76F51',strokeWeight:3,strokeOpacity:0.9,map});if(pts.length>1)map.fitBounds(bounds,40);}</script><script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDw09Bg7XaH7apEWJBcFtogVfrdUwF_gEM&language=he&callback=init" async defer></script></body></html>`;
+        const html = `<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><style>html,body,#m{margin:0;padding:0;height:100%;width:100%;}.gm-style-iw{direction:rtl;}</style></head><body><div id="m"></div><script>const pts=${JSON.stringify(pts)};function init(){const map=new google.maps.Map(document.getElementById('m'),{center:{lat:pts[0].lat,lng:pts[0].lng},zoom:12,mapTypeControl:false,streetViewControl:false,fullscreenControl:false});const bounds=new google.maps.LatLngBounds();pts.forEach(p=>{const m=new google.maps.Marker({position:{lat:p.lat,lng:p.lng},map,label:{text:String(p.num),color:'#fff',fontWeight:'800'},icon:{path:google.maps.SymbolPath.CIRCLE,scale:14,fillColor:'#E76F51',fillOpacity:1,strokeColor:'#fff',strokeWeight:2}});bounds.extend({lat:p.lat,lng:p.lng});const iw=new google.maps.InfoWindow({content:'<div style="direction:rtl;font-family:-apple-system,sans-serif;"><b>'+p.num+'. '+p.name+'</b></div>'});m.addListener('click',()=>iw.open({anchor:m,map}));});new google.maps.Polyline({path:pts.map(p=>({lat:p.lat,lng:p.lng})),strokeColor:'#E76F51',strokeWeight:3,strokeOpacity:0.9,map});if(pts.length>1)map.fitBounds(bounds,40);}</script><script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDw09Bg7XaH7apEWJBcFtogVfrdUwF_gEM&language=${lang}&callback=init" async defer></script></body></html>`;
         return (
           <View style={{ position: 'relative', height: mapBig ? 440 : 220 }}>
             <WebView originWhitelist={['*']} source={{ html }} style={{ flex: 1 }} />
             <TouchableOpacity onPress={() => setMapBig(b => !b)} style={s.enlargeBtn}>
-              <Text style={s.enlargeBtnTxt}>{mapBig ? '⤡ הקטן מפה' : '⤢ הגדל מפה'}</Text>
+              <Text style={s.enlargeBtnTxt}>{mapBig ? t('itin.shrinkMap') : t('itin.enlargeMap')}</Text>
             </TouchableOpacity>
           </View>
         );
@@ -228,7 +242,7 @@ function ItineraryCard({ it, idx }: { it: any; idx: number }) {
 
       {navUrl ? (
         <TouchableOpacity style={[s.navBtn, { backgroundColor: it.color }]} onPress={() => lastStop && openMapsChoice(lastStop.lat, lastStop.lng, lastStop.name || it.title, 'navigate')}>
-          <Text style={s.navBtnTxt}>פתח ניווט ב-Google Maps</Text>
+          <Text style={s.navBtnTxt}>{t('itin.openNav')}</Text>
         </TouchableOpacity>
       ) : null}
 
@@ -241,8 +255,8 @@ function ItineraryCard({ it, idx }: { it: any; idx: number }) {
               </View>
               <Text style={[s.stopTime, { color: it.color }]}>{stop.time}</Text>
               <View style={{ flex: 1 }}>
-                <Text style={s.stopName}>{stop.name}</Text>
-                <Text style={s.stopDesc} numberOfLines={openStop === j ? undefined : 2}>{stop.desc}</Text>
+                <Text style={[s.stopName, { writingDirection: en ? 'ltr' : 'rtl', textAlign: en ? 'left' : 'right' }]}>{stopName(stop)}</Text>
+                <Text style={[s.stopDesc, { writingDirection: en ? 'ltr' : 'rtl', textAlign: en ? 'left' : 'right' }]} numberOfLines={openStop === j ? undefined : 2}>{stopDesc(stop)}</Text>
               </View>
               <Text style={[s.chev, { color: it.color, transform: [{ rotate: openStop === j ? '180deg' : '0deg' }] }]}>▼</Text>
             </TouchableOpacity>
@@ -257,11 +271,12 @@ function ItineraryCard({ it, idx }: { it: any; idx: number }) {
 }
 
 function StarHubCard({ h, idx }: { h: StarHub; idx: number }) {
+  const { t, lang } = useI18n();
   const [open, setOpen] = useState(false);
   const [big, setBig] = useState(false);
   const [expanded, setExpanded] = useState(false);
   const lastSpoke = h.spokes[h.spokes.length - 1];
-  const hubHtml = `<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><style>html,body,#m{margin:0;padding:0;height:100%;width:100%;}</style></head><body><div id="m"></div><script>const center=${JSON.stringify(h.center)};const color=${JSON.stringify(h.color)};const spokes=${JSON.stringify(h.spokes)};function init(){const map=new google.maps.Map(document.getElementById('m'),{center,zoom:13,mapTypeControl:false,streetViewControl:false,fullscreenControl:false});const bounds=new google.maps.LatLngBounds();bounds.extend(center);new google.maps.Marker({position:center,map,label:{text:'★',color:'#fff',fontWeight:'800',fontSize:'14px'},icon:{path:google.maps.SymbolPath.CIRCLE,scale:18,fillColor:color,fillOpacity:1,strokeColor:'#fff',strokeWeight:3}});spokes.forEach((sp,i)=>{const m=new google.maps.Marker({position:{lat:sp.lat,lng:sp.lng},map,label:{text:String(i+1),color:'#fff',fontWeight:'800'},icon:{path:google.maps.SymbolPath.CIRCLE,scale:12,fillColor:color,fillOpacity:1,strokeColor:'#fff',strokeWeight:2}});bounds.extend({lat:sp.lat,lng:sp.lng});const iw=new google.maps.InfoWindow({content:'<div style="direction:rtl;font-family:-apple-system,sans-serif;"><b>'+(i+1)+'. '+sp.name+'</b></div>'});m.addListener('click',()=>iw.open({anchor:m,map}));new google.maps.Polyline({path:[center,{lat:sp.lat,lng:sp.lng}],strokeColor:color,strokeWeight:3,strokeOpacity:0.85,map});});map.fitBounds(bounds,40);}</script><script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDw09Bg7XaH7apEWJBcFtogVfrdUwF_gEM&language=he&callback=init" async defer></script></body></html>`;
+  const hubHtml = `<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><style>html,body,#m{margin:0;padding:0;height:100%;width:100%;}</style></head><body><div id="m"></div><script>const center=${JSON.stringify(h.center)};const color=${JSON.stringify(h.color)};const spokes=${JSON.stringify(h.spokes)};function init(){const map=new google.maps.Map(document.getElementById('m'),{center,zoom:13,mapTypeControl:false,streetViewControl:false,fullscreenControl:false});const bounds=new google.maps.LatLngBounds();bounds.extend(center);new google.maps.Marker({position:center,map,label:{text:'★',color:'#fff',fontWeight:'800',fontSize:'14px'},icon:{path:google.maps.SymbolPath.CIRCLE,scale:18,fillColor:color,fillOpacity:1,strokeColor:'#fff',strokeWeight:3}});spokes.forEach((sp,i)=>{const m=new google.maps.Marker({position:{lat:sp.lat,lng:sp.lng},map,label:{text:String(i+1),color:'#fff',fontWeight:'800'},icon:{path:google.maps.SymbolPath.CIRCLE,scale:12,fillColor:color,fillOpacity:1,strokeColor:'#fff',strokeWeight:2}});bounds.extend({lat:sp.lat,lng:sp.lng});const iw=new google.maps.InfoWindow({content:'<div style="direction:rtl;font-family:-apple-system,sans-serif;"><b>'+(i+1)+'. '+sp.name+'</b></div>'});m.addListener('click',()=>iw.open({anchor:m,map}));new google.maps.Polyline({path:[center,{lat:sp.lat,lng:sp.lng}],strokeColor:color,strokeWeight:3,strokeOpacity:0.85,map});});map.fitBounds(bounds,40);}</script><script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDw09Bg7XaH7apEWJBcFtogVfrdUwF_gEM&language=${lang}&callback=init" async defer></script></body></html>`;
   return (
     <View style={[s.card, { backgroundColor: '#fff', borderWidth: 2, borderColor: h.color }]}>
       <TouchableOpacity onPress={() => setExpanded(e => !e)} activeOpacity={0.85} style={[s.accHead, { borderBottomWidth: expanded ? 1 : 0, borderBottomColor: h.color + '33' }]}>
@@ -269,8 +284,8 @@ function StarHubCard({ h, idx }: { h: StarHub; idx: number }) {
           <Text style={[s.accBadgeIcon, { color: h.color }]}>★</Text>
         </View>
         <View style={{ flex: 1, paddingHorizontal: 12 }}>
-          <Text style={s.accTitle} numberOfLines={2}>{h.name}</Text>
-          <Text style={[s.accMeta, { color: h.color, fontWeight: '700' }]}>★ {h.spokes.length} חיצים</Text>
+          <Text style={s.accTitle} numberOfLines={2}>{lang === 'en' ? (h.nameEn || h.name) : h.name}</Text>
+          <Text style={[s.accMeta, { color: h.color, fontWeight: '700' }]}>★ {h.spokes.length} {t('itin.spokes')}</Text>
         </View>
         <Text style={[s.accChev, { color: h.color }]}>{expanded ? '▲' : '▼'}</Text>
       </TouchableOpacity>
@@ -278,23 +293,23 @@ function StarHubCard({ h, idx }: { h: StarHub; idx: number }) {
       <View style={{ position: 'relative', height: big ? 440 : 220 }}>
         <WebView originWhitelist={['*']} source={{ html: hubHtml }} style={{ flex: 1 }} />
         <TouchableOpacity onPress={() => setBig(b => !b)} style={s.enlargeBtn}>
-          <Text style={s.enlargeBtnTxt}>{big ? '⤡ הקטן מפה' : '⤢ הגדל מפה'}</Text>
+          <Text style={s.enlargeBtnTxt}>{big ? t('itin.shrinkMap') : t('itin.enlargeMap')}</Text>
         </TouchableOpacity>
       </View>
       <View style={{ padding: 14 }}>
-        <Text style={s.starDesc}>{h.desc}</Text>
+        <Text style={[s.starDesc, { writingDirection: lang === 'en' ? 'ltr' : 'rtl', textAlign: lang === 'en' ? 'left' : 'right' }]}>{lang === 'en' ? (h.descEn || h.desc) : h.desc}</Text>
         <TouchableOpacity style={[s.navBtn, { backgroundColor: h.color, marginTop: 12, borderRadius: 8 }]} onPress={() => lastSpoke && openMapsChoice(lastSpoke.lat, lastSpoke.lng, lastSpoke.name || h.center?.name || 'יעד', 'navigate')}>
-          <Text style={s.navBtnTxt}>פתח ניווט בין כל הזרועות</Text>
+          <Text style={s.navBtnTxt}>{t('itin.navAllSpokes')}</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => setOpen(o => !o)} style={{ paddingVertical: 10, alignItems: 'center' }}>
-          <Text style={{ color: h.color, fontWeight: '700', fontSize: 13 }}>{open ? 'סגור רשימה ▲' : 'הצג רשימה ▼'}</Text>
+          <Text style={{ color: h.color, fontWeight: '700', fontSize: 13 }}>{open ? t('itin.hideList') : t('itin.showList')}</Text>
         </TouchableOpacity>
         {open ? h.spokes.map((sp, i) => (
           <View key={i} style={s.spokeRow}>
             <View style={[s.stopNum, { backgroundColor: h.color }]}>
               <Text style={s.stopNumTxt}>{i + 1}</Text>
             </View>
-            <Text style={s.stopName}>{sp.name}</Text>
+            <Text style={s.stopName}>{lang === 'en' ? (sp.nameEn || sp.name) : sp.name}</Text>
           </View>
         )) : null}
         <RateRow storageKey={`rate-star-${idx}`} color={h.color} />
@@ -306,6 +321,8 @@ function StarHubCard({ h, idx }: { h: StarHub; idx: number }) {
 }
 
 function MyTripView() {
+  const { t, lang } = useI18n();
+  const catLabel = (c: string) => t('itcat.' + c);
   const [items, setItems] = useState<any[]>([]);
   const [days, setDays] = useState<Record<string, number>>({});
   const [maxDays, setMaxDays] = useState(3);
@@ -364,8 +381,8 @@ function MyTripView() {
     return (
       <View style={{ padding: 24, alignItems: 'center' }}>
         <Text style={{ fontSize: 40 }}>❤️</Text>
-        <Text style={{ color: Colors.TEXT, fontWeight: '800', fontSize: 16, marginTop: 12, textAlign: 'center', writingDirection: 'rtl' }}>הטיול שלי ריק</Text>
-        <Text style={{ color: Colors.MUTED, fontSize: 13, marginTop: 6, textAlign: 'center', writingDirection: 'rtl', lineHeight: 19 }}>לחצו על ה-❤️ בכל מסעדה, מלון או אטרקציה — והם יישמרו כאן לטיול שלכם.</Text>
+        <Text style={{ color: Colors.TEXT, fontWeight: '800', fontSize: 16, marginTop: 12, textAlign: 'center', writingDirection: lang === 'en' ? 'ltr' : 'rtl' }}>{t('itin.emptyMineTitle')}</Text>
+        <Text style={{ color: Colors.MUTED, fontSize: 13, marginTop: 6, textAlign: 'center', writingDirection: lang === 'en' ? 'ltr' : 'rtl', lineHeight: 19 }}>{t('itin.emptyMineSub')}</Text>
       </View>
     );
   }
@@ -396,7 +413,7 @@ function MyTripView() {
   };
 
   const mapItems = itemsByDay.filter(it => it.lat && it.lng);
-  const mapHtml = mapItems.length > 0 ? `<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><style>html,body,#m{margin:0;padding:0;height:100%;width:100%;}</style></head><body><div id="m"></div><script>function init(){const pts=${JSON.stringify(mapItems.map(it => ({ lat: it.lat, lng: it.lng, name: it.name })))};const map=new google.maps.Map(document.getElementById('m'),{center:pts[0],zoom:12,mapTypeControl:false,streetViewControl:false,fullscreenControl:false});const bounds=new google.maps.LatLngBounds();const path=[];pts.forEach((p,i)=>{const pos={lat:p.lat,lng:p.lng};path.push(pos);bounds.extend(pos);const m=new google.maps.Marker({position:pos,map,label:{text:String(i+1),color:'#fff',fontWeight:'800',fontSize:'13px'},icon:{path:google.maps.SymbolPath.CIRCLE,scale:15,fillColor:'#E76F51',fillOpacity:1,strokeColor:'#fff',strokeWeight:3}});const iw=new google.maps.InfoWindow({content:'<div style="direction:rtl;font-family:-apple-system,sans-serif;"><b>'+(i+1)+'. '+p.name+'</b></div>'});m.addListener('click',()=>iw.open({anchor:m,map}));});if(pts.length>1){new google.maps.Polyline({path,geodesic:true,strokeColor:'#1A6B8A',strokeOpacity:0.8,strokeWeight:3,map});map.fitBounds(bounds,40);}}</script><script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDw09Bg7XaH7apEWJBcFtogVfrdUwF_gEM&language=he&callback=init" async defer></script></body></html>` : '';
+  const mapHtml = mapItems.length > 0 ? `<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><style>html,body,#m{margin:0;padding:0;height:100%;width:100%;}</style></head><body><div id="m"></div><script>function init(){const pts=${JSON.stringify(mapItems.map(it => ({ lat: it.lat, lng: it.lng, name: it.name })))};const map=new google.maps.Map(document.getElementById('m'),{center:pts[0],zoom:12,mapTypeControl:false,streetViewControl:false,fullscreenControl:false});const bounds=new google.maps.LatLngBounds();const path=[];pts.forEach((p,i)=>{const pos={lat:p.lat,lng:p.lng};path.push(pos);bounds.extend(pos);const m=new google.maps.Marker({position:pos,map,label:{text:String(i+1),color:'#fff',fontWeight:'800',fontSize:'13px'},icon:{path:google.maps.SymbolPath.CIRCLE,scale:15,fillColor:'#E76F51',fillOpacity:1,strokeColor:'#fff',strokeWeight:3}});const iw=new google.maps.InfoWindow({content:'<div style="direction:rtl;font-family:-apple-system,sans-serif;"><b>'+(i+1)+'. '+p.name+'</b></div>'});m.addListener('click',()=>iw.open({anchor:m,map}));});if(pts.length>1){new google.maps.Polyline({path,geodesic:true,strokeColor:'#1A6B8A',strokeOpacity:0.8,strokeWeight:3,map});map.fitBounds(bounds,40);}}</script><script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDw09Bg7XaH7apEWJBcFtogVfrdUwF_gEM&language=${lang}&callback=init" async defer></script></body></html>` : '';
 
   const navAllLast = mapItems.length > 1 ? mapItems[mapItems.length - 1] : null;
   const navAllUrl = navAllLast ? 'open' : null;
@@ -406,9 +423,9 @@ function MyTripView() {
   return (
     <View style={{ backgroundColor: dayBg, marginHorizontal: -14, paddingHorizontal: 14, paddingTop: 4, paddingBottom: 20 }}>
       <TouchableOpacity onPress={() => setShowPicker(true)} style={[mt.startBtn, { backgroundColor: 'rgba(255,255,255,0.5)' }]} activeOpacity={0.7}>
-        <Text style={mt.startLabel}>תאריך התחלת הטיול</Text>
+        <Text style={mt.startLabel}>{t('itin.startDate')}</Text>
         <Text style={mt.startVal}>
-          {startDate ? `${HEB_DAYS[startDate.getDay()]} · ${startDate.getDate()} ${HEB_MONTHS_SHORT[startDate.getMonth()]} ${startDate.getFullYear()}` : 'הקש לבחירה ←'}
+          {startDate ? `${dayName(startDate.getDay(), lang)} · ${startDate.getDate()} ${monthShort(startDate.getMonth(), lang)} ${startDate.getFullYear()}` : t('itin.tapChoose')}
         </Text>
       </TouchableOpacity>
       {showPicker ? (
@@ -422,7 +439,7 @@ function MyTripView() {
           />
           {Platform.OS === 'ios' ? (
             <TouchableOpacity onPress={() => setShowPicker(false)} style={mt.pickerDone}>
-              <Text style={mt.pickerDoneTxt}>אישור</Text>
+              <Text style={mt.pickerDoneTxt}>{t('itin.confirm')}</Text>
             </TouchableOpacity>
           ) : null}
         </View>
@@ -434,12 +451,12 @@ function MyTripView() {
           const active = activeDay === d;
           return (
             <TouchableOpacity key={d} onPress={() => setActiveDay(d)} style={[mt.dayTab, active && mt.dayTabActive]} activeOpacity={0.7}>
-              <Text style={[mt.dayTabTxt, active && mt.dayTabTxtActive]}>יום {d}</Text>
+              <Text style={[mt.dayTabTxt, active && mt.dayTabTxtActive]}>{t('itin.day')} {d}</Text>
             </TouchableOpacity>
           );
         })}
         <TouchableOpacity onPress={() => { setMaxDays(maxDays + 1); setActiveDay(maxDays + 1); }} style={mt.dayTab} activeOpacity={0.7}>
-          <Text style={mt.dayAddTxt}>+ הוסף</Text>
+          <Text style={mt.dayAddTxt}>{t('itin.add')}</Text>
         </TouchableOpacity>
       </ScrollView>
 
@@ -447,12 +464,12 @@ function MyTripView() {
         (() => {
           const d = startDate ? new Date(startDate) : null;
           if (d) d!.setDate(d!.getDate() + (activeDay - 1));
-          const dayName = d ? HEB_DAYS[d.getDay()] : `יום ${activeDay}`;
-          const dayDate = d ? `${d.getDate()} ${['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'][d.getMonth()]}` : '';
+          const dayLbl = d ? d.toLocaleDateString(lang === 'en' ? 'en-US' : 'he-IL', { weekday: 'long' }) : `${t('itin.day')} ${activeDay}`;
+          const dayDate = d ? d.toLocaleDateString(lang === 'en' ? 'en-US' : 'he-IL', { day: 'numeric', month: 'long' }) : '';
           return (
             <View style={{ flexDirection: 'row-reverse', alignItems: 'baseline', gap: 12, marginTop: 8, marginBottom: 16 }}>
-              <Text style={mt.eventMonthName}>{dayName}{dayDate ? ` · ${dayDate}` : ''}</Text>
-              <Text style={mt.eventMonthSub}>{itemsByDay.length} תחנות</Text>
+              <Text style={mt.eventMonthName}>{dayLbl}{dayDate ? ` · ${dayDate}` : ''}</Text>
+              <Text style={mt.eventMonthSub}>{itemsByDay.length} {t('itin.stops')}</Text>
             </View>
           );
         })()
@@ -461,8 +478,8 @@ function MyTripView() {
       {itemsByDay.length === 0 ? (
         <View style={mt.empty}>
           <Text style={{ fontSize: 56 }}>🗺️</Text>
-          <Text style={mt.emptyTitle}>אין תחנות ב{formatDayDate(startDate, activeDay)}</Text>
-          <Text style={mt.emptySub}>סמנו ❤️ במסעדות, מלונות ואטרקציות — הם ישמרו כאן.</Text>
+          <Text style={mt.emptyTitle}>{t('itin.noStops')}{formatDayDate(startDate, activeDay, lang)}</Text>
+          <Text style={mt.emptySub}>{t('itin.emptyDaySub')}</Text>
         </View>
       ) : (
         <View>
@@ -479,13 +496,13 @@ function MyTripView() {
                 </View>
                 <View style={{ flex: 1, minWidth: 0 }}>
                   <Text style={mt.eventName}>{it.name}</Text>
-                  <Text style={mt.eventDesc}>{meta.label}{it.address ? ` · ${it.address}` : ''}</Text>
+                  <Text style={mt.eventDesc}>{catLabel(it._cat)}{it.address ? ` · ${it.address}` : ''}</Text>
                   <View style={{ flexDirection: 'row-reverse', gap: 14, marginTop: 4 }}>
                     <TouchableOpacity onPress={() => setMoveMenu(it._key)} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
-                      <Text style={mt.ticketLink}>שינוי יום ←</Text>
+                      <Text style={mt.ticketLink}>{t('itin.changeDay')}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => removeItem(it._cat, it.id)} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
-                      <Text style={[mt.ticketLink, { color: '#B85C5C' }]}>הסר ←</Text>
+                      <Text style={[mt.ticketLink, { color: '#B85C5C' }]}>{t('itin.remove')}</Text>
                     </TouchableOpacity>
                   </View>
                 </View>
@@ -499,14 +516,14 @@ function MyTripView() {
         <View style={mt.menuBackdrop}>
           <Pressable onPress={() => setOrderMenu(null)} style={StyleSheet.absoluteFill} />
           <View style={mt.menu}>
-            <Text style={mt.menuTitle}>העבר למיקום</Text>
+            <Text style={mt.menuTitle}>{t('itin.moveToPos')}</Text>
             {itemsByDay.map((_, i) => {
               const pos = i + 1;
               const currentIdx = orderMenu ? itemsByDay.findIndex(x => x._key === orderMenu) : -1;
               const isCurrent = currentIdx === i;
               return (
                 <TouchableOpacity key={pos} onPress={() => { if (orderMenu) moveToPosition(orderMenu, pos); setOrderMenu(null); }} style={[mt.menuItem, isCurrent && mt.menuItemActive]}>
-                  <Text style={[mt.menuTxt, isCurrent && mt.menuTxtActive]}>מיקום {pos}</Text>
+                  <Text style={[mt.menuTxt, isCurrent && mt.menuTxtActive]}>{t('itin.position')} {pos}</Text>
                   {isCurrent ? <Text style={mt.menuCheck}>✓</Text> : null}
                 </TouchableOpacity>
               );
@@ -519,13 +536,13 @@ function MyTripView() {
         <View style={mt.menuBackdrop}>
           <Pressable onPress={() => setMoveMenu(null)} style={StyleSheet.absoluteFill} />
           <View style={mt.menu}>
-            <Text style={mt.menuTitle}>העבר ליום</Text>
+            <Text style={mt.menuTitle}>{t('itin.moveToDay')}</Text>
             {Array.from({ length: maxDays }).map((_, i) => {
               const d = i + 1;
               const isCurrent = moveMenu && (days[moveMenu] || 1) === d;
               return (
                 <TouchableOpacity key={d} onPress={() => { if (moveMenu) { setItemDay(moveMenu, d); setActiveDay(d); } setMoveMenu(null); }} style={[mt.menuItem, isCurrent && mt.menuItemActive]}>
-                  <Text style={[mt.menuTxt, isCurrent && mt.menuTxtActive]}>{formatDayDate(startDate, d)}</Text>
+                  <Text style={[mt.menuTxt, isCurrent && mt.menuTxtActive]}>{formatDayDate(startDate, d, lang)}</Text>
                   {isCurrent ? <Text style={mt.menuCheck}>✓</Text> : null}
                 </TouchableOpacity>
               );
@@ -539,8 +556,8 @@ function MyTripView() {
           <View style={mt.mapDivider} />
           <TouchableOpacity onPress={() => setMapOpen(o => !o)} style={mt.mapToggle} activeOpacity={0.6}>
             <View style={{ flex: 1 }}>
-              <Text style={mt.mapToggleLabel}>מפת מסלול</Text>
-              <Text style={mt.mapToggleTitle}>{mapOpen ? 'סגירת המפה' : 'הצג את מסלול היום'}</Text>
+              <Text style={mt.mapToggleLabel}>{t('itin.routeMap')}</Text>
+              <Text style={mt.mapToggleTitle}>{mapOpen ? t('itin.closeMap') : t('itin.showDayRoute')}</Text>
             </View>
             <Text style={mt.mapToggleChevron}>{mapOpen ? '−' : '+'}</Text>
           </TouchableOpacity>
@@ -550,8 +567,8 @@ function MyTripView() {
                 <WebView originWhitelist={['*']} source={{ html: mapHtml }} style={{ flex: 1 }} scrollEnabled={false} />
               </View>
               {navAllUrl ? (
-                <TouchableOpacity onPress={() => navAllLast && openMapsChoice(navAllLast.lat, navAllLast.lng, navAllLast.name || 'יעד אחרון', 'navigate')} style={mt.navAll} activeOpacity={0.6}>
-                  <Text style={mt.navAllTxt}>פתח ב-Google Maps ←</Text>
+                <TouchableOpacity onPress={() => navAllLast && openMapsChoice(navAllLast.lat, navAllLast.lng, navAllLast.name || t('itin.lastDest'), 'navigate')} style={mt.navAll} activeOpacity={0.6}>
+                  <Text style={mt.navAllTxt}>{t('itin.openGmaps')}</Text>
                 </TouchableOpacity>
               ) : null}
             </>
@@ -678,37 +695,38 @@ const mt = StyleSheet.create({
 });
 
 export default function ItinerariesScreen() {
+  const { t } = useI18n();
   const [view, setView] = useState<'day' | 'star' | 'mytrip'>('day');
   return (
     <View style={s.container}>
       <SafeAreaView edges={['top']} style={{ backgroundColor: '#000' }} />
       <View style={s.header}>
         <View style={{ width: 32 }} />
-        <Text style={[s.title, { flex: 1, textAlign: 'center' }]}>מסלולים מוכנים</Text>
+        <Text style={[s.title, { flex: 1, textAlign: 'center' }]}>{t('itin.title')}</Text>
         <TouchableOpacity onPress={() => router.back()} style={s.closeBtnX}>
           <Text style={s.closeBtnXTxt}>✕</Text>
         </TouchableOpacity>
       </View>
       <View style={s.tabsRow}>
         <TouchableOpacity onPress={() => setView('day')} style={[s.tabBtn, view === 'day' && s.tabBtnActive]}>
-          <Text style={[s.tabTxt, view === 'day' && s.tabTxtActive]}>📅 מסלולי יום</Text>
+          <Text style={[s.tabTxt, view === 'day' && s.tabTxtActive]}>{t('itin.tabDay')}</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => setView('star')} style={[s.tabBtn, view === 'star' && s.tabBtnActive]}>
-          <Text style={[s.tabTxt, view === 'star' && s.tabTxtActive]}>⭐ טיולי כוכב</Text>
+          <Text style={[s.tabTxt, view === 'star' && s.tabTxtActive]}>{t('itin.tabStar')}</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => setView('mytrip')} style={[s.tabBtn, view === 'mytrip' && s.tabBtnActive]}>
-          <Text style={[s.tabTxt, view === 'mytrip' && s.tabTxtActive]}>❤️ הטיול שלי</Text>
+          <Text style={[s.tabTxt, view === 'mytrip' && s.tabTxtActive]}>{t('itin.tabMyTrip')}</Text>
         </TouchableOpacity>
       </View>
       <ScrollView contentContainerStyle={{ padding: 14, paddingBottom: 60 }}>
         {view === 'day' ? (
           <>
-            <Text style={{ color: Colors.MUTED, fontSize: 12, fontWeight: '700', letterSpacing: 0.6, textAlign: 'center', marginBottom: 10 }}>{ITINERARIES.length} מסלולים מוכנים</Text>
+            <Text style={{ color: Colors.MUTED, fontSize: 12, fontWeight: '700', letterSpacing: 0.6, textAlign: 'center', marginBottom: 10 }}>{ITINERARIES.length} {t('itin.countReady')}</Text>
             {ITINERARIES.map((it: any, i: number) => <ItineraryCard key={i} it={it} idx={i} />)}
           </>
         ) : view === 'star' ? (
           <>
-            <Text style={{ color: Colors.MUTED, fontSize: 12, fontWeight: '700', letterSpacing: 0.6, textAlign: 'center', marginBottom: 10 }}>{STAR_HUBS.length} טיולי כוכב</Text>
+            <Text style={{ color: Colors.MUTED, fontSize: 12, fontWeight: '700', letterSpacing: 0.6, textAlign: 'center', marginBottom: 10 }}>{STAR_HUBS.length} {t('itin.countStar')}</Text>
             {STAR_HUBS.map((h, i) => <StarHubCard key={i} h={h} idx={i} />)}
           </>
         ) : (
