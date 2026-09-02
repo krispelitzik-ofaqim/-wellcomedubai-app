@@ -9,7 +9,8 @@ import { useI18n } from '../constants/i18n';
 const RE_API = 'https://wellcomedubaicom-production.up.railway.app';
 
 export default function SubmitProject() {
-  const { t } = useI18n();
+  const { t, isRTL } = useI18n();
+  const s = makeStyles(isRTL);
   const [title, setTitle] = useState('');
   const [developer, setDeveloper] = useState('');
   const [type, setType] = useState('residential');
@@ -73,7 +74,7 @@ export default function SubmitProject() {
           <Text style={{ color: '#1A6B8A' }}>WellCome </Text>
           <Text style={{ color: '#E76F51' }}>Dubai</Text>
         </Text>
-        <TouchableOpacity onPress={() => router.back()} style={s.brandClose}>
+        <TouchableOpacity onPress={() => { if (router.canGoBack()) router.back(); else router.replace('/(tabs)/'); }} style={s.brandClose}>
           <Text style={{ color: '#2C5F6E', fontSize: 18, fontWeight: '700' }}>✕</Text>
         </TouchableOpacity>
       </View>
@@ -150,6 +151,8 @@ export default function SubmitProject() {
 }
 
 function Section({ title, children }: any) {
+  const { isRTL } = useI18n();
+  const s = makeStyles(isRTL);
   return (
     <View style={s.section}>
       <Text style={s.sectionTitle}>{title}</Text>
@@ -159,6 +162,8 @@ function Section({ title, children }: any) {
 }
 
 function Field({ label, value, onChange, placeholder, keyboard }: any) {
+  const { isRTL } = useI18n();
+  const s = makeStyles(isRTL);
   return (
     <View style={{ marginBottom: 8 }}>
       <Text style={s.label}>{label}</Text>
@@ -167,20 +172,20 @@ function Field({ label, value, onChange, placeholder, keyboard }: any) {
   );
 }
 
-const s = StyleSheet.create({
+const makeStyles = (isRTL: boolean) => StyleSheet.create({
   container: { flex: 1, backgroundColor: Colors.BG },
-  header: { flexDirection: 'row-reverse', alignItems: 'center', paddingHorizontal: 14, paddingVertical: 12, backgroundColor: '#0E2A38', gap: 10 },
+  header: { flexDirection: isRTL ? 'row-reverse' : 'row', alignItems: 'center', paddingHorizontal: 14, paddingVertical: 12, backgroundColor: '#0E2A38', gap: 10 },
   back: { padding: 4 },
   closeBtn: { width: 36, height: 36, borderRadius: 18, backgroundColor: 'rgba(233,196,106,0.15)', alignItems: 'center', justifyContent: 'center' },
-  brandBar: { flexDirection: 'row-reverse', alignItems: 'center', paddingHorizontal: 14, paddingVertical: 10, backgroundColor: '#fff', borderBottomWidth: 1, borderBottomColor: '#E5E7EB' },
+  brandBar: { flexDirection: isRTL ? 'row-reverse' : 'row', alignItems: 'center', paddingHorizontal: 14, paddingVertical: 10, backgroundColor: '#fff', borderBottomWidth: 1, borderBottomColor: '#E5E7EB' },
   brandTxt: { flex: 1, fontSize: 22, fontWeight: '900', letterSpacing: -0.3, textAlign: 'center' },
   brandClose: { width: 32, alignItems: 'center' },
-  title: { color: Colors.GOLD, fontSize: 17, fontWeight: '900', writingDirection: 'rtl', textAlign: 'right' },
+  title: { color: Colors.GOLD, fontSize: 17, fontWeight: '900', writingDirection: isRTL ? 'rtl' : 'ltr', textAlign: isRTL ? 'right' : 'left' },
   section: { backgroundColor: '#fff', borderRadius: 12, padding: 14, marginBottom: 12, borderWidth: 1, borderColor: '#E8DEC8' },
-  sectionTitle: { fontWeight: '800', color: '#1A4A5E', fontSize: 14, marginBottom: 10, paddingBottom: 6, borderBottomWidth: 1, borderBottomColor: '#F0E6D2', writingDirection: 'rtl', textAlign: 'right' },
-  label: { color: Colors.MUTED, fontSize: 12, fontWeight: '700', marginBottom: 4, writingDirection: 'rtl', textAlign: 'right' },
-  input: { backgroundColor: '#FDFAF2', borderWidth: 1, borderColor: '#E8DEC8', borderRadius: 8, paddingHorizontal: 12, paddingVertical: 10, fontSize: 14, color: Colors.TEXT, writingDirection: 'rtl', textAlign: 'right' },
-  typeRow: { flexDirection: 'row-reverse', flexWrap: 'wrap', gap: 6, marginTop: 4 },
+  sectionTitle: { fontWeight: '800', color: '#1A4A5E', fontSize: 14, marginBottom: 10, paddingBottom: 6, borderBottomWidth: 1, borderBottomColor: '#F0E6D2', writingDirection: isRTL ? 'rtl' : 'ltr', textAlign: isRTL ? 'right' : 'left' },
+  label: { color: Colors.MUTED, fontSize: 12, fontWeight: '700', marginBottom: 4, writingDirection: isRTL ? 'rtl' : 'ltr', textAlign: isRTL ? 'right' : 'left' },
+  input: { backgroundColor: '#FDFAF2', borderWidth: 1, borderColor: '#E8DEC8', borderRadius: 8, paddingHorizontal: 12, paddingVertical: 10, fontSize: 14, color: Colors.TEXT, writingDirection: isRTL ? 'rtl' : 'ltr', textAlign: isRTL ? 'right' : 'left' },
+  typeRow: { flexDirection: isRTL ? 'row-reverse' : 'row', flexWrap: 'wrap', gap: 6, marginTop: 4 },
   typeChip: { paddingHorizontal: 12, paddingVertical: 8, borderRadius: 8, backgroundColor: '#F5EDD8', borderWidth: 1, borderColor: '#E8DEC8' },
   typeChipTxt: { color: Colors.TEXT, fontSize: 12, fontWeight: '700' },
   uploadBtn: { backgroundColor: Colors.PRIMARY, paddingVertical: 12, borderRadius: 8, alignItems: 'center' },

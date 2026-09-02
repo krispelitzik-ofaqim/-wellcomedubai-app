@@ -1,12 +1,16 @@
 import { Stack } from 'expo-router';
-import { I18nManager } from 'react-native';
+import { I18nManager, Platform } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { I18nProvider } from '../constants/i18n';
+import UpdatePrompt from '../components/UpdatePrompt';
+import ViewTracker from '../components/ViewTracker';
 
-if (!I18nManager.isRTL) {
-  I18nManager.allowRTL(true);
-  I18nManager.forceRTL(true);
+// Force an LTR base and do RTL manually per-element (via isRTL from i18n) — matches web,
+// which already aligns correctly. Native forceRTL double-flipped manual layouts → reversed UI.
+if (Platform.OS !== 'web') {
+  I18nManager.allowRTL(false);
+  if (I18nManager.isRTL) I18nManager.forceRTL(false);
 }
 
 export default function RootLayout() {
@@ -18,6 +22,8 @@ export default function RootLayout() {
           <Stack.Screen name="(tabs)" />
           <Stack.Screen name="learn/[id]" options={{ presentation: 'transparentModal', animation: 'fade', animationDuration: 200 }} />
         </Stack>
+        <UpdatePrompt />
+        <ViewTracker />
       </SafeAreaProvider>
     </I18nProvider>
   );

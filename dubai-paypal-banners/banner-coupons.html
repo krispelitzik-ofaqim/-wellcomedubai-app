@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { display: flex; align-items: center; justify-content: center; background: #333; font-family: -apple-system, "Segoe UI", "Assistant", Arial, sans-serif; }
+  .banner {
+    width: 1200px; height: 675px; position: relative; overflow: hidden;
+    background: url('bg.jpg') center/cover no-repeat;
+    color: #fff; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 60px; text-align: center;
+  }
+  .overlay { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(22,34,44,0.48) 0%, rgba(22,34,44,0.86) 100%); }
+  .content { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; }
+  .badge { position: absolute; top: 44px; right: 44px; z-index: 3; background: #E9C46A; color: #16222C; font-weight: 800; font-size: 22px; padding: 10px 22px; border-radius: 6px; letter-spacing: 1px; }
+  .logo-row { display: flex; align-items: center; gap: 16px; margin-bottom: 26px; }
+  .logo-row img { width: 84px; height: 84px; border-radius: 18px; box-shadow: 0 6px 22px rgba(0,0,0,0.4); }
+  .brand { font-size: 28px; font-weight: 700; letter-spacing: 1px; color: #fff; }
+  .kicker { color: #E9C46A; font-size: 18px; font-weight: 800; letter-spacing: 3px; margin-bottom: 12px; }
+  .title { font-size: 62px; font-weight: 800; margin-bottom: 8px; text-shadow: 0 2px 12px rgba(0,0,0,0.5); }
+  .price { font-size: 42px; font-weight: 800; color: #E9C46A; margin-bottom: 28px; }
+  .feats { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; max-width: 1040px; }
+  .chip { border: 1.5px solid rgba(255,255,255,0.35); color: #fff; font-size: 21px; font-weight: 600; padding: 11px 20px; border-radius: 6px; background: rgba(255,255,255,0.10); }
+</style>
+</head>
+<body>
+  <div class="banner">
+    <div class="overlay"></div>
+    <div class="badge" id="badge"></div>
+    <div class="content">
+      <div class="logo-row"><img src="logo.png" alt="logo"><span class="brand">WellCome Dubai</span></div>
+      <div class="kicker" id="kicker"></div>
+      <div class="title" id="title"></div>
+      <div class="price" id="price"></div>
+      <div class="feats" id="feats"></div>
+    </div>
+  </div>
+<script>
+  var TR = {
+    en: { dir:'ltr', badge:'COUPONS', kicker:'WELLCOME DUBAI · COUPONS', title:'Coupons Package', price:'$365', feats:['Digital discount coupon','Seen by thousands of tourists','One full year','Direct QR to your page'] },
+    he: { dir:'rtl', badge:'קופונים', kicker:'WELLCOME DUBAI · קופונים', title:'חבילת קופונים לעסק', price:'$365', feats:['קופון הנחה דיגיטלי','חשיפה לאלפי תיירים','שנה שלמה','QR ישיר לדף העסק'] },
+    ar: { dir:'rtl', badge:'كوبونات', kicker:'WELLCOME DUBAI · كوبونات', title:'باقة كوبونات للأعمال', price:'$365', feats:['كوبون خصم رقمي','يراه آلاف السياح','سنة كاملة','رمز QR مباشر لصفحتك'] },
+    ru: { dir:'ltr', badge:'КУПОНЫ', kicker:'WELLCOME DUBAI · КУПОНЫ', title:'Пакет купонов для бизнеса', price:'$365', feats:['Цифровой купон на скидку','Тысячи туристов увидят','Целый год','Прямой QR на вашу страницу'] },
+    hi: { dir:'ltr', badge:'कूपन', kicker:'WELLCOME DUBAI · कूपन', title:'व्यवसाय कूपन पैकेज', price:'$365', feats:['डिजिटल छूट कूपन','हज़ारों पर्यटकों तक पहुँच','पूरा एक साल','आपके पेज का सीधा QR'] },
+  };
+  var lang = new URLSearchParams(location.search).get('lang') || 'en';
+  var d = TR[lang] || TR.en;
+  document.documentElement.dir = d.dir;
+  document.getElementById('badge').textContent = d.badge;
+  document.getElementById('kicker').textContent = d.kicker;
+  document.getElementById('title').textContent = d.title;
+  document.getElementById('price').textContent = d.price;
+  document.getElementById('feats').innerHTML = d.feats.map(function(f){return '<span class="chip">'+f+'</span>';}).join('');
+</script>
+</body>
+</html>

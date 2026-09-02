@@ -4,18 +4,21 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import * as Location from 'expo-location';
 import { LinearGradient } from 'expo-linear-gradient';
-import { WebView } from 'react-native-webview';
+import { WebView } from '../components/WebView';
 import { CATALOG } from '../data/catalog';
 import { Colors } from '../constants/colors';
 import { useI18n } from '../constants/i18n';
+import { tcRu } from '../constants/contentRu';
+import { tcHi } from '../constants/contentHi';
+import { tcAr } from '../constants/contentAr';
 
 const NEAR_CATS = [
-  { key: 'restaurants', label: 'מסעדות', color: '#F4A261', icon: '🍽️' },
-  { key: 'attractions', label: 'אטרקציות', color: '#2A9D8F', icon: '🏛️' },
-  { key: 'shopping',    label: 'קניות',    color: '#F4A261', icon: '🛍️' },
-  { key: 'nightlife',   label: 'בילויים',  color: '#B85C8E', icon: '🥂' },
-  { key: 'kids',        label: 'ילדים',    color: '#E76F51', icon: '🧸' },
-  { key: 'hotels',      label: 'מלונות',   color: '#B8923A', icon: '🏨' },
+  { key: 'restaurants', label: 'מסעדות', labelEn: 'Restaurants', color: '#F4A261', icon: '🍽️' },
+  { key: 'attractions', label: 'אטרקציות', labelEn: 'Attractions', color: '#2A9D8F', icon: '🏛️' },
+  { key: 'shopping',    label: 'קניות',    labelEn: 'Shopping',    color: '#F4A261', icon: '🛍️' },
+  { key: 'nightlife',   label: 'בילויים',  labelEn: 'Nightlife',  color: '#B85C8E', icon: '🥂' },
+  { key: 'kids',        label: 'ילדים',    labelEn: 'Kids',    color: '#E76F51', icon: '🧸' },
+  { key: 'hotels',      label: 'מלונות',   labelEn: 'Hotels',   color: '#B8923A', icon: '🏨' },
 ];
 
 function imgUrl(item: any) {
@@ -38,6 +41,8 @@ type Coords = { lat: number; lng: number };
 
 export default function NearMeScreen() {
   const { t, lang } = useI18n();
+  const isRTL = lang === 'he' || lang === 'ar';
+  const dir = { textAlign: (isRTL ? 'right' : 'left') as 'right' | 'left', writingDirection: (isRTL ? 'rtl' : 'ltr') as 'rtl' | 'ltr' };
   const [coords, setCoords] = useState<Coords | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -83,19 +88,19 @@ export default function NearMeScreen() {
         markers.push({ lat: it.lat, lng: it.lng, name: it.name, color: sec.color, dist: it._dist.toFixed(2) });
       });
     });
-    return `<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><style>html,body,#m{margin:0;padding:0;height:100%;width:100%;}</style></head><body><div id="m"></div><script>function init(){const map=new google.maps.Map(document.getElementById('m'),{center:{lat:${coords.lat},lng:${coords.lng}},zoom:13,mapTypeControl:false,streetViewControl:false,fullscreenControl:false});new google.maps.Marker({position:{lat:${coords.lat},lng:${coords.lng}},map,title:'${lang === 'en' ? 'You are here' : 'אני כאן'}',icon:{path:google.maps.SymbolPath.CIRCLE,scale:11,fillColor:'#1A6B8A',fillOpacity:1,strokeColor:'#fff',strokeWeight:3}});const pts=${JSON.stringify(markers)};pts.forEach(p=>{const m=new google.maps.Marker({position:{lat:p.lat,lng:p.lng},map,icon:{path:google.maps.SymbolPath.CIRCLE,scale:7,fillColor:p.color,fillOpacity:1,strokeColor:'#fff',strokeWeight:2}});const iw=new google.maps.InfoWindow({content:'<div style="direction:rtl;font-family:-apple-system,sans-serif;"><b>'+p.name+'</b><br><span style="color:#E76F51;">'+p.dist+' ${lang === 'en' ? 'km' : 'ק"מ'}</span></div>'});m.addListener('click',()=>iw.open({anchor:m,map}));});}</script><script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDw09Bg7XaH7apEWJBcFtogVfrdUwF_gEM&language=${lang}&callback=init" async defer></script></body></html>`;
+    return `<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><style>html,body,#m{margin:0;padding:0;height:100%;width:100%;}</style></head><body><div id="m"></div><script>function init(){const map=new google.maps.Map(document.getElementById('m'),{center:{lat:${coords.lat},lng:${coords.lng}},zoom:13,mapTypeControl:false,streetViewControl:false,fullscreenControl:false,gestureHandling:'cooperative'});new google.maps.Marker({position:{lat:${coords.lat},lng:${coords.lng}},map,title:'${lang === 'ar' ? tcAr('אני כאן') : lang === 'hi' ? tcHi('אני כאן') : lang === 'ru' ? tcRu('אני כאן') : lang === 'en' ? 'You are here' : 'אני כאן'}',icon:{path:google.maps.SymbolPath.CIRCLE,scale:11,fillColor:'#1A6B8A',fillOpacity:1,strokeColor:'#fff',strokeWeight:3}});const pts=${JSON.stringify(markers)};pts.forEach(p=>{const m=new google.maps.Marker({position:{lat:p.lat,lng:p.lng},map,icon:{path:google.maps.SymbolPath.CIRCLE,scale:7,fillColor:p.color,fillOpacity:1,strokeColor:'#fff',strokeWeight:2}});const iw=new google.maps.InfoWindow({content:'<div style="direction:rtl;font-family:-apple-system,sans-serif;"><b>'+p.name+'</b><br><span style="color:#E76F51;">'+p.dist+' ${lang === 'ar' ? tcAr('ק"מ') : lang === 'hi' ? tcHi('ק"מ') : lang === 'ru' ? tcRu('ק"מ') : lang === 'en' ? 'km' : 'ק"מ'}</span></div>'});m.addListener('click',()=>iw.open({anchor:m,map}));});}</script><script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDw09Bg7XaH7apEWJBcFtogVfrdUwF_gEM&language=${lang}&callback=init" async defer></script></body></html>`;
   }, [coords, sections]);
 
   return (
     <View style={s.container}>
       <SafeAreaView edges={['top']} style={{ backgroundColor: '#2C5F6E' }} />
-      <LinearGradient colors={['#2C5F6E', '#2A9D8F']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={s.header}>
+      <LinearGradient colors={['#2C5F6E', '#2A9D8F']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={[s.header, { flexDirection: isRTL ? 'row-reverse' : 'row' }]}>
         <Text style={s.headerIcon}>📍</Text>
         <View style={{ flex: 1 }}>
-          <Text style={s.headerTitle}>{t('near.title')}</Text>
-          <Text style={s.headerSub}>{t('near.sub')}</Text>
+          <Text style={[s.headerTitle, dir]}>{t('near.title')}</Text>
+          <Text style={[s.headerSub, dir]}>{t('near.sub')}</Text>
         </View>
-        <TouchableOpacity onPress={() => router.back()} style={s.closeBtn}>
+        <TouchableOpacity onPress={() => { if (router.canGoBack()) router.back(); else router.replace('/(tabs)/'); }} style={s.closeBtn}>
           <Text style={{ color: '#fff', fontSize: 18, fontWeight: '700' }}>✕</Text>
         </TouchableOpacity>
       </LinearGradient>
@@ -126,15 +131,15 @@ export default function NearMeScreen() {
             return (
               <View key={sec.key} style={{ marginTop: 18 }}>
                 <View style={[s.sectionHead, { backgroundColor: sec.color + '12', borderRightColor: sec.color }]}>
-                  <Text style={[s.sectionTitle, { color: sec.color }]}>{sec.icon} {t('cat.' + sec.key).startsWith('cat.') ? sec.label : t('cat.' + sec.key)}</Text>
+                  <Text style={[s.sectionTitle, dir, { color: sec.color }]}>{sec.icon} {t('cat.' + sec.key).startsWith('cat.') ? (lang === 'ar' ? tcAr(sec.label) : lang === 'hi' ? tcHi(sec.label) : lang === 'ru' ? tcRu(sec.label) : lang === 'he' ? sec.label : (sec.labelEn || sec.label)) : t('cat.' + sec.key)}</Text>
                 </View>
-                <View style={{ gap: 8, paddingHorizontal: 16, marginTop: 8 }}>
+                <View style={{ marginTop: 8 }}>
                   {visible.map((it: any) => (
-                    <TouchableOpacity key={it.id} onPress={() => router.push(`/item/${it.id}?cat=${sec.key}` as any)} style={[s.row, { borderRightColor: sec.color }]}>
+                    <TouchableOpacity key={it.id} onPress={() => router.push(`/item/${it.id}?cat=${sec.key}` as any)} style={[s.row, { flexDirection: isRTL ? 'row-reverse' : 'row', borderRightWidth: isRTL ? 4 : 0, borderLeftWidth: isRTL ? 0 : 4, borderRightColor: sec.color, borderLeftColor: sec.color }]}>
                       {imgUrl(it) ? <Image source={{ uri: imgUrl(it) }} style={s.thumb} /> : <View style={[s.thumb, { backgroundColor: '#E5E7EB', alignItems: 'center', justifyContent: 'center' }]}><Text style={{ fontSize: 26 }}>{sec.icon}</Text></View>}
                       <View style={{ flex: 1, justifyContent: 'center', paddingHorizontal: 12 }}>
-                        <Text style={s.rowName} numberOfLines={1}>{it.name}</Text>
-                        {it.address ? <Text style={s.rowAddr} numberOfLines={1}>📍 {it.address}</Text> : null}
+                        <Text style={[s.rowName, dir]} numberOfLines={1}>{lang !== 'he' ? (it.nameEn || it.name) : it.name}</Text>
+                        {it.address ? <Text style={[s.rowAddr, dir]} numberOfLines={1}>📍 {it.address}</Text> : null}
                         <View style={[s.distChip, { backgroundColor: sec.color }]}>
                           <Text style={s.distTxt}>{it._dist.toFixed(1)} {t('common.km')}</Text>
                         </View>
@@ -143,7 +148,7 @@ export default function NearMeScreen() {
                   ))}
                   {hiddenCount > 0 && (
                     <TouchableOpacity onPress={() => setExpanded(prev => ({ ...prev, [sec.key]: true }))} style={[s.moreBtn, { borderColor: sec.color }]}>
-                      <Text style={[s.moreTxt, { color: sec.color }]}>{lang === 'en' ? `${hiddenCount} more…` : `עוד ${hiddenCount}…`}</Text>
+                      <Text style={[s.moreTxt, { color: sec.color }]}>{lang === 'ar' ? tcAr(`עוד ${hiddenCount}…`) : lang === 'hi' ? tcHi(`עוד ${hiddenCount}…`) : lang === 'ru' ? tcRu(`עוד ${hiddenCount}…`) : lang === 'en' ? `${hiddenCount} more…` : `עוד ${hiddenCount}…`}</Text>
                     </TouchableOpacity>
                   )}
                 </View>
@@ -160,8 +165,8 @@ const s = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#FDF6EC' },
   header: { flexDirection: 'row-reverse', alignItems: 'center', gap: 10, paddingHorizontal: 16, paddingVertical: 12 },
   headerIcon: { fontSize: 22 },
-  headerTitle: { color: '#fff', fontWeight: '900', fontSize: 16, textAlign: 'right', writingDirection: 'rtl' },
-  headerSub: { color: 'rgba(255,255,255,0.85)', fontSize: 11, marginTop: 2, textAlign: 'right', writingDirection: 'rtl' },
+  headerTitle: { color: '#fff', fontWeight: '400', fontSize: 24, letterSpacing: 0.3, textAlign: 'right', writingDirection: 'rtl' },
+  headerSub: { color: 'rgba(255,255,255,0.85)', fontSize: 13, marginTop: 3, textAlign: 'right', writingDirection: 'rtl' },
   closeBtn: { width: 32, height: 32, borderRadius: 16, backgroundColor: 'rgba(255,255,255,0.2)', alignItems: 'center', justifyContent: 'center' },
   center: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 28 },
   centerTxt: { color: Colors.MUTED, fontSize: 13, marginTop: 12 },
@@ -170,14 +175,14 @@ const s = StyleSheet.create({
   errSub: { color: Colors.MUTED, fontSize: 12.5, marginTop: 6, textAlign: 'center' },
   retry: { marginTop: 16, backgroundColor: Colors.SECONDARY, paddingHorizontal: 22, paddingVertical: 10, borderRadius: 8 },
   mapWrap: { height: 240, backgroundColor: '#E5E7EB' },
-  sectionHead: { paddingHorizontal: 16, paddingVertical: 8, marginHorizontal: 16, borderRightWidth: 4, borderRadius: 8 },
-  sectionTitle: { fontWeight: '900', fontSize: 14.5, writingDirection: 'rtl', textAlign: 'right' },
-  row: { flexDirection: 'row-reverse', backgroundColor: '#fff', borderRadius: 10, overflow: 'hidden', borderRightWidth: 4, shadowColor: '#000', shadowOpacity: 0.06, shadowRadius: 4, shadowOffset: { width: 0, height: 2 } },
-  thumb: { width: 90, height: 90 },
-  rowName: { fontWeight: '800', color: '#2C5F6E', fontSize: 14, writingDirection: 'rtl', textAlign: 'right' },
-  rowAddr: { color: Colors.MUTED, fontSize: 11.5, marginTop: 4, writingDirection: 'rtl', textAlign: 'right' },
+  sectionHead: { paddingHorizontal: 16, paddingVertical: 10, borderRightWidth: 4, borderRadius: 0 },
+  sectionTitle: { fontWeight: '600', fontSize: 18, letterSpacing: 0.2, writingDirection: 'rtl', textAlign: 'right' },
+  row: { flexDirection: 'row-reverse', backgroundColor: '#fff', borderRadius: 0, overflow: 'hidden', borderRightWidth: 4, borderBottomWidth: 1, borderBottomColor: '#EAE0CE' },
+  thumb: { width: 96, height: 96 },
+  rowName: { fontWeight: '500', color: '#2C5F6E', fontSize: 18, letterSpacing: 0.2, writingDirection: 'rtl', textAlign: 'right' },
+  rowAddr: { color: Colors.MUTED, fontSize: 13, marginTop: 4, writingDirection: 'rtl', textAlign: 'right' },
   distChip: { alignSelf: 'flex-end', paddingHorizontal: 8, paddingVertical: 2, borderRadius: 10, marginTop: 6 },
   distTxt: { color: '#fff', fontSize: 10.5, fontWeight: '800' },
-  moreBtn: { marginTop: 2, paddingVertical: 8, borderWidth: 1, borderStyle: 'dashed', borderRadius: 8, alignItems: 'center' },
+  moreBtn: { marginTop: 2, paddingVertical: 11, borderWidth: 1, borderStyle: 'dashed', borderRadius: 0, alignItems: 'center' },
   moreTxt: { fontSize: 12.5, fontWeight: '700' },
 });

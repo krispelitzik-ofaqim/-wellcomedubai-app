@@ -5,6 +5,9 @@ import { useLocalSearchParams } from 'expo-router';
 import * as DocumentPicker from 'expo-document-picker';
 import { Colors } from '../../constants/colors';
 import { useI18n } from '../../constants/i18n';
+import { tcRu } from '../../constants/contentRu';
+import { tcHi } from '../../constants/contentHi';
+import { tcAr } from '../../constants/contentAr';
 
 const TOPICS = [
   { id: 'general',    key: 'ct.tGeneral',  label: 'שאלה כללית',           prefix: 'שלום, ',                                                  prefixEn: 'Hello, ' },
@@ -15,7 +18,8 @@ const TOPICS = [
 ];
 
 export default function ContactScreen() {
-  const { t, lang } = useI18n();
+  const { t, lang, isRTL } = useI18n();
+  const s = makeStyles(isRTL);
   const { topic } = useLocalSearchParams<{ topic?: string }>();
   const [active, setActive] = useState(topic || 'general');
   const [open, setOpen] = useState(false);
@@ -38,9 +42,12 @@ export default function ContactScreen() {
 
   const buildText = () => {
     const en = lang === 'en';
-    let txt = (en ? current.prefixEn : current.prefix) + (message || '');
-    if (phone) txt += `\n\n${en ? 'Callback phone' : 'טלפון לחזרה'}: ${phone}`;
-    if (file) txt += `\n\n${en ? 'Attached file' : 'מצורף קובץ'}: ${file.name}${file.size ? ` (${Math.round(file.size / 1024)}KB)` : ''}\n(${en ? 'please attach manually to the message' : 'יש לצרף ידנית להודעה'})`;
+    const ru = lang === 'ru';
+    const hi = lang === 'hi';
+    const ar = lang === 'ar';
+    let txt = (ar ? tcAr(current.prefix) : hi ? tcHi(current.prefix) : ru ? tcRu(current.prefix) : en ? current.prefixEn : current.prefix) + (message || '');
+    if (phone) txt += `\n\n${ar ? tcAr('טלפון לחזרה') : hi ? tcHi('טלפון לחזרה') : ru ? tcRu('טלפון לחזרה') : en ? 'Callback phone' : 'טלפון לחזרה'}: ${phone}`;
+    if (file) txt += `\n\n${ar ? tcAr('מצורף קובץ') : hi ? tcHi('מצורף קובץ') : ru ? tcRu('מצורף קובץ') : en ? 'Attached file' : 'מצורף קובץ'}: ${file.name}${file.size ? ` (${Math.round(file.size / 1024)}KB)` : ''}\n(${ar ? tcAr('יש לצרף ידנית להודעה') : hi ? tcHi('יש לצרף ידנית להודעה') : ru ? tcRu('יש לצרף ידנית להודעה') : en ? 'please attach manually to the message' : 'יש לצרף ידנית להודעה'})`;
     return txt;
   };
 
@@ -53,13 +60,13 @@ export default function ContactScreen() {
       </View>
 
       <ScrollView contentContainerStyle={s.body} keyboardShouldPersistTaps="handled">
-        <Text style={[s.sectionLabel, { writingDirection: lang === 'en' ? 'ltr' : 'rtl', textAlign: lang === 'en' ? 'left' : 'right' }]}>{t('ct.topicLabel')}</Text>
+        <Text style={[s.sectionLabel, { writingDirection: isRTL ? 'rtl' : 'ltr', textAlign: isRTL ? 'right' : 'left' }]}>{t('ct.topicLabel')}</Text>
         <TouchableOpacity style={s.dropdown} onPress={() => setOpen(true)}>
           <Text style={s.dropdownArrow}>▾</Text>
           <Text style={s.dropdownTxt}>{t(current.key)}</Text>
         </TouchableOpacity>
 
-        <Text style={[s.sectionLabel, { writingDirection: lang === 'en' ? 'ltr' : 'rtl', textAlign: lang === 'en' ? 'left' : 'right' }]}>{t('ct.phone')}</Text>
+        <Text style={[s.sectionLabel, { writingDirection: isRTL ? 'rtl' : 'ltr', textAlign: isRTL ? 'right' : 'left' }]}>{t('ct.phone')}</Text>
         <TextInput
           value={phone}
           onChangeText={setPhone}
@@ -69,7 +76,7 @@ export default function ContactScreen() {
           style={s.input}
         />
 
-        <Text style={[s.sectionLabel, { writingDirection: lang === 'en' ? 'ltr' : 'rtl', textAlign: lang === 'en' ? 'left' : 'right' }]}>{t('ct.msgLabel')}</Text>
+        <Text style={[s.sectionLabel, { writingDirection: isRTL ? 'rtl' : 'ltr', textAlign: isRTL ? 'right' : 'left' }]}>{t('ct.msgLabel')}</Text>
         <TextInput
           value={message}
           onChangeText={setMessage}
@@ -82,7 +89,7 @@ export default function ContactScreen() {
 
         {showDiploma ? (
           <>
-            <Text style={[s.sectionLabel, { writingDirection: lang === 'en' ? 'ltr' : 'rtl', textAlign: lang === 'en' ? 'left' : 'right' }]}>{t('contact.diploma')}</Text>
+            <Text style={[s.sectionLabel, { writingDirection: isRTL ? 'rtl' : 'ltr', textAlign: isRTL ? 'right' : 'left' }]}>{t('contact.diploma')}</Text>
             <TouchableOpacity style={s.uploadBtn} onPress={pickFile}>
               <Text style={s.uploadTxt}>📎 {file ? t('contact.replaceFile') : t('ct.uploadFile')}</Text>
             </TouchableOpacity>
@@ -123,31 +130,31 @@ export default function ContactScreen() {
     </View>
   );
 }
-const s = StyleSheet.create({
+const makeStyles = (isRTL: boolean) => StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fff' },
   header: { backgroundColor: Colors.PRIMARY, paddingHorizontal: 18, paddingTop: 8, paddingBottom: 18, alignItems: 'center' },
-  title: { fontSize: 22, fontWeight: '900', color: '#fff', textAlign: 'center', marginTop: 8 },
+  title: { fontSize: 24, fontWeight: '400', letterSpacing: 0.3, color: '#fff', textAlign: 'center', marginTop: 8 },
   sub: { fontSize: 13, color: 'rgba(255,255,255,0.85)', textAlign: 'center', marginTop: 4 },
-  body: { padding: 22, gap: 12 },
-  sectionLabel: { color: Colors.MUTED, fontSize: 12, fontWeight: '700', marginTop: 6, marginBottom: 6, writingDirection: 'rtl', textAlign: 'right' },
-  dropdown: { flexDirection: 'row-reverse', alignItems: 'center', paddingHorizontal: 14, paddingVertical: 12, borderRadius: 10, backgroundColor: '#fff', borderWidth: 1, borderColor: '#D9C9A6', marginBottom: 4 },
-  dropdownTxt: { flex: 1, color: '#2C5F6E', fontSize: 14, fontWeight: '700', writingDirection: 'rtl', textAlign: 'right' },
-  dropdownArrow: { color: Colors.MUTED, fontSize: 16, fontWeight: '700' },
-  input: { backgroundColor: '#fff', borderWidth: 1, borderColor: '#D9C9A6', borderRadius: 10, paddingHorizontal: 14, paddingVertical: 12, fontSize: 14, color: '#2C5F6E', writingDirection: 'rtl', textAlign: 'right' },
-  btn: { borderRadius: 12, padding: 14, alignItems: 'center', marginTop: 8 },
-  btnTxt: { color: '#fff', fontWeight: '900', fontSize: 15 },
-  uploadBtn: { backgroundColor: '#E8F2F7', borderWidth: 1, borderColor: '#B6D2DE', borderStyle: 'dashed', borderRadius: 10, paddingVertical: 12, alignItems: 'center', marginTop: 2 },
-  uploadTxt: { color: Colors.PRIMARY, fontWeight: '800', fontSize: 13.5 },
-  fileChip: { flexDirection: 'row-reverse', alignItems: 'center', gap: 8, marginTop: 8, padding: 10, backgroundColor: '#FAF6EE', borderRadius: 8, borderWidth: 1, borderColor: '#E8DEC8' },
-  fileTxt: { flex: 1, color: '#2C5F6E', fontSize: 12.5, fontWeight: '600', writingDirection: 'rtl', textAlign: 'right' },
-  fileRemove: { color: '#E76F51', fontSize: 14, fontWeight: '800', paddingHorizontal: 6 },
+  body: { padding: 18, gap: 12 },
+  sectionLabel: { color: Colors.MUTED, fontSize: 14, fontWeight: '600', letterSpacing: 0.2, marginTop: 8, marginBottom: 6, writingDirection: isRTL ? 'rtl' : 'ltr', textAlign: isRTL ? 'right' : 'left' },
+  dropdown: { flexDirection: isRTL ? 'row-reverse' : 'row', alignItems: 'center', paddingHorizontal: 16, paddingVertical: 14, borderRadius: 0, backgroundColor: '#fff', borderWidth: 1, borderColor: '#EAE0CE', marginBottom: 4 },
+  dropdownTxt: { flex: 1, color: '#2C5F6E', fontSize: 18, fontWeight: '500', letterSpacing: 0.2, writingDirection: isRTL ? 'rtl' : 'ltr', textAlign: isRTL ? 'right' : 'left' },
+  dropdownArrow: { color: Colors.MUTED, fontSize: 16, fontWeight: '500' },
+  input: { backgroundColor: '#fff', borderWidth: 1, borderColor: '#EAE0CE', borderRadius: 0, paddingHorizontal: 16, paddingVertical: 14, fontSize: 16, color: '#2C5F6E', writingDirection: isRTL ? 'rtl' : 'ltr', textAlign: isRTL ? 'right' : 'left' },
+  btn: { borderRadius: 0, paddingVertical: 16, alignItems: 'center', marginTop: 8 },
+  btnTxt: { color: '#fff', fontWeight: '600', fontSize: 16, letterSpacing: 0.2 },
+  uploadBtn: { backgroundColor: '#E8F2F7', borderWidth: 1, borderColor: '#B6D2DE', borderStyle: 'dashed', borderRadius: 0, paddingVertical: 14, alignItems: 'center', marginTop: 2 },
+  uploadTxt: { color: Colors.PRIMARY, fontWeight: '600', fontSize: 15 },
+  fileChip: { flexDirection: isRTL ? 'row-reverse' : 'row', alignItems: 'center', gap: 8, marginTop: 8, padding: 12, backgroundColor: '#FAF6EE', borderRadius: 0, borderBottomWidth: 1, borderBottomColor: '#EAE0CE' },
+  fileTxt: { flex: 1, color: '#2C5F6E', fontSize: 14, fontWeight: '500', writingDirection: isRTL ? 'rtl' : 'ltr', textAlign: isRTL ? 'right' : 'left' },
+  fileRemove: { color: '#E24B32', fontSize: 15, fontWeight: '600', paddingHorizontal: 6 },
 
   modalBackdrop: { flex: 1, backgroundColor: 'rgba(0,0,0,0.4)', justifyContent: 'center', alignItems: 'center', padding: 22 },
-  menu: { width: '100%', maxWidth: 360, backgroundColor: '#fff', borderRadius: 12, overflow: 'hidden', shadowColor: '#000', shadowOpacity: 0.25, shadowRadius: 14, shadowOffset: { width: 0, height: 8 } },
-  menuTitle: { color: '#fff', backgroundColor: Colors.PRIMARY, fontSize: 14, fontWeight: '800', padding: 14, textAlign: 'center' },
-  menuItem: { flexDirection: 'row-reverse', alignItems: 'center', paddingHorizontal: 18, paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: '#F0E6D2' },
+  menu: { width: '100%', maxWidth: 360, backgroundColor: '#fff', borderRadius: 0, overflow: 'hidden' },
+  menuTitle: { color: '#fff', backgroundColor: Colors.PRIMARY, fontSize: 20, fontWeight: '600', letterSpacing: 0.2, padding: 16, textAlign: 'center' },
+  menuItem: { flexDirection: isRTL ? 'row-reverse' : 'row', alignItems: 'center', paddingHorizontal: 18, paddingVertical: 16, borderBottomWidth: 1, borderBottomColor: '#EAE0CE' },
   menuItemActive: { backgroundColor: '#E8F2F7' },
-  menuTxt: { flex: 1, color: '#2C5F6E', fontSize: 14, fontWeight: '700', writingDirection: 'rtl', textAlign: 'right' },
-  menuTxtActive: { color: Colors.PRIMARY, fontWeight: '900' },
-  menuCheck: { color: Colors.PRIMARY, fontSize: 16, fontWeight: '900' },
+  menuTxt: { flex: 1, color: '#2C5F6E', fontSize: 18, fontWeight: '500', letterSpacing: 0.2, writingDirection: isRTL ? 'rtl' : 'ltr', textAlign: isRTL ? 'right' : 'left' },
+  menuTxtActive: { color: Colors.PRIMARY, fontWeight: '600' },
+  menuCheck: { color: Colors.PRIMARY, fontSize: 18, fontWeight: '600' },
 });

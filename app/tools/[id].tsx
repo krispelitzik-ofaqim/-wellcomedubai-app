@@ -1,9 +1,12 @@
 import { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Linking } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Linking, ImageBackground } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, router } from 'expo-router';
 import { Colors } from '../../constants/colors';
 import { useI18n } from '../../constants/i18n';
+import { tcRu } from '../../constants/contentRu';
+import { tcHi } from '../../constants/contentHi';
+import { tcAr } from '../../constants/contentAr';
 
 export default function ToolScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -19,7 +22,7 @@ export default function ToolScreen() {
             <Text style={{ color: '#E76F51', fontWeight: '900' }}>Dubai</Text>
           </Text>
         </View>
-        <TouchableOpacity onPress={() => router.back()} style={s.back}>
+        <TouchableOpacity onPress={() => { if (router.canGoBack()) router.back(); else router.replace('/(tabs)/'); }} style={s.back}>
           <Text style={{ fontSize: 22, color: '#2C5F6E', fontWeight: '700' }}>✕</Text>
         </TouchableOpacity>
       </View>
@@ -32,26 +35,29 @@ export default function ToolScreen() {
   );
 }
 
-type CurCode = 'ILS' | 'AED' | 'USD' | 'EUR';
-const CUR_FLAGS: Record<CurCode, string> = { ILS: '🇮🇱', AED: '🇦🇪', USD: '🇺🇸', EUR: '🇪🇺' };
-const CUR_NAMES: Record<CurCode, string> = { ILS: 'שקל', AED: 'דירהם', USD: 'דולר', EUR: 'יורו' };
-const CUR_ORDER: CurCode[] = ['EUR', 'USD', 'AED', 'ILS'];
+type CurCode = 'ILS' | 'AED' | 'USD' | 'EUR' | 'INR' | 'RUB' | 'SAR';
+const CUR_FLAGS: Record<CurCode, string> = { ILS: '🇮🇱', AED: '🇦🇪', USD: '🇺🇸', EUR: '🇪🇺', INR: '🇮🇳', RUB: '🇷🇺', SAR: '🇸🇦' };
+const CUR_FALLBACK: Record<CurCode, string> = { ILS: '₪ ILS', AED: 'AED', USD: '$ USD', EUR: '€ EUR', INR: '₹ INR', RUB: '₽ RUB', SAR: 'SAR' };
+// Each language's own currency, shown alongside the Dirham.
+const LOCAL_CUR: Record<string, CurCode> = { he: 'ILS', en: 'USD', ru: 'RUB', hi: 'INR', ar: 'SAR' };
 
 function Currency() {
-  const { t } = useI18n();
-  const curName = (c: CurCode) => t('cur.' + c);
+  const { t, lang } = useI18n();
+  const localCur: CurCode = LOCAL_CUR[lang] || 'USD';
+  const CUR_ORDER: CurCode[] = Array.from(new Set<CurCode>([localCur, 'AED', 'USD', 'EUR']));
+  const curName = (c: CurCode) => { const v = t('cur.' + c); return v.startsWith('cur.') ? CUR_FALLBACK[c] : v; };
   const [rates, setRates] = useState<Record<CurCode, number> | null>(null);
   const [lastUpdate, setLastUpdate] = useState<string>('');
   const [loading, setLoading] = useState(false);
   const [amount, setAmount] = useState('');
-  const [from, setFrom] = useState<CurCode>('ILS');
+  const [from, setFrom] = useState<CurCode>(localCur);
 
   const load = () => {
     setLoading(true);
     fetch('https://open.er-api.com/v6/latest/USD')
       .then(r => r.json())
       .then(d => {
-        if (d.rates) setRates({ ILS: d.rates.ILS, AED: d.rates.AED, USD: 1, EUR: d.rates.EUR });
+        if (d.rates) setRates({ ILS: d.rates.ILS, AED: d.rates.AED, USD: 1, EUR: d.rates.EUR, INR: d.rates.INR, RUB: d.rates.RUB, SAR: d.rates.SAR });
         const src = d.time_last_update_utc;
         if (src) {
           const dt = new Date(src);
@@ -158,7 +164,8 @@ function wmoCondition(code: number, lang: string = 'he'): string {
     95: 'Thunderstorm', 96: 'Hailstorm', 99: 'Heavy hailstorm',
   };
   const m = lang === 'en' ? en : he;
-  return m[code] || (lang === 'en' ? 'Unknown' : 'לא ידוע');
+  const base = m[code] || (lang === 'en' ? 'Unknown' : 'לא ידוע');
+  return lang === 'ar' ? tcAr(base) : lang === 'hi' ? tcHi(base) : lang === 'ru' ? tcRu(base) : base;
 }
 function wmoEmoji(code: number): string {
   if (code === 0 || code === 1) return '☀️';
@@ -172,10 +179,32 @@ function wmoEmoji(code: number): string {
   return '🌡️';
 }
 
+// Dubai monthly climate averages (°C): daytime high, night low, sea temperature.
+const DXB_CLIMATE = [
+  { hi: 24, lo: 14, sea: 22 }, { hi: 25, lo: 15, sea: 21 }, { hi: 28, lo: 18, sea: 23 },
+  { hi: 33, lo: 21, sea: 25 }, { hi: 38, lo: 25, sea: 28 }, { hi: 39, lo: 27, sea: 30 },
+  { hi: 41, lo: 30, sea: 32 }, { hi: 41, lo: 30, sea: 33 }, { hi: 39, lo: 27, sea: 32 },
+  { hi: 35, lo: 24, sea: 30 }, { hi: 30, lo: 20, sea: 27 }, { hi: 26, lo: 16, sea: 24 },
+];
+const CLIMATE_TR: Record<string, { title: string; para: string; cMonth: string; cHi: string; cLo: string; cSea: string; months: string[] }> = {
+  he: { title: 'סקירת אקלים שנתית', para: 'לדובאי אקלים מדברי חם. הקיץ (יוני–ספטמבר) חם במיוחד ולח, עם מקסימום של 40° ומעלה. החורף (נובמבר–מרץ) נעים ושטוף שמש, 24–30° — הזמן הטוב ביותר לבקר. הים חמים כל השנה (21–33°), וגשם נדיר, בעיקר בחורף.', cMonth: 'חודש', cHi: 'מקס׳', cLo: 'מינ׳', cSea: 'ים', months: ['ינואר', 'פברואר', 'מרץ', 'אפריל', 'מאי', 'יוני', 'יולי', 'אוגוסט', 'ספטמבר', 'אוקטובר', 'נובמבר', 'דצמבר'] },
+  en: { title: 'Annual Climate Overview', para: 'Dubai has a hot desert climate. Summer (June–September) is extremely hot and humid, with highs around 40°+. Winter (November–March) is pleasant and sunny, 24–30° — the best time to visit. The sea stays warm year-round (21–33°), and rain is rare, mostly in winter.', cMonth: 'Month', cHi: 'High', cLo: 'Low', cSea: 'Sea', months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'] },
+  ru: { title: 'Годовой обзор климата', para: 'В Дубае жаркий пустынный климат. Лето (июнь–сентябрь) очень жаркое и влажное, максимум около 40°+. Зима (ноябрь–март) приятная и солнечная, 24–30° — лучшее время для поездки. Море тёплое круглый год (21–33°), дожди редки, в основном зимой.', cMonth: 'Месяц', cHi: 'Макс', cLo: 'Мин', cSea: 'Море', months: ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек'] },
+  ar: { title: 'نظرة سنوية على المناخ', para: 'لدبي مناخ صحراوي حار. الصيف (يونيو–سبتمبر) شديد الحرارة والرطوبة، بحد أقصى نحو 40°+. الشتاء (نوفمبر–مارس) لطيف ومشمس، 24–30° — أفضل وقت للزيارة. يبقى البحر دافئًا طوال العام (21–33°)، والأمطار نادرة وغالبًا في الشتاء.', cMonth: 'الشهر', cHi: 'العليا', cLo: 'الدنيا', cSea: 'البحر', months: ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'] },
+  hi: { title: 'वार्षिक जलवायु अवलोकन', para: 'दुबई की जलवायु गर्म रेगिस्तानी है। गर्मी (जून–सितंबर) बेहद गर्म और आर्द्र होती है, अधिकतम लगभग 40°+। सर्दी (नवंबर–मार्च) सुहावनी और धूप भरी रहती है, 24–30° — घूमने का सबसे अच्छा समय। समुद्र साल भर गर्म रहता है (21–33°), और बारिश दुर्लभ है, मुख्यतः सर्दियों में।', cMonth: 'महीना', cHi: 'अधि', cLo: 'न्यून', cSea: 'समुद्र', months: ['जन', 'फ़र', 'मार्च', 'अप्रैल', 'मई', 'जून', 'जुल', 'अग', 'सित', 'अक्तू', 'नव', 'दिस'] },
+};
+const climateHiColor = (hi: number) => (hi >= 38 ? '#E24B32' : hi >= 30 ? '#F4A261' : '#2A9D8F');
+
 function Weather() {
   const { t, lang } = useI18n();
   const [w, setW] = useState<any>(null);
-  const dayNames = lang === 'en'
+  const dayNames = lang === 'ar'
+    ? ['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'].map(tcAr)
+    : lang === 'hi'
+    ? ['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'].map(tcHi)
+    : lang === 'ru'
+    ? ['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'].map(tcRu)
+    : lang === 'en'
     ? ['Sun','Mon','Tue','Wed','Thu','Fri','Sat']
     : ['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
 
@@ -191,21 +220,25 @@ function Weather() {
   const c = w.current || {};
   const code = c.weather_code;
   const days = w.daily?.time || [];
+  const isRTL = lang === 'he' || lang === 'ar';
+  const clim = CLIMATE_TR[lang] || CLIMATE_TR.en;
 
   return (
     <View>
-      <View style={s.wCurrent}>
-        <Text style={s.wNow}>{t('wthr.now')}</Text>
-        <Text style={s.wIconBig}>{wmoEmoji(code)}</Text>
-        <Text style={s.wTempBig}>{Math.round(c.temperature_2m)}°C</Text>
-        <Text style={s.wCondBig}>{wmoCondition(code, lang)}</Text>
-        <View style={s.wStatsRow}>
-          <Text style={s.wStat}>🌡️ {t('wthr.feels')} {Math.round(c.apparent_temperature)}°</Text>
-          <Text style={s.wStat}>💧 {t('wthr.humidity')} {Math.round(c.relative_humidity_2m)}%</Text>
-          <Text style={s.wStat}>🌬️ {Math.round(c.wind_speed_10m)} {t('wthr.wind')}</Text>
-          <Text style={s.wStat}>☀️ UV {Math.round((c.uv_index || 0) * 10) / 10}</Text>
+      <ImageBackground source={{ uri: 'https://wellcomedubai.com/images/Yizhak/dubai-skyline-evening.jpg' }} resizeMode="cover" style={s.wCurrent} imageStyle={{ borderRadius: 0 }}>
+        <View style={s.wOverlay}>
+          <Text style={s.wNow}>{t('wthr.now')}</Text>
+          <Text style={s.wIconBig}>{wmoEmoji(code)}</Text>
+          <Text style={s.wTempBig}>{Math.round(c.temperature_2m)}°</Text>
+          <Text style={s.wCondBig}>{wmoCondition(code, lang)}</Text>
+          <View style={s.wStatsRow}>
+            <Text style={s.wStat}>🌡️ {t('wthr.feels')} {Math.round(c.apparent_temperature)}°</Text>
+            <Text style={s.wStat}>💧 {t('wthr.humidity')} {Math.round(c.relative_humidity_2m)}%</Text>
+            <Text style={s.wStat}>🌬️ {Math.round(c.wind_speed_10m)} {t('wthr.wind')}</Text>
+            <Text style={s.wStat}>☀️ UV {Math.round((c.uv_index || 0) * 10) / 10}</Text>
+          </View>
         </View>
-      </View>
+      </ImageBackground>
 
       <View style={s.wForecastBox}>
         <Text style={s.wForecastTitle}>{t('wthr.forecast')}</Text>
@@ -224,6 +257,26 @@ function Weather() {
             </View>
           );
         })}
+      </View>
+
+      {/* Annual climate overview — paragraph + monthly table */}
+      <View style={s.wForecastBox}>
+        <Text style={[s.wForecastTitle, { textAlign: isRTL ? 'right' : 'left', writingDirection: isRTL ? 'rtl' : 'ltr' }]}>{clim.title}</Text>
+        <Text style={{ color: Colors.TEXT, fontSize: 13.5, lineHeight: 20, marginTop: 4, marginBottom: 12, writingDirection: isRTL ? 'rtl' : 'ltr', textAlign: isRTL ? 'right' : 'left' }}>{clim.para}</Text>
+        <View style={[s.wClimHead, { flexDirection: isRTL ? 'row-reverse' : 'row' }]}>
+          <Text style={[s.wClimHeadTxt, { flex: 1.5, textAlign: isRTL ? 'right' : 'left' }]}>{clim.cMonth}</Text>
+          <Text style={s.wClimHeadTxt}>{clim.cHi}</Text>
+          <Text style={s.wClimHeadTxt}>{clim.cLo}</Text>
+          <Text style={s.wClimHeadTxt}>{clim.cSea}</Text>
+        </View>
+        {DXB_CLIMATE.map((m, i) => (
+          <View key={i} style={[s.wClimRow, { flexDirection: isRTL ? 'row-reverse' : 'row' }]}>
+            <Text style={[s.wClimMonth, { flex: 1.5, textAlign: isRTL ? 'right' : 'left' }]}>{clim.months[i]}</Text>
+            <Text style={[s.wClimCell, { color: climateHiColor(m.hi), fontWeight: '800' }]}>{m.hi}°</Text>
+            <Text style={s.wClimCell}>{m.lo}°</Text>
+            <Text style={[s.wClimCell, { color: '#1A6B8A' }]}>{m.sea}°</Text>
+          </View>
+        ))}
       </View>
 
     </View>
@@ -265,27 +318,32 @@ function statusColor(status: string) {
 function statusHe(status: string, lang: string = 'he') {
   const x = (status || '').toLowerCase();
   const en = lang === 'en';
-  if (x.includes('landed')) return en ? 'Landed' : 'נחת';
-  if (x.includes('arrived')) return en ? 'Arrived' : 'הגיע';
-  if (x.includes('departed')) return en ? 'Departed' : 'המריא';
-  if (x.includes('en route')) return en ? 'En route' : 'בדרך';
-  if (x.includes('cancelled')) return en ? 'Cancelled' : 'בוטל';
-  if (x.includes('delayed')) return en ? 'Delayed' : 'מאחר';
-  if (x.includes('scheduled')) return en ? 'Scheduled' : 'מתוכנן';
-  if (x.includes('expected')) return en ? 'Expected' : 'צפוי';
-  if (x.includes('boarding')) return en ? 'Boarding' : 'עולים';
-  if (x.includes('gate')) return en ? 'Gate' : 'שער';
-  return status || '';
+  const pick = () => {
+    if (x.includes('landed')) return en ? 'Landed' : 'נחת';
+    if (x.includes('arrived')) return en ? 'Arrived' : 'הגיע';
+    if (x.includes('departed')) return en ? 'Departed' : 'המריא';
+    if (x.includes('en route')) return en ? 'En route' : 'בדרך';
+    if (x.includes('cancelled')) return en ? 'Cancelled' : 'בוטל';
+    if (x.includes('delayed')) return en ? 'Delayed' : 'מאחר';
+    if (x.includes('scheduled')) return en ? 'Scheduled' : 'מתוכנן';
+    if (x.includes('expected')) return en ? 'Expected' : 'צפוי';
+    if (x.includes('boarding')) return en ? 'Boarding' : 'עולים';
+    if (x.includes('gate')) return en ? 'Gate' : 'שער';
+    return status || '';
+  };
+  const r = pick();
+  return lang === 'ar' ? tcAr(r) : lang === 'hi' ? tcHi(r) : lang === 'ru' ? tcRu(r) : r;
 }
 
 const AIRPORTS = { DXB: { icao: 'OMDB', code: 'DXB' }, AUH: { icao: 'OMAA', code: 'AUH' } } as const;
 
 function Flights() {
   const { t, lang } = useI18n();
-  const locale = lang === 'en' ? 'en-US' : 'he-IL';
+  const locale = lang === 'ru' ? 'ru-RU' : lang === 'en' ? 'en-US' : 'he-IL';
   const [airport, setAirport] = useState<'DXB' | 'AUH'>('DXB');
   const [direction, setDirection] = useState<'Departure' | 'Arrival'>('Departure');
   const [flights, setFlights] = useState<Flight[] | null>(null);
+  const [fltQ, setFltQ] = useState('');
   const [loading, setLoading] = useState(false);
   const [now, setNow] = useState(new Date());
   const apCode = AIRPORTS[airport].code;
@@ -333,7 +391,7 @@ function Flights() {
         });
         // Hebrew edition prioritizes Tel Aviv flights; the international edition shows all flights.
         const tlv = result.filter(f => f.isTLV);
-        setFlights(lang !== 'en' && tlv.length > 0 ? tlv : result);
+        setFlights(lang === 'he' && tlv.length > 0 ? tlv : result);
       })
       .catch(() => setFlights([]))
       .finally(() => setLoading(false));
@@ -341,6 +399,9 @@ function Flights() {
 
   const dubaiTime = now.toLocaleTimeString(locale, { timeZone: 'Asia/Dubai', hour: '2-digit', minute: '2-digit' });
   const isDep = direction === 'Departure';
+  const isRTL = lang === 'he' || lang === 'ar';
+  const fmtT = (str?: string) => { const m = String(str || '').match(/\d{1,2}:\d{2}/); return m ? m[0] : ''; };
+  const cityShort = (nm?: string) => String(nm || '').replace(/\s*(international|intl|airport|apt)\s*/gi, '').trim() || String(nm || '');
 
   return (
     <View>
@@ -375,30 +436,55 @@ function Flights() {
         {!loading && flights && flights.length === 0 && (
           <Text style={[s.muted, { textAlign: 'center', padding: 20 }]}>{t('flt.error')}</Text>
         )}
-        {!loading && flights && flights.length > 0 && (
+        {!loading && flights && flights.length > 0 && (() => {
+          const q = fltQ.trim().toLowerCase();
+          const shown = q ? flights.filter(f => [f.airline, f.flight, f.destination, f.origin, f.destinationCode, f.originCode].filter(Boolean).join(' ').toLowerCase().includes(q)) : flights;
+          return (
           <>
-            <View style={s.fbRowHead}>
-              <Text style={s.fbColFlight}>{t('flt.colFlight')}</Text>
-              <Text style={s.fbColCode}>{isDep ? t('flt.colDest') : t('flt.colOrigin')}</Text>
-              <Text style={s.fbColAirline}>{t('flt.colAirline')}</Text>
-              <Text style={s.fbColStatus}>{t('flt.colStatus')}</Text>
+            <View style={[s.fltSearch, { flexDirection: isRTL ? 'row-reverse' : 'row' }]}>
+              <Text style={{ fontSize: 15 }}>🔎</Text>
+              <TextInput value={fltQ} onChangeText={setFltQ} placeholder={lang === 'he' ? 'חיפוש יעד, חברה או מספר טיסה…' : 'Search destination, airline or flight…'} placeholderTextColor="#9CA3AF" style={[s.fltSearchInput, { textAlign: isRTL ? 'right' : 'left', writingDirection: isRTL ? 'rtl' : 'ltr' }]} />
+              {fltQ ? <TouchableOpacity onPress={() => setFltQ('')}><Text style={{ fontSize: 18, color: '#9CA3AF' }}>×</Text></TouchableOpacity> : null}
             </View>
-            {flights.map((f, i) => (
-              <View key={i} style={[s.fbRow, f.isTLV && { backgroundColor: '#FFF8E7' }]}>
-                <Text style={[s.fbColFlight, { color: '#E76F51', fontWeight: '700' }]}>{f.flight}</Text>
-                <Text style={[s.fbColCode, { color: '#2A9D8F', fontWeight: '800' }]}>{(isDep ? f.destinationCode : f.originCode) || '—'}</Text>
-                <Text style={[s.fbColAirline, { color: Colors.TEXT }]} numberOfLines={1}>{f.airline}</Text>
-                <View style={[s.fbColStatusBox, { backgroundColor: statusBg(f.status) }]}>
-                  <Text style={{ color: statusColor(f.status), fontSize: 10, fontWeight: '700' }}>{statusHe(f.status, lang)}</Text>
+            {shown.length === 0 ? <Text style={[s.muted, { textAlign: 'center', padding: 16 }]}>{lang === 'he' ? 'לא נמצאו טיסות' : 'No flights found'}</Text> : null}
+            {shown.map((f, i) => {
+              const otherCode = (isDep ? f.destinationCode : f.originCode) || '—';
+              const otherCity = cityShort(isDep ? f.destination : f.origin);
+              const time = fmtT(f.actual) || fmtT(f.scheduled);
+              return (
+              <View key={i} style={[s.flCard, lang === 'he' && f.isTLV && { backgroundColor: '#FFF8E7' }]}>
+                <View style={s.flTop}>
+                  <Text style={s.flAirline} numberOfLines={1}>{f.airline || '—'}</Text>
+                  <Text style={s.flNum}>{f.flight}</Text>
+                </View>
+                <View style={[s.flRoute, { flexDirection: isRTL ? 'row-reverse' : 'row' }]}>
+                  <View style={s.flEnd}>
+                    <Text style={s.flCode}>{isDep ? apCode : otherCode}</Text>
+                    <Text style={s.flCity} numberOfLines={1}>{isDep ? 'Dubai' : otherCity}</Text>
+                  </View>
+                  <Text style={s.flPlane}>{isRTL ? '←' : '→'}</Text>
+                  <View style={s.flEnd}>
+                    <Text style={s.flCode}>{isDep ? otherCode : apCode}</Text>
+                    <Text style={s.flCity} numberOfLines={1}>{isDep ? otherCity : 'Dubai'}</Text>
+                  </View>
+                  <View style={{ flex: 1 }} />
+                  <View style={{ alignItems: 'center', gap: 4 }}>
+                    <Text style={s.flTime}>{time || '--:--'}</Text>
+                    <View style={[s.flStatus, { backgroundColor: statusBg(f.status) }]}>
+                      <Text style={{ color: statusColor(f.status), fontSize: 10, fontWeight: '700' }}>{statusHe(f.status, lang)}</Text>
+                    </View>
+                  </View>
                 </View>
               </View>
-            ))}
+              );
+            })}
             <Text style={s.timestamp}>{t('flt.updated')} {now.toLocaleTimeString(locale)} · DXB</Text>
           </>
-        )}
+          );
+        })()}
       </View>
 
-      <TouchableOpacity style={[s.tapBtn, { backgroundColor: Colors.SECONDARY, marginTop: 12 }]} onPress={async () => { const url = 'https://www.aviasales.com/search/TLV01DXB01?marker=X5SEJjUA'; const ok = await Linking.canOpenURL(url); if (ok) await Linking.openURL(url); }}>
+      <TouchableOpacity style={[s.tapBtn, { backgroundColor: Colors.SECONDARY, marginTop: 12 }]} onPress={async () => { const url = lang === 'he' ? `https://www.aviasales.com/search/TLV01${apCode}01?marker=X5SEJjUA` : `https://www.aviasales.com/?marker=X5SEJjUA`; const ok = await Linking.canOpenURL(url); if (ok) await Linking.openURL(url); }}>
         <Text style={s.tapBtnTxt}>{t('flt.search')}</Text>
       </TouchableOpacity>
     </View>
@@ -409,11 +495,11 @@ const s = StyleSheet.create({
   container: { flex: 1, backgroundColor: Colors.BG },
   header: { flexDirection: 'row-reverse', alignItems: 'center', paddingHorizontal: 14, paddingVertical: 12, backgroundColor: '#fff', gap: 10, borderBottomWidth: 1, borderBottomColor: '#E5E7EB' },
   back: { padding: 4 },
-  title: { color: '#fff', fontSize: 17, fontWeight: '900', writingDirection: 'rtl' },
+  title: { color: '#fff', fontSize: 24, fontWeight: '400', letterSpacing: 0.3, writingDirection: 'rtl' },
   brand: { fontSize: 16, fontWeight: '900', letterSpacing: -0.3, fontFamily: 'System', textAlign: 'right', writingDirection: 'rtl' },
   center: { alignItems: 'center', padding: 40, gap: 12 },
   muted: { color: Colors.MUTED, fontSize: 14 },
-  bigStat: { fontSize: 24, fontWeight: '900', color: Colors.PRIMARY, textAlign: 'center', marginTop: 14 },
+  bigStat: { fontSize: 26, fontWeight: '400', letterSpacing: 0.3, color: Colors.PRIMARY, textAlign: 'center', marginTop: 14 },
   bigStatSub: { color: Colors.MUTED, fontSize: 12, textAlign: 'center', marginTop: 4 },
   row: { flexDirection: 'row-reverse', alignItems: 'flex-end', gap: 10, marginTop: 22 },
   field: { flex: 1 },
@@ -425,7 +511,7 @@ const s = StyleSheet.create({
   tipTxt: { color: Colors.TEXT, fontSize: 12, lineHeight: 18, writingDirection: 'rtl', textAlign: 'right' },
   weatherHero: { alignItems: 'center', backgroundColor: '#fff', borderRadius: 14, padding: 20, marginTop: 10 },
   weatherIcon: { fontSize: 60 },
-  weatherTemp: { fontSize: 48, fontWeight: '900', color: Colors.PRIMARY, marginTop: 8 },
+  weatherTemp: { fontSize: 60, fontWeight: '300', color: Colors.PRIMARY, marginTop: 8 },
   weatherCity: { color: Colors.MUTED, fontSize: 14, marginTop: 4 },
   metricsRow: { flexDirection: 'row-reverse', gap: 10, marginTop: 12 },
   metric: { flex: 1, backgroundColor: '#fff', borderRadius: 10, padding: 14, alignItems: 'center', borderWidth: 1, borderColor: '#E8DEC8' },
@@ -436,7 +522,7 @@ const s = StyleSheet.create({
   dayTemp: { color: Colors.PRIMARY, fontWeight: '900', fontSize: 14 },
   tapBtn: { backgroundColor: Colors.PRIMARY, paddingHorizontal: 24, paddingVertical: 14, borderRadius: 10, alignSelf: 'stretch', alignItems: 'center', marginTop: 14 },
   tapBtnTxt: { color: '#fff', fontWeight: '800', fontSize: 14 },
-  cardTitle: { fontSize: 16, fontWeight: '900', color: Colors.TEXT, textAlign: 'right', writingDirection: 'rtl', marginBottom: 12 },
+  cardTitle: { fontSize: 20, fontWeight: '600', letterSpacing: 0.2, color: Colors.TEXT, textAlign: 'right', writingDirection: 'rtl', marginBottom: 12 },
   rateGrid: { flexDirection: 'row-reverse', flexWrap: 'wrap', gap: 8, marginBottom: 16 },
   rateCard: { flexBasis: '48%', backgroundColor: '#F5E6CB', borderRadius: 8, padding: 10, flexDirection: 'row-reverse', justifyContent: 'center', alignItems: 'center' },
   rateLead: { fontWeight: '900', fontSize: 13 },
@@ -449,6 +535,19 @@ const s = StyleSheet.create({
   resultBox: { backgroundColor: Colors.TEXT, borderRadius: 10, padding: 16, marginTop: 14, alignItems: 'center' },
   resultTxt: { color: '#fff', fontSize: 22, fontWeight: '900' },
   timestamp: { color: '#aaa', fontSize: 11, textAlign: 'center', padding: 8 },
+  flCard: { backgroundColor: '#fff', paddingHorizontal: 16, paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: '#EAE0CE' },
+  fltSearch: { alignItems: 'center', gap: 8, backgroundColor: '#F3F4F6', borderRadius: 10, paddingHorizontal: 12, paddingVertical: 8, margin: 8 },
+  fltSearchInput: { flex: 1, fontSize: 14.5, color: '#1A2530' },
+  flTop: { flexDirection: 'row-reverse', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 },
+  flAirline: { flex: 1, color: Colors.TEXT, fontSize: 16, fontWeight: '500', letterSpacing: 0.2, writingDirection: 'rtl', textAlign: 'right' },
+  flNum: { color: Colors.MUTED, fontSize: 12, fontWeight: '600', letterSpacing: 0.5 },
+  flRoute: { alignItems: 'center', gap: 8 },
+  flEnd: { alignItems: 'center', minWidth: 52 },
+  flCode: { color: '#1A4A5E', fontSize: 20, fontWeight: '600', letterSpacing: 0.5 },
+  flCity: { color: Colors.MUTED, fontSize: 10.5, marginTop: 1, maxWidth: 72 },
+  flPlane: { color: '#B8923A', fontSize: 18, fontWeight: '400' },
+  flTime: { color: Colors.PRIMARY, fontSize: 22, fontWeight: '400', letterSpacing: 0.5 },
+  flStatus: { paddingHorizontal: 8, paddingVertical: 2, borderRadius: 0 },
   fbHeader: { backgroundColor: '#2C5F6E', padding: 14, borderTopLeftRadius: 8, borderTopRightRadius: 8 },
   fbTab: { paddingHorizontal: 12, paddingVertical: 6, borderRadius: 6, backgroundColor: 'rgba(255,255,255,0.15)' },
   fbTabOn: { backgroundColor: '#B8923A' },
@@ -464,7 +563,7 @@ const s = StyleSheet.create({
   fbColStatusBox: { width: 60, paddingVertical: 3, paddingHorizontal: 6, borderRadius: 4, alignItems: 'center' },
   wHero: { backgroundColor: '#2A9D8F', borderRadius: 10, padding: 16, marginTop: 4 },
   wLabel: { color: 'rgba(255,255,255,0.85)', fontSize: 13 },
-  wTemp: { color: '#fff', fontSize: 36, fontWeight: '900', marginTop: 2 },
+  wTemp: { color: '#fff', fontSize: 58, fontWeight: '300', marginTop: 2 },
   wCond: { color: '#fff', fontSize: 14, marginTop: 2 },
   wIcon: { fontSize: 56 },
   wMetrics: { flexDirection: 'row-reverse', flexWrap: 'wrap', gap: 12, marginTop: 12 },
@@ -474,8 +573,8 @@ const s = StyleSheet.create({
   wDayName: { color: 'rgba(255,255,255,0.85)', fontSize: 11 },
   wDayIcon: { fontSize: 22, lineHeight: 26 },
   wDayTemp: { color: '#fff', fontSize: 12, fontWeight: '700' },
-  curWrap: { backgroundColor: '#E76F51', margin: -14, paddingHorizontal: 18, paddingTop: 11, paddingBottom: 18, minHeight: 720 },
-  curTitle: { color: '#fff', fontSize: 26, fontWeight: '900', writingDirection: 'rtl' },
+  curWrap: { backgroundColor: '#1A4A5E', margin: -14, paddingHorizontal: 18, paddingTop: 11, paddingBottom: 18, minHeight: 560 },
+  curTitle: { color: '#fff', fontSize: 28, fontWeight: '400', letterSpacing: 0.3, writingDirection: 'rtl' },
   curSub: { color: 'rgba(255,255,255,0.85)', fontSize: 13, marginTop: 2 },
   curUpdated: { color: 'rgba(255,255,255,0.7)', fontSize: 11, marginTop: 4 },
   curRefresh: { flexDirection: 'row-reverse', alignSelf: 'center', alignItems: 'center', gap: 8, backgroundColor: 'rgba(255,255,255,0.18)', paddingHorizontal: 18, paddingVertical: 7, borderRadius: 20, marginTop: 14, marginBottom: 18 },
@@ -492,14 +591,20 @@ const s = StyleSheet.create({
   curResultName: { color: 'rgba(255,255,255,0.85)', fontSize: 12, fontWeight: '700' },
   curResultRate: { color: 'rgba(255,255,255,0.65)', fontSize: 10, textAlign: 'center', marginTop: 2 },
   curSource: { color: 'rgba(255,255,255,0.6)', fontSize: 11, textAlign: 'center', marginTop: 0 },
-  wCurrent: { backgroundColor: '#2C5F6E', padding: 24, alignItems: 'center', marginBottom: 16, borderRadius: 10 },
-  wNow: { color: 'rgba(255,255,255,0.85)', fontSize: 13 },
-  wIconBig: { fontSize: 64, lineHeight: 70, marginVertical: 6 },
-  wTempBig: { color: '#fff', fontSize: 48, fontWeight: '900' },
-  wCondBig: { color: '#fff', fontSize: 16, marginBottom: 12 },
+  wCurrent: { marginHorizontal: -14, marginTop: -11, marginBottom: 16, minHeight: 300, backgroundColor: '#2C5F6E', overflow: 'hidden' },
+  wOverlay: { flex: 1, backgroundColor: 'rgba(20,40,55,0.45)', paddingVertical: 34, paddingHorizontal: 24, alignItems: 'center', justifyContent: 'center' },
+  wNow: { color: 'rgba(255,255,255,0.9)', fontSize: 14, letterSpacing: 0.5 },
+  wIconBig: { fontSize: 76, lineHeight: 84, marginVertical: 4 },
+  wTempBig: { color: '#fff', fontSize: 76, fontWeight: '200', letterSpacing: 1 },
+  wCondBig: { color: '#fff', fontSize: 18, fontWeight: '400', marginBottom: 16 },
   wStatsRow: { flexDirection: 'row-reverse', flexWrap: 'wrap', gap: 14, justifyContent: 'center' },
   wStat: { color: 'rgba(255,255,255,0.95)', fontSize: 12, fontWeight: '600' },
   wForecastBox: { backgroundColor: '#fff', borderRadius: 10, padding: 14, marginBottom: 16 },
+  wClimHead: { alignItems: 'center', paddingBottom: 7, borderBottomWidth: 2, borderBottomColor: '#EAE0CE' },
+  wClimHeadTxt: { flex: 1, color: Colors.MUTED, fontWeight: '800', fontSize: 12, textAlign: 'center' },
+  wClimRow: { alignItems: 'center', paddingVertical: 7, borderBottomWidth: 1, borderBottomColor: '#F5EFE6' },
+  wClimMonth: { color: Colors.TEXT, fontWeight: '700', fontSize: 13 },
+  wClimCell: { flex: 1, color: Colors.TEXT, fontSize: 13.5, fontWeight: '600', textAlign: 'center' },
   wForecastTitle: { color: Colors.TEXT, fontWeight: '800', fontSize: 14, marginBottom: 10, textAlign: 'right', writingDirection: 'rtl' },
   wForecastRow: { flexDirection: 'row-reverse', alignItems: 'center', justifyContent: 'space-between', paddingVertical: 8, borderBottomWidth: 1, borderBottomColor: '#F5EFE6' },
   wFcDayName: { width: 56, color: Colors.TEXT, fontWeight: '700', fontSize: 13, textAlign: 'right' },

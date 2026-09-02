@@ -1,29 +1,30 @@
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { WebView } from 'react-native-webview';
+import { WebView } from '../../components/WebView';
 import { useLocalSearchParams, router } from 'expo-router';
 import { Colors } from '../../constants/colors';
 import { useI18n } from '../../constants/i18n';
 import { CATALOG } from '../../data/catalog';
 
-const TITLES: Record<string, { he: string; color: string }> = {
-  hotels: { he: 'מלונות', color: Colors.GOLD },
-  attractions: { he: 'אטרקציות', color: Colors.SECONDARY },
-  restaurants: { he: 'מסעדות', color: Colors.WARM },
-  shopping: { he: 'קניות', color: Colors.WARM },
-  nightlife: { he: 'בילויים', color: Colors.PINK },
-  transport: { he: 'תחבורה', color: Colors.PRIMARY },
-  kids: { he: 'ילדים', color: Colors.ACCENT },
-  casino: { he: 'בידור ומשחקים', color: Colors.GOLD },
-  abudhabi: { he: 'אבו דאבי', color: Colors.PINK },
+const TITLES: Record<string, { he: string; en: string; color: string }> = {
+  hotels: { he: 'מלונות', en: 'Hotels', color: Colors.GOLD },
+  attractions: { he: 'אטרקציות', en: 'Attractions', color: Colors.SECONDARY },
+  restaurants: { he: 'מסעדות', en: 'Restaurants', color: Colors.WARM },
+  shopping: { he: 'קניות', en: 'Shopping', color: Colors.WARM },
+  nightlife: { he: 'בילויים', en: 'Nightlife', color: Colors.PINK },
+  transport: { he: 'תחבורה', en: 'Transport', color: Colors.PRIMARY },
+  kids: { he: 'ילדים', en: 'Kids', color: Colors.ACCENT },
+  casino: { he: 'בידור ומשחקים', en: 'Entertainment & Gaming', color: Colors.GOLD },
+  abudhabi: { he: 'אבו דאבי', en: 'Abu Dhabi', color: Colors.PINK },
 };
 
 export default function CategoryMap() {
   const { t, lang } = useI18n();
   const { id } = useLocalSearchParams<{ id: string }>();
   const cat = id || '';
-  const meta = TITLES[cat] || { he: 'מפה', color: Colors.PRIMARY };
-  const catTitle = t('cat.' + cat).startsWith('cat.') ? (meta.he === 'מפה' ? t('catmap.map') : meta.he) : t('cat.' + cat);
+  const meta = TITLES[cat] || { he: 'מפה', en: 'Map', color: Colors.PRIMARY };
+  const metaTitle = lang === 'he' ? meta.he : (meta.en || meta.he);
+  const catTitle = t('cat.' + cat).startsWith('cat.') ? (meta.he === 'מפה' ? t('catmap.map') : metaTitle) : t('cat.' + cat);
   const items: any[] = (CATALOG as any)[cat] || [];
   const withCoords = items.filter(i => i.lat && i.lng);
 
@@ -33,11 +34,11 @@ export default function CategoryMap() {
     image: it.image ? (it.image.startsWith('http') ? it.image : 'https://wellcomedubai.com/' + it.image) : '',
     color: meta.color,
   }));
-  const html = `<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><style>html,body,#map{margin:0;padding:0;height:100%;width:100%;}.gm-style-iw{direction:rtl;font-family:-apple-system,sans-serif;}.popup-img{width:100%;height:120px;object-fit:cover;border-radius:6px;margin-bottom:6px;}.popup-name{font-weight:800;color:#2C5F6E;font-size:14px;}.popup-addr{font-size:11px;color:#6B7F8D;margin-top:4px;}.popup-meta{margin-top:5px;display:flex;gap:8px;font-size:12px;font-weight:700;}.popup-rating{color:#92400e;}.popup-price{color:#E76F51;}.popup-actions{display:flex;gap:6px;margin-top:8px;}.popup-btn{flex:1;padding:6px 8px;border-radius:5px;text-align:center;font-size:11px;font-weight:700;text-decoration:none;color:#fff;}</style></head><body><div id="map"></div><script>
+  const html = `<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><style>html,body,#map{margin:0;padding:0;height:100%;width:100%;}.gm-style-iw{direction:rtl;font-family:-apple-system,sans-serif;}.popup-img{width:100%;height:120px;object-fit:cover;border-radius:0;margin-bottom:6px;}.popup-name{font-weight:600;color:#2C5F6E;font-size:16px;letter-spacing:0.2px;}.popup-addr{font-size:11px;color:#6B7F8D;margin-top:4px;}.popup-meta{margin-top:5px;display:flex;gap:8px;font-size:12px;font-weight:700;}.popup-rating{color:#92400e;}.popup-price{color:#E76F51;}.popup-actions{display:flex;gap:6px;margin-top:8px;}.popup-btn{flex:1;padding:8px 8px;border-radius:0;text-align:center;font-size:12px;font-weight:600;text-decoration:none;color:#fff;}</style></head><body><div id="map"></div><script>
     const pts = ${JSON.stringify(markers)};
     function initMap(){
       const center = pts.length ? { lat: pts[0].lat, lng: pts[0].lng } : { lat: 25.2, lng: 55.27 };
-      const map = new google.maps.Map(document.getElementById('map'), { center, zoom: 11, mapTypeControl: false, streetViewControl: false, fullscreenControl: false });
+      const map = new google.maps.Map(document.getElementById('map'), { center, zoom: 11, mapTypeControl: false, streetViewControl: false, fullscreenControl: false, gestureHandling: 'cooperative' });
       const bounds = new google.maps.LatLngBounds();
       pts.forEach(p => {
         const m = new google.maps.Marker({ position: { lat: p.lat, lng: p.lng }, map, title: p.name, icon: { path: google.maps.SymbolPath.CIRCLE, scale: 9, fillColor: p.color, fillOpacity: 0.95, strokeColor: '#fff', strokeWeight: 2 } });
@@ -65,7 +66,7 @@ export default function CategoryMap() {
           <Text style={{ color: '#1A6B8A' }}>WellCome </Text>
           <Text style={{ color: '#E76F51' }}>Dubai</Text>
         </Text>
-        <TouchableOpacity onPress={() => router.back()} style={s.brandClose}>
+        <TouchableOpacity onPress={() => { if (router.canGoBack()) router.back(); else router.replace('/(tabs)/'); }} style={s.brandClose}>
           <Text style={{ color: '#2C5F6E', fontSize: 18, fontWeight: '700' }}>✕</Text>
         </TouchableOpacity>
       </View>
@@ -85,5 +86,5 @@ const s = StyleSheet.create({
   brandBar: { flexDirection: 'row-reverse', alignItems: 'center', paddingHorizontal: 14, paddingVertical: 10, backgroundColor: '#fff', borderBottomWidth: 1, borderBottomColor: '#E5E7EB' },
   brandTxt: { flex: 1, fontSize: 22, fontWeight: '900', letterSpacing: -0.3, textAlign: 'center' },
   brandClose: { width: 32, alignItems: 'center' },
-  title: { color: '#fff', fontSize: 16, fontWeight: '900', writingDirection: 'rtl', textAlign: 'right' },
+  title: { color: '#fff', fontSize: 22, fontWeight: '400', letterSpacing: 0.3, writingDirection: 'rtl', textAlign: 'right' },
 });

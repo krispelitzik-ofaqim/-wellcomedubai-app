@@ -18,6 +18,11 @@ const CAT_NAME: Record<string, string> = {
   nightlife: 'בילויים', kids: 'ילדים', transport: 'תחבורה', casino: 'בידור', abudhabi: 'אבו דאבי',
 };
 
+const CAT_NAME_EN: Record<string, string> = {
+  hotels: 'Hotels', restaurants: 'Restaurants', attractions: 'Attractions', shopping: 'Shopping',
+  nightlife: 'Nightlife', kids: 'Kids', transport: 'Transport', casino: 'Entertainment', abudhabi: 'Abu Dhabi',
+};
+
 const CAT_COLOR: Record<string, string> = {
   hotels: Colors.GOLD, restaurants: Colors.WARM, attractions: Colors.SECONDARY,
   shopping: Colors.WARM, nightlife: Colors.PINK, kids: Colors.ACCENT,
@@ -25,7 +30,8 @@ const CAT_COLOR: Record<string, string> = {
 };
 
 export default function FavoritesScreen() {
-  const { t } = useI18n();
+  const { t, lang, isRTL } = useI18n();
+  const s = makeStyles(isRTL);
   const [items, setItems] = useState<{ fav: Favorite; data: any }[]>([]);
 
   const load = useCallback(async () => {
@@ -53,7 +59,7 @@ export default function FavoritesScreen() {
         <Text style={s.title}>{t('fav.title')}</Text>
         <Text style={s.subtitle}>{items.length} {t('fav.items')}</Text>
       </View>
-      <ScrollView contentContainerStyle={{ padding: 12, paddingBottom: 60 }}>
+      <ScrollView contentContainerStyle={{ paddingBottom: 60 }}>
         {items.length === 0 ? (
           <View style={s.empty}>
             <Text style={{ fontSize: 56 }}>🤍</Text>
@@ -65,10 +71,10 @@ export default function FavoritesScreen() {
             <Image source={{ uri: imgUrl(data.image) }} style={s.cardImg} />
             <View style={s.cardBody}>
               <View style={[s.catChip, { backgroundColor: CAT_COLOR[fav.cat] || Colors.PRIMARY }]}>
-                <Text style={s.catChipTxt}>{t('cat.' + fav.cat).startsWith('cat.') ? (CAT_NAME[fav.cat] || fav.cat) : t('cat.' + fav.cat)}</Text>
+                <Text style={s.catChipTxt}>{t('cat.' + fav.cat).startsWith('cat.') ? ((lang === 'he' ? CAT_NAME[fav.cat] : (CAT_NAME_EN[fav.cat] || CAT_NAME[fav.cat])) || fav.cat) : t('cat.' + fav.cat)}</Text>
               </View>
               <Text style={s.cardName} numberOfLines={2}>{data.name}</Text>
-              <View style={{ flexDirection: 'row-reverse', justifyContent: 'space-between', marginTop: 4 }}>
+              <View style={{ flexDirection: isRTL ? 'row-reverse' : 'row', justifyContent: 'space-between', marginTop: 4 }}>
                 {data.rating ? <Text style={s.rating}>⭐ {data.rating}</Text> : <Text> </Text>}
                 {data.address ? <Text style={s.address} numberOfLines={1}>📍 {data.address}</Text> : null}
               </View>
@@ -80,22 +86,22 @@ export default function FavoritesScreen() {
   );
 }
 
-const s = StyleSheet.create({
+const makeStyles = (isRTL: boolean) => StyleSheet.create({
   container: { flex: 1, backgroundColor: Colors.BG },
   brandBar: { paddingHorizontal: 14, paddingVertical: 10, backgroundColor: '#fff', borderBottomWidth: 1, borderBottomColor: '#E5E7EB', alignItems: 'center' },
   brandTxt: { fontSize: 22, fontWeight: '900', letterSpacing: -0.3 },
-  header: { paddingHorizontal: 18, paddingTop: 8, paddingBottom: 14, backgroundColor: '#fff', borderBottomWidth: 1, borderBottomColor: '#E8DEC8' },
-  title: { fontSize: 18, fontWeight: '900', color: '#1A4A5E', writingDirection: 'rtl', textAlign: 'right' },
-  subtitle: { color: Colors.MUTED, fontSize: 12, marginTop: 2, writingDirection: 'rtl', textAlign: 'right' },
+  header: { paddingHorizontal: 18, paddingTop: 10, paddingBottom: 16, backgroundColor: '#fff', borderBottomWidth: 1, borderBottomColor: '#EAE0CE' },
+  title: { fontSize: 24, fontWeight: '400', letterSpacing: 0.3, color: '#1A4A5E', writingDirection: isRTL ? 'rtl' : 'ltr', textAlign: isRTL ? 'right' : 'left' },
+  subtitle: { color: Colors.MUTED, fontSize: 13, marginTop: 3, writingDirection: isRTL ? 'rtl' : 'ltr', textAlign: isRTL ? 'right' : 'left' },
   empty: { alignItems: 'center', padding: 60 },
-  emptyTitle: { fontSize: 18, fontWeight: '900', color: Colors.TEXT, marginTop: 14, writingDirection: 'rtl' },
-  emptySub: { color: Colors.MUTED, fontSize: 13, textAlign: 'center', marginTop: 6, writingDirection: 'rtl' },
-  card: { flexDirection: 'row-reverse', backgroundColor: '#fff', borderRadius: 10, marginBottom: 10, overflow: 'hidden', borderWidth: 1, borderColor: '#E8DEC8' },
+  emptyTitle: { fontSize: 20, fontWeight: '600', letterSpacing: 0.2, color: Colors.TEXT, marginTop: 14, writingDirection: isRTL ? 'rtl' : 'ltr' },
+  emptySub: { color: Colors.MUTED, fontSize: 14, textAlign: 'center', marginTop: 6, lineHeight: 20, writingDirection: isRTL ? 'rtl' : 'ltr' },
+  card: { flexDirection: isRTL ? 'row-reverse' : 'row', backgroundColor: '#fff', borderRadius: 0, overflow: 'hidden', borderBottomWidth: 1, borderBottomColor: '#EAE0CE' },
   cardImg: { width: 110, height: 110 },
-  cardBody: { flex: 1, padding: 12 },
-  catChip: { alignSelf: 'flex-end', paddingHorizontal: 8, paddingVertical: 2, borderRadius: 6, marginBottom: 6 },
-  catChipTxt: { color: '#fff', fontSize: 10, fontWeight: '800' },
-  cardName: { fontWeight: '900', color: Colors.TEXT, fontSize: 14, writingDirection: 'rtl', textAlign: 'right' },
-  rating: { color: Colors.GOLD, fontSize: 12, fontWeight: '800' },
-  address: { color: Colors.MUTED, fontSize: 11, flex: 1, textAlign: 'left', marginRight: 8 },
+  cardBody: { flex: 1, paddingHorizontal: 16, paddingVertical: 14, justifyContent: 'center' },
+  catChip: { alignSelf: 'flex-end', paddingHorizontal: 9, paddingVertical: 3, borderRadius: 0, marginBottom: 7 },
+  catChipTxt: { color: '#fff', fontSize: 11, fontWeight: '700', letterSpacing: 0.2 },
+  cardName: { fontWeight: '500', fontSize: 19, letterSpacing: 0.2, color: Colors.TEXT, writingDirection: isRTL ? 'rtl' : 'ltr', textAlign: isRTL ? 'right' : 'left' },
+  rating: { color: Colors.GOLD, fontSize: 13, fontWeight: '700' },
+  address: { color: Colors.MUTED, fontSize: 12, flex: 1, textAlign: 'left', marginRight: 8 },
 });

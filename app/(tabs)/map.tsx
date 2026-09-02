@@ -1,23 +1,26 @@
 import { useState, useMemo } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Linking } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Linking, Modal } from 'react-native';
 import { openMapsChoice } from '../../utils/maps';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { WebView } from 'react-native-webview';
+import { WebView } from '../../components/WebView';
 import { router } from 'expo-router';
 import { Colors } from '../../constants/colors';
 import { useI18n } from '../../constants/i18n';
 import { CATALOG } from '../../data/catalog';
+import { tcRu } from '../../constants/contentRu';
+import { tcHi } from '../../constants/contentHi';
+import { tcAr } from '../../constants/contentAr';
 
 const FILTERS = [
-  { key: 'hotels',      label: 'מלונות',   color: '#B8923A' },
-  { key: 'restaurants', label: 'מסעדות',   color: '#F4A261' },
-  { key: 'attractions', label: 'אטרקציות', color: '#2A9D8F' },
-  { key: 'shopping',    label: 'קניות',    color: '#F4A261' },
-  { key: 'nightlife',   label: 'בילויים',  color: '#B85C8E' },
-  { key: 'kids',        label: 'ילדים',    color: '#E76F51' },
-  { key: 'transport',   label: 'תחבורה',   color: '#1A6B8A' },
-  { key: 'casino',      label: 'בידור',    color: '#E9C46A' },
-  { key: 'all',         label: 'הכל',      color: '#2C5F6E' },
+  { key: 'hotels',      label: 'מלונות',   labelEn: 'Hotels',        color: '#B8923A' },
+  { key: 'restaurants', label: 'מסעדות',   labelEn: 'Restaurants',   color: '#F4A261' },
+  { key: 'attractions', label: 'אטרקציות', labelEn: 'Attractions',   color: '#2A9D8F' },
+  { key: 'shopping',    label: 'קניות',    labelEn: 'Shopping',      color: '#F4A261' },
+  { key: 'nightlife',   label: 'בילויים',  labelEn: 'Nightlife',     color: '#B85C8E' },
+  { key: 'kids',        label: 'ילדים',    labelEn: 'Kids',          color: '#E76F51' },
+  { key: 'transport',   label: 'תחבורה',   labelEn: 'Transport',     color: '#1A6B8A' },
+  { key: 'casino',      label: 'בידור',    labelEn: 'Entertainment', color: '#E9C46A' },
+  { key: 'all',         label: 'הכל',      labelEn: 'All',           color: '#2C5F6E' },
 ];
 
 const AREAS = [
@@ -40,9 +43,13 @@ const CATEGORY_COLORS: Record<string, string> = {
 };
 
 export default function MapScreen() {
-  const { t, lang } = useI18n();
+  const { t, lang, isRTL } = useI18n();
+  const s = makeStyles(isRTL);
   const [filter, setFilter] = useState('hotels');
   const [areasOn, setAreasOn] = useState(false);
+  const [areaModal, setAreaModal] = useState<any>(null);   // in-app closable area map window
+
+  const areaLabel = (a: any) => (lang === 'ar' ? tcAr(a.name) : lang === 'hi' ? tcHi(a.name) : lang === 'ru' ? tcRu(a.name) : lang === 'en' ? a.nameEn : a.name) || `Area ${a.num}`;
 
   const allItems = useMemo(() => {
     const items: any[] = [];
@@ -64,7 +71,7 @@ export default function MapScreen() {
     return `<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><style>html,body,#map{margin:0;padding:0;height:100%;width:100%;}.gm-style-iw{direction:rtl;font-family:-apple-system,sans-serif;}</style></head><body><div id="map"></div><script>
       const pts = ${JSON.stringify(pts)};
       function initMap(){
-        const map = new google.maps.Map(document.getElementById('map'), { center: { lat: 25.20, lng: 55.27 }, zoom: 11, mapTypeControl: false, streetViewControl: false, fullscreenControl: false });
+        const map = new google.maps.Map(document.getElementById('map'), { center: { lat: 25.20, lng: 55.27 }, zoom: 11, mapTypeControl: false, streetViewControl: false, fullscreenControl: false, gestureHandling: 'cooperative' });
         ${areasOn ? `
         ${JSON.stringify(AREAS)}.forEach(a => {
           new google.maps.Polygon({ paths: a.poly.map(p => ({ lat: p[0], lng: p[1] })), strokeColor: a.color, strokeOpacity: 0.9, strokeWeight: 2, fillColor: a.color, fillOpacity: 0.25, map });
@@ -97,7 +104,7 @@ export default function MapScreen() {
           const isActive = filter === f.key;
           return (
             <TouchableOpacity key={f.key} onPress={() => setFilter(f.key)} style={[s.filterTab, isActive && { borderBottomColor: Colors.GOLD, backgroundColor: '#F5E6CB' }]}>
-              <Text style={[s.filterTxt, isActive && { color: Colors.TEXT, fontWeight: '900' }]}>{f.key === 'all' ? t('common.all') : (t('cat.' + f.key).startsWith('cat.') ? f.label : t('cat.' + f.key))}</Text>
+              <Text style={[s.filterTxt, isActive && { color: Colors.TEXT, fontWeight: '700' }]}>{f.key === 'all' ? t('common.all') : (t('cat.' + f.key).startsWith('cat.') ? (lang === 'he' ? f.label : (f.labelEn || f.label)) : t('cat.' + f.key))}</Text>
             </TouchableOpacity>
           );
         })}
@@ -112,9 +119,9 @@ export default function MapScreen() {
       {areasOn ? (
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 14, gap: 8, paddingBottom: 8 }} style={{ flexGrow: 0 }}>
           {AREAS.map(a => (
-            <TouchableOpacity key={a.num} style={[s.areaCard, { borderColor: a.color }]} onPress={() => openMapsChoice(a.poly[0][0], a.poly[0][1], (lang === 'en' ? a.nameEn : a.name) || `Area ${a.num}`, 'show')}>
-              <Text style={[s.areaName, { color: a.color, writingDirection: lang === 'en' ? 'ltr' : 'rtl', textAlign: lang === 'en' ? 'left' : 'right' }]}>{lang === 'en' ? a.nameEn : a.name}</Text>
-              <Text style={[s.areaDesc, { writingDirection: lang === 'en' ? 'ltr' : 'rtl', textAlign: lang === 'en' ? 'left' : 'right' }]} numberOfLines={3}>{lang === 'en' ? a.descEn : a.desc}</Text>
+            <TouchableOpacity key={a.num} style={[s.areaCard, { borderRightColor: a.color }]} onPress={() => setAreaModal(a)}>
+              <Text style={[s.areaName, { color: a.color, writingDirection: isRTL ? 'rtl' : 'ltr', textAlign: isRTL ? 'right' : 'left' }]}>{lang === 'ar' ? tcAr(a.name) : lang === 'hi' ? tcHi(a.name) : lang === 'ru' ? tcRu(a.name) : lang === 'en' ? a.nameEn : a.name}</Text>
+              <Text style={[s.areaDesc, { writingDirection: isRTL ? 'rtl' : 'ltr', textAlign: isRTL ? 'right' : 'left' }]} numberOfLines={3}>{lang === 'ar' ? tcAr(a.desc) : lang === 'hi' ? tcHi(a.desc) : lang === 'ru' ? tcRu(a.desc) : lang === 'en' ? a.descEn : a.desc}</Text>
             </TouchableOpacity>
           ))}
         </ScrollView>
@@ -123,25 +130,47 @@ export default function MapScreen() {
       <View style={s.mapWrap}>
         <WebView originWhitelist={['*']} source={{ html }} style={{ flex: 1 }} />
       </View>
+
+      <Modal visible={!!areaModal} animationType="slide" onRequestClose={() => setAreaModal(null)}>
+        <View style={{ flex: 1, backgroundColor: '#000' }}>
+          <SafeAreaView edges={['top']} style={{ backgroundColor: '#1A4A5E' }} />
+          <View style={{ flexDirection: isRTL ? 'row-reverse' : 'row', alignItems: 'center', justifyContent: 'space-between', backgroundColor: '#1A4A5E', paddingHorizontal: 16, paddingVertical: 12 }}>
+            <Text style={{ color: '#fff', fontSize: 16, fontWeight: '800', flex: 1, textAlign: isRTL ? 'right' : 'left' }} numberOfLines={1}>{areaModal ? areaLabel(areaModal) : ''}</Text>
+            <TouchableOpacity onPress={() => setAreaModal(null)} hitSlop={{ top: 16, bottom: 16, left: 16, right: 16 }} style={{ paddingHorizontal: 14, paddingVertical: 8, borderRadius: 18, backgroundColor: '#E76F51' }}>
+              <Text style={{ color: '#fff', fontWeight: '900', fontSize: 15 }}>✕</Text>
+            </TouchableOpacity>
+          </View>
+          {areaModal ? (
+            <WebView
+              originWhitelist={['*']}
+              source={{ html: `<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><style>html,body,#m{margin:0;padding:0;height:100%;width:100%;}</style></head><body><div id="m"></div><script>function init(){const poly=${JSON.stringify(areaModal.poly)}.map(p=>({lat:p[0],lng:p[1]}));const map=new google.maps.Map(document.getElementById('m'),{mapTypeControl:false,streetViewControl:false,fullscreenControl:false,gestureHandling:'greedy'});new google.maps.Polygon({paths:poly,strokeColor:'${areaModal.color}',strokeOpacity:0.95,strokeWeight:2,fillColor:'${areaModal.color}',fillOpacity:0.22,map});const b=new google.maps.LatLngBounds();poly.forEach(p=>b.extend(p));map.fitBounds(b,30);}</script><script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDw09Bg7XaH7apEWJBcFtogVfrdUwF_gEM&language=${lang}&callback=init" async defer></script></body></html>` }}
+              style={{ flex: 1 }}
+            />
+          ) : null}
+          <TouchableOpacity onPress={() => areaModal && openMapsChoice(areaModal.poly[0][0], areaModal.poly[0][1], areaLabel(areaModal), 'navigate')} style={{ backgroundColor: Colors.PRIMARY, paddingVertical: 15, alignItems: 'center' }}>
+            <Text style={{ color: '#fff', fontWeight: '800', fontSize: 15 }}>{t('act.navigateMe')}</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
     </View>
   );
 }
 
-const s = StyleSheet.create({
+const makeStyles = (isRTL: boolean) => StyleSheet.create({
   container: { flex: 1, backgroundColor: Colors.BG },
-  brandBar: { flexDirection: 'row-reverse', alignItems: 'center', paddingHorizontal: 14, paddingVertical: 10, backgroundColor: '#fff', borderBottomWidth: 1, borderBottomColor: '#E5E7EB' },
+  brandBar: { flexDirection: isRTL ? 'row-reverse' : 'row', alignItems: 'center', paddingHorizontal: 14, paddingVertical: 10, backgroundColor: '#fff', borderBottomWidth: 1, borderBottomColor: '#E5E7EB' },
   brandTxt: { flex: 1, fontSize: 22, fontWeight: '900', letterSpacing: -0.3, textAlign: 'center' },
-  header: { flexDirection: 'row-reverse', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 14, paddingVertical: 10, backgroundColor: '#fff', borderBottomWidth: 1, borderBottomColor: '#E8DEC8' },
+  header: { flexDirection: isRTL ? 'row-reverse' : 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 14, paddingVertical: 10, backgroundColor: '#fff', borderBottomWidth: 1, borderBottomColor: '#E8DEC8' },
   closeBtn: { width: 32, height: 32, borderRadius: 16, backgroundColor: '#E76F51', alignItems: 'center', justifyContent: 'center' },
   closeBtnTxt: { color: '#fff', fontSize: 18, fontWeight: '900', lineHeight: 20 },
-  title: { fontSize: 16, fontWeight: '900', color: '#1A4A5E', writingDirection: 'rtl', textAlign: 'center', flex: 1 },
+  title: { fontSize: 24, fontWeight: '400', color: '#1A4A5E', letterSpacing: 0.3, writingDirection: isRTL ? 'rtl' : 'ltr', textAlign: 'center', flex: 1 },
   filtersRow: { paddingHorizontal: 16, alignItems: 'center', backgroundColor: '#fff' },
   filterTab: { paddingVertical: 10, paddingHorizontal: 14, borderBottomWidth: 3, borderBottomColor: 'transparent', height: 44, justifyContent: 'center' },
-  filterTxt: { fontSize: 14, fontWeight: '600', color: '#9CA3AF', writingDirection: 'rtl' },
-  areasBtn: { padding: 10, borderRadius: 8, borderWidth: 1, borderColor: '#E5E7EB', backgroundColor: '#fff', alignItems: 'center' },
-  areasBtnTxt: { color: Colors.TEXT, fontWeight: '700', fontSize: 14 },
-  areaCard: { width: 170, backgroundColor: '#fff', borderWidth: 2, borderRadius: 8, padding: 10 },
-  areaName: { fontWeight: '800', fontSize: 13, marginBottom: 4, writingDirection: 'rtl', textAlign: 'right' },
-  areaDesc: { fontSize: 11, color: Colors.TEXT, lineHeight: 14, writingDirection: 'rtl', textAlign: 'right' },
-  mapWrap: { flex: 1, marginHorizontal: 12, marginBottom: 12, borderRadius: 16, overflow: 'hidden', borderWidth: 1, borderColor: '#E5E7EB' },
+  filterTxt: { fontSize: 15, fontWeight: '500', color: '#9CA3AF', writingDirection: isRTL ? 'rtl' : 'ltr' },
+  areasBtn: { paddingVertical: 12, paddingHorizontal: 16, borderRadius: 0, borderWidth: 0, backgroundColor: Colors.GOLD, alignItems: 'center' },
+  areasBtnTxt: { color: '#fff', fontWeight: '600', fontSize: 15, letterSpacing: 0.2 },
+  areaCard: { width: 180, backgroundColor: '#fff', borderRadius: 0, borderRightWidth: 4, borderRightColor: '#E76F51', borderBottomWidth: 1, borderBottomColor: '#EAE0CE', padding: 14 },
+  areaName: { fontWeight: '600', fontSize: 16, letterSpacing: 0.2, marginBottom: 5, writingDirection: isRTL ? 'rtl' : 'ltr', textAlign: isRTL ? 'right' : 'left' },
+  areaDesc: { fontSize: 12, color: Colors.MUTED, lineHeight: 16, writingDirection: isRTL ? 'rtl' : 'ltr', textAlign: isRTL ? 'right' : 'left' },
+  mapWrap: { flex: 1, borderRadius: 0, overflow: 'hidden' },
 });

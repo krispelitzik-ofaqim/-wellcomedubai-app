@@ -2,12 +2,20 @@ import { useState, useRef, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Linking, FlatList, Dimensions, NativeSyntheticEvent, NativeScrollEvent, Alert, Modal, Pressable } from 'react-native';
 import { openMapsChoice } from '../utils/maps';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { WebView } from 'react-native-webview';
+import { WebView } from '../components/WebView';
+import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ImagePicker from 'expo-image-picker';
+import { Audio } from 'expo-av';
+import * as Speech from 'expo-speech';
+import { GUIDED_AUDIO } from '../data/guided-narration';
+import { STOPS_AUDIO } from '../data/stops-narration';
 import { Colors } from '../constants/colors';
 import { useI18n } from '../constants/i18n';
+import { tcRu } from '../constants/contentRu';
+import { tcHi } from '../constants/contentHi';
+import { tcAr } from '../constants/contentAr';
 import { ITINERARIES } from '../data/itineraries';
 import { STAR_HUBS, type StarHub } from '../data/star-hubs';
 import { CATALOG } from '../data/catalog';
@@ -27,6 +35,90 @@ const PHOTOS_BY_CAT_MT: Record<string, any> = {
   kids: KIDS_PHOTOS, nightlife: NIGHTLIFE_PHOTOS, shopping: SHOPPING_PHOTOS,
   transport: TRANSPORT_PHOTOS, casino: CASINO_PHOTOS, abudhabi: ABUDHABI_PHOTOS,
 };
+
+// Hebrew narration via the device's built-in Hebrew voice (Carmit) — no API key, real Hebrew.
+function HebrewTTS({ text, color }: { text: string; color: string }) {
+  const [playing, setPlaying] = useState(false);
+  const voiceRef = useRef<string | undefined>(undefined);
+  useEffect(() => {
+    (async () => {
+      try {
+        const vs: any[] = await Speech.getAvailableVoicesAsync();
+        const he = vs.find(v => (v.language || '').toLowerCase().startsWith('he'));
+        voiceRef.current = he?.identifier;
+      } catch {}
+    })();
+    return () => { Speech.stop(); };
+  }, []);
+  const clean = (text || '').replace(/\s+/g, ' ').trim();
+  const toggle = async () => {
+    if (playing) { Speech.stop(); setPlaying(false); return; }
+    if (!voiceRef.current) {
+      try { const vs: any[] = await Speech.getAvailableVoicesAsync(); voiceRef.current = vs.find(v => (v.language || '').toLowerCase().startsWith('he'))?.identifier; } catch {}
+    }
+    setPlaying(true);
+    Speech.speak(clean, { language: 'he-IL', voice: voiceRef.current, onDone: () => setPlaying(false), onStopped: () => setPlaying(false), onError: () => setPlaying(false) });
+  };
+  return (
+    <TouchableOpacity onPress={toggle} activeOpacity={0.7} style={{ flexDirection: 'row-reverse', alignItems: 'center', gap: 8, marginTop: 10 }}>
+      <View style={{ width: 30, height: 30, borderRadius: 15, backgroundColor: color, alignItems: 'center', justifyContent: 'center' }}>
+        <Text style={{ color: '#fff', fontSize: 11, fontWeight: '700' }}>{playing ? '❚❚' : '▶'}</Text>
+      </View>
+      <Text style={{ color, fontSize: 13, fontWeight: '700' }}>{playing ? 'מנגן…' : 'האזן לתחנה'}</Text>
+    </TouchableOpacity>
+  );
+}
+
+// Minimal audio player for guided-tour stops (pre-rendered ElevenLabs narration per language).
+function StopAudio({ source, color }: { source: any; color: string }) {
+  const soundRef = useRef<Audio.Sound | null>(null);
+  const [playing, setPlaying] = useState(false);
+  const [pos, setPos] = useState(0);
+  const [dur, setDur] = useState(0);
+  useEffect(() => {
+    let mounted = true;
+    (async () => {
+      try { await Audio.setAudioModeAsync({ playsInSilentModeIOS: true, shouldDuckAndroid: true }); } catch {}
+      const { sound } = await Audio.Sound.createAsync(source, { shouldPlay: false });
+      if (!mounted) { sound.unloadAsync(); return; }
+      soundRef.current = sound;
+      sound.setOnPlaybackStatusUpdate((st: any) => {
+        if (!st.isLoaded) return;
+        setDur(st.durationMillis || 0); setPos(st.positionMillis || 0); setPlaying(!!st.isPlaying);
+        if (st.didJustFinish) { setPlaying(false); sound.setPositionAsync(0); }
+      });
+    })();
+    return () => { mounted = false; soundRef.current?.unloadAsync(); };
+  }, [source]);
+  const [speed, setSpeed] = useState<1 | 1.5 | 2>(1);
+  const toggle = async () => {
+    const s = soundRef.current; if (!s) return;
+    const st: any = await s.getStatusAsync(); if (!st.isLoaded) return;
+    if (st.isPlaying) await s.pauseAsync();
+    else { if (st.positionMillis >= (st.durationMillis || 0) - 200) await s.setPositionAsync(0); await s.playAsync(); }
+  };
+  const setSp = async (sp: 1 | 1.5 | 2) => { setSpeed(sp); try { await soundRef.current?.setRateAsync(sp, true); } catch {} };
+  const pct = dur ? (pos / dur) * 100 : 0;
+  return (
+    <View style={{ marginTop: 10 }}>
+      <TouchableOpacity onPress={toggle} activeOpacity={0.7} style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+        <View style={{ width: 30, height: 30, borderRadius: 15, backgroundColor: color, alignItems: 'center', justifyContent: 'center' }}>
+          <Text style={{ color: '#fff', fontSize: 11, fontWeight: '700' }}>{playing ? '❚❚' : '▶'}</Text>
+        </View>
+        <View style={{ flex: 1, height: 4, backgroundColor: 'rgba(0,0,0,0.1)', borderRadius: 2 }}>
+          <View style={{ width: `${pct}%`, height: '100%', backgroundColor: color, borderRadius: 2 }} />
+        </View>
+      </TouchableOpacity>
+      <View style={{ flexDirection: 'row', gap: 6, marginTop: 6 }}>
+        {([1, 1.5, 2] as const).map(sp => (
+          <TouchableOpacity key={sp} onPress={() => setSp(sp)} style={{ paddingHorizontal: 9, paddingVertical: 3, borderRadius: 6, backgroundColor: speed === sp ? color : 'rgba(0,0,0,0.06)' }}>
+            <Text style={{ fontSize: 12, fontWeight: '800', color: speed === sp ? '#fff' : '#666' }}>x{sp}</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+    </View>
+  );
+}
 
 function thumbUrl(cat: string, id: any, fallback: string): string {
   const entry = PHOTOS_BY_CAT_MT[cat]?.[String(id)];
@@ -60,11 +152,11 @@ const HEB_DAYS = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמיש�
 const EN_DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 const HEB_MONTHS_SHORT = ['ינו', 'פבר', 'מרץ', 'אפר', 'מאי', 'יוני', 'יולי', 'אוג', 'ספט', 'אוק', 'נוב', 'דצמ'];
 const EN_MONTHS_SHORT = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-const dayName = (dow: number, lang: string) => (lang === 'en' ? EN_DAYS : HEB_DAYS)[dow];
-const monthShort = (m: number, lang: string) => (lang === 'en' ? EN_MONTHS_SHORT : HEB_MONTHS_SHORT)[m];
+const dayName = (dow: number, lang: string) => lang === 'ar' ? tcAr(HEB_DAYS[dow]) : lang === 'hi' ? tcHi(HEB_DAYS[dow]) : lang === 'ru' ? tcRu(HEB_DAYS[dow]) : (lang === 'en' ? EN_DAYS : HEB_DAYS)[dow];
+const monthShort = (m: number, lang: string) => lang === 'ar' ? tcAr(HEB_MONTHS_SHORT[m]) : lang === 'hi' ? tcHi(HEB_MONTHS_SHORT[m]) : lang === 'ru' ? tcRu(HEB_MONTHS_SHORT[m]) : (lang === 'en' ? EN_MONTHS_SHORT : HEB_MONTHS_SHORT)[m];
 
 function formatDayDate(startDate: Date | null, dayNum: number, lang: string = 'he') {
-  if (!startDate) return `${lang === 'en' ? 'Day' : 'יום'} ${dayNum}`;
+  if (!startDate) return `${lang === 'ar' ? tcAr('יום') : lang === 'hi' ? tcHi('יום') : lang === 'ru' ? tcRu('יום') : lang === 'en' ? 'Day' : 'יום'} ${dayNum}`;
   const d = new Date(startDate);
   d.setDate(d.getDate() + (dayNum - 1));
   return `${dayName(d.getDay(), lang)} ${d.getDate()}/${d.getMonth() + 1}`;
@@ -101,20 +193,40 @@ function RateRow({ storageKey, color }: { storageKey: string; color: string }) {
   );
 }
 
+const ALBUM_API = 'https://wellcomedubaicom-production.up.railway.app';
+const albumImg = (p: string) => (p.startsWith('http') ? p : ALBUM_API + p);
+
+// Shared visitors' album — photos are uploaded to the server and shown to ALL users
+// (keyed per tour/itinerary), not just saved on the uploader's device.
 function AlbumRow({ storageKey, color }: { storageKey: string; color: string }) {
   const { t } = useI18n();
   const [open, setOpen] = useState(false);
   const [photos, setPhotos] = useState<string[]>([]);
-  useEffect(() => { AsyncStorage.getItem(storageKey).then(v => { if (v) try { setPhotos(JSON.parse(v)); } catch {} }); }, [storageKey]);
+  const [busy, setBusy] = useState(false);
+  const load = () => {
+    fetch(`${ALBUM_API}/api/album?key=${encodeURIComponent(storageKey)}`)
+      .then(r => r.json()).then(j => { if (Array.isArray(j.photos)) setPhotos(j.photos); }).catch(() => {});
+  };
+  useEffect(() => { load(); }, [storageKey]);
   const add = async () => {
     const perm = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (!perm.granted) { Alert.alert(t('itin.permTitle'), t('itin.permMsg')); return; }
     const res = await ImagePicker.launchImageLibraryAsync({ mediaTypes: ImagePicker.MediaTypeOptions.Images, allowsMultipleSelection: true, quality: 0.7 });
     if (res.canceled) return;
-    const uris = res.assets.map(a => a.uri);
-    const next = [...photos, ...uris];
-    setPhotos(next);
-    AsyncStorage.setItem(storageKey, JSON.stringify(next));
+    setBusy(true);
+    try {
+      const fd = new FormData();
+      fd.append('key', storageKey);
+      for (let i = 0; i < res.assets.length; i++) {
+        const uri = res.assets[i].uri;
+        if (Platform.OS === 'web') { const blob = await (await fetch(uri)).blob(); fd.append('photos', blob, `photo_${i}.jpg`); }
+        else { fd.append('photos', { uri, name: `photo_${i}.jpg`, type: 'image/jpeg' } as any); }
+      }
+      const r = await fetch(`${ALBUM_API}/api/album`, { method: 'POST', body: fd as any });
+      const j = await r.json();
+      if (Array.isArray(j.photos)) setPhotos(j.photos); else throw new Error('bad');
+    } catch { Alert.alert(t('itin.permTitle'), t('sp.errMsg') || 'ההעלאה נכשלה, נסה שוב.'); }
+    finally { setBusy(false); }
   };
   return (
     <View style={s.albumBox}>
@@ -124,12 +236,12 @@ function AlbumRow({ storageKey, color }: { storageKey: string; color: string }) 
       </TouchableOpacity>
       {open ? (
         <View style={{ padding: 10 }}>
-          <TouchableOpacity onPress={add} style={[s.albumAddBtn, { backgroundColor: color }]}>
-            <Text style={s.albumAddTxt}>{t('itin.uploadPhoto')}</Text>
+          <TouchableOpacity onPress={add} disabled={busy} style={[s.albumAddBtn, { backgroundColor: color, opacity: busy ? 0.6 : 1 }]}>
+            <Text style={s.albumAddTxt}>{busy ? '…' : t('itin.uploadPhoto')}</Text>
           </TouchableOpacity>
           {photos.length ? (
             <View style={s.photoGrid}>
-              {photos.map((p, i) => <Image key={i} source={{ uri: p }} style={s.photoThumb} />)}
+              {photos.map((p, i) => <Image key={i} source={{ uri: albumImg(p) }} style={s.photoThumb} />)}
             </View>
           ) : (
             <Text style={s.albumEmpty}>{t('itin.albumEmpty')}</Text>
@@ -143,16 +255,21 @@ function AlbumRow({ storageKey, color }: { storageKey: string; color: string }) 
 const { width: SCREEN_W } = Dimensions.get('window');
 
 function ItineraryCard({ it, idx }: { it: any; idx: number }) {
-  const { t, lang } = useI18n();
+  const { t, lang, isRTL } = useI18n();
   const [slide, setSlide] = useState(0);
   const ref = useRef<FlatList>(null);
   const stops = it.stops || [];
   const en = lang === 'en';
-  const itTitle = en ? (it.titleEn || it.title) : it.title;
-  const itDuration = en ? (it.durationEn || it.duration) : it.duration;
-  const itBestFor = en ? (it.bestForEn || it.bestFor) : it.bestFor;
-  const stopName = (st: any) => en ? (st.nameEn || st.name) : st.name;
-  const stopDesc = (st: any) => en ? (st.descEn || st.desc) : st.desc;
+  const itTitle = lang === 'ar' ? tcAr(it.title) : lang === 'hi' ? tcHi(it.title) : lang === 'ru' ? tcRu(it.title) : en ? (it.titleEn || it.title) : it.title;
+  const itDuration = lang === 'ar' ? tcAr(it.duration) : lang === 'hi' ? tcHi(it.duration) : lang === 'ru' ? tcRu(it.duration) : en ? (it.durationEn || it.duration) : it.duration;
+  const itBestFor = lang === 'ar' ? tcAr(it.bestFor) : lang === 'hi' ? tcHi(it.bestFor) : lang === 'ru' ? tcRu(it.bestFor) : en ? (it.bestForEn || it.bestFor) : it.bestFor;
+  const stopName = (st: any) => lang === 'ar' ? tcAr(st.name) : lang === 'hi' ? tcHi(st.name) : lang === 'ru' ? tcRu(st.name) : en ? (st.nameEn || st.name) : st.name;
+  const stopDesc = (st: any) => lang === 'ar' ? tcAr(st.desc) : lang === 'hi' ? tcHi(st.desc) : lang === 'ru' ? tcRu(st.desc) : en ? (st.descEn || st.desc) : st.desc;
+  // Full explanatory paragraph per site (shown when the stop is expanded). Per-language; only rendered if it exists.
+  const stopInfo = (st: any) => ({ he: st.info, en: st.infoEn, ar: st.infoAr, hi: st.infoHi, ru: st.infoRu } as any)[lang];
+  // GetYourGuide affiliate ticket link for ticketed sites (marked ticket:true in the data).
+  const ticketUrl = (name: string) => `https://www.getyourguide.com/s/?q=${encodeURIComponent(name + ' Dubai')}&partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C`;
+  const buyLabel = ({ he: 'רכוש כרטיס', en: 'Buy ticket', ru: 'Купить билет', ar: 'شراء تذكرة', hi: 'टिकट खरीदें' } as any)[lang] || 'Buy ticket';
   const [openStop, setOpenStop] = useState<number | null>(null);
   const [mapBig, setMapBig] = useState(false);
   const [expanded, setExpanded] = useState(false);
@@ -170,15 +287,28 @@ function ItineraryCard({ it, idx }: { it: any; idx: number }) {
 
   return (
     <View style={s.card}>
-      <TouchableOpacity onPress={() => setExpanded(e => !e)} activeOpacity={0.85} style={[s.accHead, { backgroundColor: it.color + '1A', borderBottomWidth: expanded ? 1 : 0, borderBottomColor: '#F0E6D2' }]}>
-        <View style={[s.accBadge, { backgroundColor: it.color }]}>
+      <TouchableOpacity onPress={() => setExpanded(e => !e)} activeOpacity={0.9} style={[s.accHead, { borderBottomWidth: expanded ? 1 : 0, borderBottomColor: '#F0E6D2' }]}>
+        {(stops[0]?.image || it.image) ? (
+          <Image source={{ uri: stops[0]?.image || it.image }} style={StyleSheet.absoluteFill} resizeMode="cover" />
+        ) : (
+          <View style={[StyleSheet.absoluteFill, { backgroundColor: it.color }]} />
+        )}
+        <LinearGradient
+          colors={[it.color + 'F2', it.color + '99', it.color + '11']}
+          locations={[0, 0.55, 1]}
+          start={{ x: isRTL ? 1 : 0, y: 0.5 }}
+          end={{ x: isRTL ? 0 : 1, y: 0.5 }}
+          style={StyleSheet.absoluteFill}
+          pointerEvents="none"
+        />
+        <View style={[s.accBadge, { backgroundColor: 'rgba(255,255,255,0.22)' }]}>
           <Text style={s.accBadgeIcon}>{it.icon}</Text>
         </View>
         <View style={{ flex: 1, paddingHorizontal: 12 }}>
-          <Text style={[s.accTitle, { writingDirection: en ? 'ltr' : 'rtl', textAlign: en ? 'left' : 'right' }]} numberOfLines={2}>{itTitle}</Text>
-          <Text style={[s.accMeta, { writingDirection: en ? 'ltr' : 'rtl', textAlign: en ? 'left' : 'right' }]}>{itDuration} · {stops.length} {t('itin.stops')}</Text>
+          <Text style={[s.accTitle, { writingDirection: isRTL ? 'rtl' : 'ltr', textAlign: isRTL ? 'right' : 'left' }]} numberOfLines={2}>{itTitle}</Text>
+          <Text style={[s.accMeta, { writingDirection: isRTL ? 'rtl' : 'ltr', textAlign: isRTL ? 'right' : 'left' }]}>{itDuration} · {stops.length} {t('itin.stops')}</Text>
         </View>
-        <Text style={[s.accChev, { color: it.color }]}>{expanded ? '▲' : '▼'}</Text>
+        <Text style={[s.accChev, { color: '#fff' }]}>{expanded ? '▲' : '▼'}</Text>
       </TouchableOpacity>
       {expanded ? (<>
       <FlatList
@@ -229,11 +359,12 @@ function ItineraryCard({ it, idx }: { it: any; idx: number }) {
         const points = stops.filter((s: any) => s.lat && s.lng);
         if (points.length < 2) return null;
         const pts = points.map((p: any, i: number) => ({ lat: p.lat, lng: p.lng, name: p.name, num: i + 1 }));
-        const html = `<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><style>html,body,#m{margin:0;padding:0;height:100%;width:100%;}.gm-style-iw{direction:rtl;}</style></head><body><div id="m"></div><script>const pts=${JSON.stringify(pts)};function init(){const map=new google.maps.Map(document.getElementById('m'),{center:{lat:pts[0].lat,lng:pts[0].lng},zoom:12,mapTypeControl:false,streetViewControl:false,fullscreenControl:false});const bounds=new google.maps.LatLngBounds();pts.forEach(p=>{const m=new google.maps.Marker({position:{lat:p.lat,lng:p.lng},map,label:{text:String(p.num),color:'#fff',fontWeight:'800'},icon:{path:google.maps.SymbolPath.CIRCLE,scale:14,fillColor:'#E76F51',fillOpacity:1,strokeColor:'#fff',strokeWeight:2}});bounds.extend({lat:p.lat,lng:p.lng});const iw=new google.maps.InfoWindow({content:'<div style="direction:rtl;font-family:-apple-system,sans-serif;"><b>'+p.num+'. '+p.name+'</b></div>'});m.addListener('click',()=>iw.open({anchor:m,map}));});new google.maps.Polyline({path:pts.map(p=>({lat:p.lat,lng:p.lng})),strokeColor:'#E76F51',strokeWeight:3,strokeOpacity:0.9,map});if(pts.length>1)map.fitBounds(bounds,40);}</script><script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDw09Bg7XaH7apEWJBcFtogVfrdUwF_gEM&language=${lang}&callback=init" async defer></script></body></html>`;
+        const html = `<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><style>html,body,#m{margin:0;padding:0;height:100%;width:100%;}.gm-style-iw{direction:rtl;}</style></head><body><div id="m"></div><script>const pts=${JSON.stringify(pts)};function init(){const map=new google.maps.Map(document.getElementById('m'),{center:{lat:pts[0].lat,lng:pts[0].lng},zoom:12,mapTypeControl:false,streetViewControl:false,fullscreenControl:false,gestureHandling:'cooperative'});const bounds=new google.maps.LatLngBounds();pts.forEach(p=>{const m=new google.maps.Marker({position:{lat:p.lat,lng:p.lng},map,label:{text:String(p.num),color:'#fff',fontWeight:'800'},icon:{path:google.maps.SymbolPath.CIRCLE,scale:14,fillColor:'#E76F51',fillOpacity:1,strokeColor:'#fff',strokeWeight:2}});bounds.extend({lat:p.lat,lng:p.lng});const iw=new google.maps.InfoWindow({content:'<div style="direction:rtl;font-family:-apple-system,sans-serif;"><b>'+p.num+'. '+p.name+'</b></div>'});m.addListener('click',()=>iw.open({anchor:m,map}));});new google.maps.Polyline({path:pts.map(p=>({lat:p.lat,lng:p.lng})),strokeColor:'#E76F51',strokeWeight:3,strokeOpacity:0.9,map});if(pts.length>1)map.fitBounds(bounds,40);}</script><script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDw09Bg7XaH7apEWJBcFtogVfrdUwF_gEM&language=${lang}&callback=init" async defer></script></body></html>`;
         return (
           <View style={{ position: 'relative', height: mapBig ? 440 : 220 }}>
             <WebView originWhitelist={['*']} source={{ html }} style={{ flex: 1 }} />
-            <TouchableOpacity onPress={() => setMapBig(b => !b)} style={s.enlargeBtn}>
+            <TouchableOpacity onPress={() => setMapBig(b => !b)} style={s.enlargeBtn} activeOpacity={0.85}>
+              <Text style={s.enlargeBtnTxt}>{mapBig ? '⤡' : '⤢'}</Text>
               <Text style={s.enlargeBtnTxt}>{mapBig ? t('itin.shrinkMap') : t('itin.enlargeMap')}</Text>
             </TouchableOpacity>
           </View>
@@ -250,14 +381,33 @@ function ItineraryCard({ it, idx }: { it: any; idx: number }) {
         {stops.map((stop: any, j: number) => (
           <View key={j} style={s.stopRow}>
             <TouchableOpacity onPress={() => setOpenStop(openStop === j ? null : j)} style={s.stopMain}>
-              <View style={[s.stopNum, { backgroundColor: it.color }]}>
-                <Text style={s.stopNumTxt}>{j + 1}</Text>
+              <View style={[s.stopHead, { flexDirection: isRTL ? 'row-reverse' : 'row' }]}>
+                <View style={[s.stopNum, { backgroundColor: it.color }]}>
+                  <Text style={s.stopNumTxt}>{j + 1}</Text>
+                </View>
+                <Text style={[s.stopTime, { color: it.color }]}>{stop.time}</Text>
+                <Text style={[s.stopName, { flex: 1, writingDirection: isRTL ? 'rtl' : 'ltr', textAlign: isRTL ? 'right' : 'left' }]} numberOfLines={2}>{stopName(stop)}</Text>
               </View>
-              <Text style={[s.stopTime, { color: it.color }]}>{stop.time}</Text>
-              <View style={{ flex: 1 }}>
-                <Text style={[s.stopName, { writingDirection: en ? 'ltr' : 'rtl', textAlign: en ? 'left' : 'right' }]}>{stopName(stop)}</Text>
-                <Text style={[s.stopDesc, { writingDirection: en ? 'ltr' : 'rtl', textAlign: en ? 'left' : 'right' }]} numberOfLines={openStop === j ? undefined : 2}>{stopDesc(stop)}</Text>
-              </View>
+              <Text style={[s.stopDesc, { writingDirection: isRTL ? 'rtl' : 'ltr', textAlign: isRTL ? 'right' : 'left' }]} numberOfLines={openStop === j ? undefined : 2}>{stopDesc(stop)}</Text>
+              {openStop === j && stopInfo(stop) ? (
+                <Text style={[s.stopInfo, { writingDirection: isRTL ? 'rtl' : 'ltr', textAlign: isRTL ? 'right' : 'left' }]}>{stopInfo(stop)}</Text>
+              ) : null}
+              {openStop === j ? (
+                lang === 'he' && STOPS_AUDIO[`it-${idx}-${j}-he`] ? (
+                  <StopAudio source={STOPS_AUDIO[`it-${idx}-${j}-he`]} color={it.color} />
+                ) : stop.audioKey && GUIDED_AUDIO[`${stop.audioKey}-${lang}`] ? (
+                  <StopAudio source={GUIDED_AUDIO[`${stop.audioKey}-${lang}`]} color={it.color} />
+                ) : !stop.audioKey && STOPS_AUDIO[`it-${idx}-${j}-${lang}`] ? (
+                  <StopAudio source={STOPS_AUDIO[`it-${idx}-${j}-${lang}`]} color={it.color} />
+                ) : lang === 'he' && stopInfo(stop) ? (
+                  <HebrewTTS text={stopInfo(stop)} color={it.color} />
+                ) : null
+              ) : null}
+              {openStop === j && stop.ticket ? (
+                <TouchableOpacity onPress={() => Linking.openURL(ticketUrl(stop.nameEn || stop.name))} style={{ alignSelf: isRTL ? 'flex-end' : 'flex-start', marginTop: 6 }}>
+                  <Text style={s.buyTicketLink}>{buyLabel} {isRTL ? '‹' : '›'}</Text>
+                </TouchableOpacity>
+              ) : null}
               <Text style={[s.chev, { color: it.color, transform: [{ rotate: openStop === j ? '180deg' : '0deg' }] }]}>▼</Text>
             </TouchableOpacity>
           </View>
@@ -271,45 +421,85 @@ function ItineraryCard({ it, idx }: { it: any; idx: number }) {
 }
 
 function StarHubCard({ h, idx }: { h: StarHub; idx: number }) {
-  const { t, lang } = useI18n();
-  const [open, setOpen] = useState(false);
+  const { t, lang, isRTL } = useI18n();
+  const [open, setOpen] = useState(true);
+  const [openSpoke, setOpenSpoke] = useState<number | null>(null);
   const [big, setBig] = useState(false);
   const [expanded, setExpanded] = useState(false);
+  const ticketUrl = (name: string) => `https://www.getyourguide.com/s/?q=${encodeURIComponent(name + ' Dubai')}&partner_id=PE2GLSE3MAO4YDEIXLNOYXMC67BCZ32C`;
+  const buyLabel = ({ he: 'רכוש כרטיס', en: 'Buy ticket', ru: 'Купить билет', ar: 'شراء تذكرة', hi: 'टिकट खरीदें' } as any)[lang] || 'Buy ticket';
+  const spokeInfo = (sp: any) => ({ he: sp.info, en: sp.infoEn, ar: sp.infoAr, hi: sp.infoHi, ru: sp.infoRu } as any)[lang];
   const lastSpoke = h.spokes[h.spokes.length - 1];
-  const hubHtml = `<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><style>html,body,#m{margin:0;padding:0;height:100%;width:100%;}</style></head><body><div id="m"></div><script>const center=${JSON.stringify(h.center)};const color=${JSON.stringify(h.color)};const spokes=${JSON.stringify(h.spokes)};function init(){const map=new google.maps.Map(document.getElementById('m'),{center,zoom:13,mapTypeControl:false,streetViewControl:false,fullscreenControl:false});const bounds=new google.maps.LatLngBounds();bounds.extend(center);new google.maps.Marker({position:center,map,label:{text:'★',color:'#fff',fontWeight:'800',fontSize:'14px'},icon:{path:google.maps.SymbolPath.CIRCLE,scale:18,fillColor:color,fillOpacity:1,strokeColor:'#fff',strokeWeight:3}});spokes.forEach((sp,i)=>{const m=new google.maps.Marker({position:{lat:sp.lat,lng:sp.lng},map,label:{text:String(i+1),color:'#fff',fontWeight:'800'},icon:{path:google.maps.SymbolPath.CIRCLE,scale:12,fillColor:color,fillOpacity:1,strokeColor:'#fff',strokeWeight:2}});bounds.extend({lat:sp.lat,lng:sp.lng});const iw=new google.maps.InfoWindow({content:'<div style="direction:rtl;font-family:-apple-system,sans-serif;"><b>'+(i+1)+'. '+sp.name+'</b></div>'});m.addListener('click',()=>iw.open({anchor:m,map}));new google.maps.Polyline({path:[center,{lat:sp.lat,lng:sp.lng}],strokeColor:color,strokeWeight:3,strokeOpacity:0.85,map});});map.fitBounds(bounds,40);}</script><script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDw09Bg7XaH7apEWJBcFtogVfrdUwF_gEM&language=${lang}&callback=init" async defer></script></body></html>`;
+  const hubHtml = `<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><style>html,body,#m{margin:0;padding:0;height:100%;width:100%;}</style></head><body><div id="m"></div><script>const center=${JSON.stringify(h.center)};const color=${JSON.stringify(h.color)};const spokes=${JSON.stringify(h.spokes)};function init(){const map=new google.maps.Map(document.getElementById('m'),{center,zoom:13,mapTypeControl:false,streetViewControl:false,fullscreenControl:false,gestureHandling:'cooperative'});const bounds=new google.maps.LatLngBounds();bounds.extend(center);new google.maps.Marker({position:center,map,label:{text:'★',color:'#fff',fontWeight:'800',fontSize:'14px'},icon:{path:google.maps.SymbolPath.CIRCLE,scale:18,fillColor:color,fillOpacity:1,strokeColor:'#fff',strokeWeight:3}});spokes.forEach((sp,i)=>{const m=new google.maps.Marker({position:{lat:sp.lat,lng:sp.lng},map,label:{text:String(i+1),color:'#fff',fontWeight:'800'},icon:{path:google.maps.SymbolPath.CIRCLE,scale:12,fillColor:color,fillOpacity:1,strokeColor:'#fff',strokeWeight:2}});bounds.extend({lat:sp.lat,lng:sp.lng});const iw=new google.maps.InfoWindow({content:'<div style="direction:rtl;font-family:-apple-system,sans-serif;"><b>'+(i+1)+'. '+sp.name+'</b></div>'});m.addListener('click',()=>iw.open({anchor:m,map}));new google.maps.Polyline({path:[center,{lat:sp.lat,lng:sp.lng}],strokeColor:color,strokeWeight:3,strokeOpacity:0.85,map});});map.fitBounds(bounds,40);}</script><script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDw09Bg7XaH7apEWJBcFtogVfrdUwF_gEM&language=${lang}&callback=init" async defer></script></body></html>`;
   return (
-    <View style={[s.card, { backgroundColor: '#fff', borderWidth: 2, borderColor: h.color }]}>
-      <TouchableOpacity onPress={() => setExpanded(e => !e)} activeOpacity={0.85} style={[s.accHead, { borderBottomWidth: expanded ? 1 : 0, borderBottomColor: h.color + '33' }]}>
-        <View style={[s.accBadge, { backgroundColor: 'transparent', borderWidth: 2, borderColor: h.color }]}>
-          <Text style={[s.accBadgeIcon, { color: h.color }]}>★</Text>
+    <View style={s.card}>
+      <TouchableOpacity onPress={() => setExpanded(e => !e)} activeOpacity={0.9} style={[s.accHead, { borderBottomWidth: expanded ? 1 : 0, borderBottomColor: h.color + '33' }]}>
+        {((h as any).image || (h.spokes[0] as any)?.image) ? (
+          <Image source={{ uri: (h as any).image || (h.spokes[0] as any)?.image }} style={StyleSheet.absoluteFill} resizeMode="cover" />
+        ) : (
+          <View style={[StyleSheet.absoluteFill, { backgroundColor: h.color }]} />
+        )}
+        <LinearGradient
+          colors={[h.color + 'F2', h.color + '99', h.color + '11']}
+          locations={[0, 0.55, 1]}
+          start={{ x: isRTL ? 1 : 0, y: 0.5 }}
+          end={{ x: isRTL ? 0 : 1, y: 0.5 }}
+          style={StyleSheet.absoluteFill}
+          pointerEvents="none"
+        />
+        <View style={[s.accBadge, { backgroundColor: 'rgba(255,255,255,0.22)' }]}>
+          <Text style={[s.accBadgeIcon, { color: '#fff' }]}>★</Text>
         </View>
         <View style={{ flex: 1, paddingHorizontal: 12 }}>
-          <Text style={s.accTitle} numberOfLines={2}>{lang === 'en' ? (h.nameEn || h.name) : h.name}</Text>
-          <Text style={[s.accMeta, { color: h.color, fontWeight: '700' }]}>★ {h.spokes.length} {t('itin.spokes')}</Text>
+          <Text style={s.accTitle} numberOfLines={2}>{lang === 'ar' ? tcAr(h.name) : lang === 'hi' ? tcHi(h.name) : lang === 'ru' ? tcRu(h.name) : lang === 'en' ? (h.nameEn || h.name) : h.name}</Text>
+          <Text style={[s.accMeta, { color: 'rgba(255,255,255,0.95)', fontWeight: '700' }]}>★ {h.spokes.length} {t('itin.spokes')}</Text>
         </View>
-        <Text style={[s.accChev, { color: h.color }]}>{expanded ? '▲' : '▼'}</Text>
+        <Text style={[s.accChev, { color: '#fff' }]}>{expanded ? '▲' : '▼'}</Text>
       </TouchableOpacity>
       {expanded ? (<>
       <View style={{ position: 'relative', height: big ? 440 : 220 }}>
         <WebView originWhitelist={['*']} source={{ html: hubHtml }} style={{ flex: 1 }} />
-        <TouchableOpacity onPress={() => setBig(b => !b)} style={s.enlargeBtn}>
+        <TouchableOpacity onPress={() => setBig(b => !b)} style={s.enlargeBtn} activeOpacity={0.85}>
+          <Text style={s.enlargeBtnTxt}>{big ? '⤡' : '⤢'}</Text>
           <Text style={s.enlargeBtnTxt}>{big ? t('itin.shrinkMap') : t('itin.enlargeMap')}</Text>
         </TouchableOpacity>
       </View>
       <View style={{ padding: 14 }}>
-        <Text style={[s.starDesc, { writingDirection: lang === 'en' ? 'ltr' : 'rtl', textAlign: lang === 'en' ? 'left' : 'right' }]}>{lang === 'en' ? (h.descEn || h.desc) : h.desc}</Text>
-        <TouchableOpacity style={[s.navBtn, { backgroundColor: h.color, marginTop: 12, borderRadius: 8 }]} onPress={() => lastSpoke && openMapsChoice(lastSpoke.lat, lastSpoke.lng, lastSpoke.name || h.center?.name || 'יעד', 'navigate')}>
+        <Text style={[s.starDesc, { writingDirection: isRTL ? 'rtl' : 'ltr', textAlign: isRTL ? 'right' : 'left' }]}>{lang === 'ar' ? tcAr(h.desc) : lang === 'hi' ? tcHi(h.desc) : lang === 'ru' ? tcRu(h.desc) : lang === 'en' ? (h.descEn || h.desc) : h.desc}</Text>
+        <TouchableOpacity style={[s.navBtn, { backgroundColor: h.color, marginTop: 12, borderRadius: 8 }]} onPress={() => lastSpoke && openMapsChoice(lastSpoke.lat, lastSpoke.lng, lastSpoke.name || h.center?.name || (lang === 'ar' ? tcAr('יעד') : lang === 'hi' ? tcHi('יעד') : lang === 'ru' ? tcRu('יעד') : lang === 'he' ? 'יעד' : 'Destination'), 'navigate')}>
           <Text style={s.navBtnTxt}>{t('itin.navAllSpokes')}</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => setOpen(o => !o)} style={{ paddingVertical: 10, alignItems: 'center' }}>
           <Text style={{ color: h.color, fontWeight: '700', fontSize: 13 }}>{open ? t('itin.hideList') : t('itin.showList')}</Text>
         </TouchableOpacity>
-        {open ? h.spokes.map((sp, i) => (
-          <View key={i} style={s.spokeRow}>
-            <View style={[s.stopNum, { backgroundColor: h.color }]}>
-              <Text style={s.stopNumTxt}>{i + 1}</Text>
-            </View>
-            <Text style={s.stopName}>{lang === 'en' ? (sp.nameEn || sp.name) : sp.name}</Text>
+        {open ? h.spokes.map((sp: any, i: number) => (
+          <View key={i} style={s.stopRow}>
+            <TouchableOpacity onPress={() => setOpenSpoke(openSpoke === i ? null : i)} style={s.stopMain} activeOpacity={0.7}>
+              <View style={[s.stopNum, { backgroundColor: h.color }]}>
+                <Text style={s.stopNumTxt}>{i + 1}</Text>
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={[s.stopName, { writingDirection: isRTL ? 'rtl' : 'ltr', textAlign: isRTL ? 'right' : 'left' }]}>{lang === 'ar' ? tcAr(sp.name) : lang === 'hi' ? tcHi(sp.name) : lang === 'ru' ? tcRu(sp.name) : lang === 'en' ? (sp.nameEn || sp.name) : sp.name}</Text>
+                {openSpoke === i && spokeInfo(sp) ? (
+                  <Text style={[s.stopInfo, { writingDirection: isRTL ? 'rtl' : 'ltr', textAlign: isRTL ? 'right' : 'left' }]}>{spokeInfo(sp)}</Text>
+                ) : null}
+                {openSpoke === i ? (
+                  lang === 'he' && STOPS_AUDIO[`star-${idx}-${i}-he`] ? (
+                    <StopAudio source={STOPS_AUDIO[`star-${idx}-${i}-he`]} color={h.color} />
+                  ) : lang !== 'he' && STOPS_AUDIO[`star-${idx}-${i}-${lang}`] ? (
+                    <StopAudio source={STOPS_AUDIO[`star-${idx}-${i}-${lang}`]} color={h.color} />
+                  ) : lang === 'he' && spokeInfo(sp) ? (
+                    <HebrewTTS text={spokeInfo(sp)} color={h.color} />
+                  ) : null
+                ) : null}
+                {openSpoke === i && sp.ticket ? (
+                  <TouchableOpacity onPress={() => Linking.openURL(ticketUrl(sp.nameEn || sp.name))} style={{ alignSelf: isRTL ? 'flex-end' : 'flex-start', marginTop: 6 }}>
+                    <Text style={s.buyTicketLink}>{buyLabel} {isRTL ? '‹' : '›'}</Text>
+                  </TouchableOpacity>
+                ) : null}
+              </View>
+              {spokeInfo(sp) ? <Text style={[s.chev, { color: h.color, transform: [{ rotate: openSpoke === i ? '180deg' : '0deg' }] }]}>▼</Text> : null}
+            </TouchableOpacity>
           </View>
         )) : null}
         <RateRow storageKey={`rate-star-${idx}`} color={h.color} />
@@ -321,7 +511,7 @@ function StarHubCard({ h, idx }: { h: StarHub; idx: number }) {
 }
 
 function MyTripView() {
-  const { t, lang } = useI18n();
+  const { t, lang, isRTL } = useI18n();
   const catLabel = (c: string) => t('itcat.' + c);
   const [items, setItems] = useState<any[]>([]);
   const [days, setDays] = useState<Record<string, number>>({});
@@ -381,8 +571,8 @@ function MyTripView() {
     return (
       <View style={{ padding: 24, alignItems: 'center' }}>
         <Text style={{ fontSize: 40 }}>❤️</Text>
-        <Text style={{ color: Colors.TEXT, fontWeight: '800', fontSize: 16, marginTop: 12, textAlign: 'center', writingDirection: lang === 'en' ? 'ltr' : 'rtl' }}>{t('itin.emptyMineTitle')}</Text>
-        <Text style={{ color: Colors.MUTED, fontSize: 13, marginTop: 6, textAlign: 'center', writingDirection: lang === 'en' ? 'ltr' : 'rtl', lineHeight: 19 }}>{t('itin.emptyMineSub')}</Text>
+        <Text style={{ color: Colors.TEXT, fontWeight: '800', fontSize: 16, marginTop: 12, textAlign: 'center', writingDirection: isRTL ? 'rtl' : 'ltr' }}>{t('itin.emptyMineTitle')}</Text>
+        <Text style={{ color: Colors.MUTED, fontSize: 13, marginTop: 6, textAlign: 'center', writingDirection: isRTL ? 'rtl' : 'ltr', lineHeight: 19 }}>{t('itin.emptyMineSub')}</Text>
       </View>
     );
   }
@@ -413,7 +603,7 @@ function MyTripView() {
   };
 
   const mapItems = itemsByDay.filter(it => it.lat && it.lng);
-  const mapHtml = mapItems.length > 0 ? `<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><style>html,body,#m{margin:0;padding:0;height:100%;width:100%;}</style></head><body><div id="m"></div><script>function init(){const pts=${JSON.stringify(mapItems.map(it => ({ lat: it.lat, lng: it.lng, name: it.name })))};const map=new google.maps.Map(document.getElementById('m'),{center:pts[0],zoom:12,mapTypeControl:false,streetViewControl:false,fullscreenControl:false});const bounds=new google.maps.LatLngBounds();const path=[];pts.forEach((p,i)=>{const pos={lat:p.lat,lng:p.lng};path.push(pos);bounds.extend(pos);const m=new google.maps.Marker({position:pos,map,label:{text:String(i+1),color:'#fff',fontWeight:'800',fontSize:'13px'},icon:{path:google.maps.SymbolPath.CIRCLE,scale:15,fillColor:'#E76F51',fillOpacity:1,strokeColor:'#fff',strokeWeight:3}});const iw=new google.maps.InfoWindow({content:'<div style="direction:rtl;font-family:-apple-system,sans-serif;"><b>'+(i+1)+'. '+p.name+'</b></div>'});m.addListener('click',()=>iw.open({anchor:m,map}));});if(pts.length>1){new google.maps.Polyline({path,geodesic:true,strokeColor:'#1A6B8A',strokeOpacity:0.8,strokeWeight:3,map});map.fitBounds(bounds,40);}}</script><script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDw09Bg7XaH7apEWJBcFtogVfrdUwF_gEM&language=${lang}&callback=init" async defer></script></body></html>` : '';
+  const mapHtml = mapItems.length > 0 ? `<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><style>html,body,#m{margin:0;padding:0;height:100%;width:100%;}</style></head><body><div id="m"></div><script>function init(){const pts=${JSON.stringify(mapItems.map(it => ({ lat: it.lat, lng: it.lng, name: it.name })))};const map=new google.maps.Map(document.getElementById('m'),{center:pts[0],zoom:12,mapTypeControl:false,streetViewControl:false,fullscreenControl:false,gestureHandling:'cooperative'});const bounds=new google.maps.LatLngBounds();const path=[];pts.forEach((p,i)=>{const pos={lat:p.lat,lng:p.lng};path.push(pos);bounds.extend(pos);const m=new google.maps.Marker({position:pos,map,label:{text:String(i+1),color:'#fff',fontWeight:'800',fontSize:'13px'},icon:{path:google.maps.SymbolPath.CIRCLE,scale:15,fillColor:'#E76F51',fillOpacity:1,strokeColor:'#fff',strokeWeight:3}});const iw=new google.maps.InfoWindow({content:'<div style="direction:rtl;font-family:-apple-system,sans-serif;"><b>'+(i+1)+'. '+p.name+'</b></div>'});m.addListener('click',()=>iw.open({anchor:m,map}));});if(pts.length>1){new google.maps.Polyline({path,geodesic:true,strokeColor:'#1A6B8A',strokeOpacity:0.8,strokeWeight:3,map});map.fitBounds(bounds,40);}}</script><script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDw09Bg7XaH7apEWJBcFtogVfrdUwF_gEM&language=${lang}&callback=init" async defer></script></body></html>` : '';
 
   const navAllLast = mapItems.length > 1 ? mapItems[mapItems.length - 1] : null;
   const navAllUrl = navAllLast ? 'open' : null;
@@ -464,8 +654,8 @@ function MyTripView() {
         (() => {
           const d = startDate ? new Date(startDate) : null;
           if (d) d!.setDate(d!.getDate() + (activeDay - 1));
-          const dayLbl = d ? d.toLocaleDateString(lang === 'en' ? 'en-US' : 'he-IL', { weekday: 'long' }) : `${t('itin.day')} ${activeDay}`;
-          const dayDate = d ? d.toLocaleDateString(lang === 'en' ? 'en-US' : 'he-IL', { day: 'numeric', month: 'long' }) : '';
+          const dayLbl = d ? d.toLocaleDateString(lang === 'ru' ? 'ru-RU' : lang === 'en' ? 'en-US' : 'he-IL', { weekday: 'long' }) : `${t('itin.day')} ${activeDay}`;
+          const dayDate = d ? d.toLocaleDateString(lang === 'ru' ? 'ru-RU' : lang === 'en' ? 'en-US' : 'he-IL', { day: 'numeric', month: 'long' }) : '';
           return (
             <View style={{ flexDirection: 'row-reverse', alignItems: 'baseline', gap: 12, marginTop: 8, marginBottom: 16 }}>
               <Text style={mt.eventMonthName}>{dayLbl}{dayDate ? ` · ${dayDate}` : ''}</Text>
@@ -703,7 +893,7 @@ export default function ItinerariesScreen() {
       <View style={s.header}>
         <View style={{ width: 32 }} />
         <Text style={[s.title, { flex: 1, textAlign: 'center' }]}>{t('itin.title')}</Text>
-        <TouchableOpacity onPress={() => router.back()} style={s.closeBtnX}>
+        <TouchableOpacity onPress={() => router.push('/(tabs)/' as any)} style={s.closeBtnX} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
           <Text style={s.closeBtnXTxt}>✕</Text>
         </TouchableOpacity>
       </View>
@@ -722,7 +912,7 @@ export default function ItinerariesScreen() {
         {view === 'day' ? (
           <>
             <Text style={{ color: Colors.MUTED, fontSize: 12, fontWeight: '700', letterSpacing: 0.6, textAlign: 'center', marginBottom: 10 }}>{ITINERARIES.length} {t('itin.countReady')}</Text>
-            {ITINERARIES.map((it: any, i: number) => <ItineraryCard key={i} it={it} idx={i} />)}
+            {ITINERARIES.map((it: any, i: number) => ({ it, i })).sort((a, b) => (b.it.sourceUrl ? 1 : 0) - (a.it.sourceUrl ? 1 : 0)).map(({ it, i }) => <ItineraryCard key={i} it={it} idx={i} />)}
           </>
         ) : view === 'star' ? (
           <>
@@ -742,19 +932,19 @@ const s = StyleSheet.create({
   header: { flexDirection: 'row-reverse', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 14, paddingVertical: 12, backgroundColor: Colors.PRIMARY },
   closeBtnX: { width: 32, height: 32, borderRadius: 16, backgroundColor: '#E76F51', alignItems: 'center', justifyContent: 'center' },
   closeBtnXTxt: { color: '#fff', fontSize: 18, fontWeight: '900', lineHeight: 20 },
-  title: { color: '#fff', fontSize: 17, fontWeight: '900', writingDirection: 'rtl', textAlign: 'right' },
-  tabsRow: { flexDirection: 'row-reverse', gap: 6, paddingHorizontal: 16, paddingVertical: 10, backgroundColor: '#fff', borderBottomWidth: 1, borderBottomColor: '#E5E7EB' },
-  tabBtn: { flex: 1, paddingVertical: 9, paddingHorizontal: 4, borderRadius: 8, borderWidth: 1, borderColor: '#E5E7EB', backgroundColor: '#fff', alignItems: 'center' },
-  tabBtnActive: { borderWidth: 2, borderColor: '#E76F51', backgroundColor: '#FFF5F2' },
-  tabTxt: { color: '#6B7F8D', fontWeight: '700', fontSize: 12, writingDirection: 'rtl', textAlign: 'center' },
-  tabTxtActive: { color: '#E76F51', fontWeight: '900' },
+  title: { color: '#fff', fontSize: 24, fontWeight: '400', letterSpacing: 0.3, writingDirection: 'rtl', textAlign: 'right' },
+  tabsRow: { flexDirection: 'row-reverse', gap: 0, paddingHorizontal: 0, paddingVertical: 0, backgroundColor: '#fff', borderBottomWidth: 1, borderBottomColor: '#E5E7EB' },
+  tabBtn: { flex: 1, paddingVertical: 13, paddingHorizontal: 4, borderRadius: 0, backgroundColor: '#F1EADD', alignItems: 'center' },
+  tabBtnActive: { backgroundColor: '#E76F51' },
+  tabTxt: { color: '#6B7F8D', fontWeight: '500', fontSize: 14, writingDirection: 'rtl', textAlign: 'center' },
+  tabTxtActive: { color: '#fff', fontWeight: '700' },
   starHead: { flexDirection: 'row-reverse', alignItems: 'center', gap: 10, padding: 12, paddingHorizontal: 16 },
   starTitle: { color: '#fff', fontSize: 16, fontWeight: '800', writingDirection: 'rtl', textAlign: 'right' },
   starSub: { color: 'rgba(255,255,255,0.9)', fontSize: 12, marginTop: 2, writingDirection: 'rtl', textAlign: 'right' },
   starDesc: { color: Colors.TEXT, fontSize: 13, lineHeight: 19, writingDirection: 'rtl', textAlign: 'right' },
   spokeRow: { flexDirection: 'row-reverse', alignItems: 'center', gap: 10, paddingVertical: 8, borderBottomWidth: 1, borderBottomColor: '#F5EFE6' },
-  enlargeBtn: { position: 'absolute', bottom: 8, left: 8, backgroundColor: 'rgba(0,0,0,0.7)', paddingHorizontal: 10, paddingVertical: 6, borderRadius: 6 },
-  enlargeBtnTxt: { color: '#fff', fontSize: 12, fontWeight: '700' },
+  enlargeBtn: { position: 'absolute', bottom: 10, left: 10, backgroundColor: '#E76F51', paddingHorizontal: 12, paddingVertical: 9, borderRadius: 0, flexDirection: 'row', alignItems: 'center', gap: 6, shadowColor: '#000', shadowOpacity: 0.28, shadowRadius: 5, shadowOffset: { width: 0, height: 2 }, elevation: 4 },
+  enlargeBtnTxt: { color: '#fff', fontSize: 13, fontWeight: '800' },
   rateBox: { marginTop: 12, padding: 12, backgroundColor: '#FBF7EF', borderRadius: 8, alignItems: 'center' },
   rateLabel: { color: Colors.TEXT, fontWeight: '800', fontSize: 13, marginBottom: 6, writingDirection: 'rtl' },
   rateStars: { flexDirection: 'row-reverse', gap: 6 },
@@ -771,14 +961,14 @@ const s = StyleSheet.create({
   photoThumb: { width: '32%', aspectRatio: 1, borderRadius: 6, backgroundColor: '#E5E7EB' },
   tip: { backgroundColor: '#F5E6CB', borderRightWidth: 3, borderRightColor: '#B8923A', padding: 10, borderRadius: 6, marginBottom: 14 },
   tipTxt: { color: Colors.TEXT, fontSize: 13, writingDirection: 'rtl', textAlign: 'right' },
-  card: { backgroundColor: '#fff', borderRadius: 10, overflow: 'hidden', borderWidth: 1, borderColor: '#E5E7EB', marginBottom: 14 },
+  card: { backgroundColor: '#fff', borderRadius: 0, overflow: 'hidden', marginBottom: 16, borderBottomWidth: 1, borderBottomColor: '#EAE0CE' },
   slideOverlay: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.35)' },
   slideTopRight: { position: 'absolute', top: 10, right: 12 },
   slideTopLeft: { position: 'absolute', top: 10, left: 12, backgroundColor: 'rgba(0,0,0,0.5)', paddingHorizontal: 8, paddingVertical: 3, borderRadius: 10 },
   slideTopLeftTxt: { color: '#fff', fontSize: 11 },
   slideBottom: { position: 'absolute', bottom: 36, right: 14, left: 14 },
-  slideTitle: { color: '#fff', fontSize: 18, fontWeight: '800', textShadowColor: 'rgba(0,0,0,0.7)', textShadowOffset: { width: 0, height: 1 }, textShadowRadius: 4, writingDirection: 'rtl', textAlign: 'right' },
-  slideMeta: { color: 'rgba(255,255,255,0.95)', fontSize: 13, marginTop: 3, textShadowColor: 'rgba(0,0,0,0.7)', textShadowRadius: 4, writingDirection: 'rtl', textAlign: 'right' },
+  slideTitle: { color: '#fff', fontSize: 26, fontWeight: '600', letterSpacing: 0.3, textShadowColor: 'rgba(0,0,0,0.7)', textShadowOffset: { width: 0, height: 1 }, textShadowRadius: 5, writingDirection: 'rtl', textAlign: 'right' },
+  slideMeta: { color: 'rgba(255,255,255,0.95)', fontSize: 14, marginTop: 4, textShadowColor: 'rgba(0,0,0,0.7)', textShadowRadius: 4, writingDirection: 'rtl', textAlign: 'right' },
   slideStop: { color: 'rgba(255,255,255,0.85)', fontSize: 12, marginTop: 2, writingDirection: 'rtl', textAlign: 'right' },
   arrowBtn: { position: 'absolute', top: 92, width: 36, height: 36, borderRadius: 18, backgroundColor: 'rgba(0,0,0,0.55)', alignItems: 'center', justifyContent: 'center', zIndex: 5 },
   arrowTxt: { color: '#fff', fontSize: 22, fontWeight: '300', lineHeight: 24 },
@@ -794,14 +984,16 @@ const s = StyleSheet.create({
   stopTime: { width: 50, fontSize: 13, fontWeight: '700', textAlign: 'center', paddingTop: 2 },
   stopName: { color: Colors.TEXT, fontSize: 14, fontWeight: '600', writingDirection: 'rtl', textAlign: 'right' },
   stopDesc: { color: Colors.MUTED, fontSize: 12, marginTop: 2, lineHeight: 17, writingDirection: 'rtl', textAlign: 'right' },
+  stopInfo: { color: '#3D5A66', fontSize: 13, marginTop: 8, lineHeight: 20, writingDirection: 'rtl', textAlign: 'right' },
+  buyTicketLink: { color: '#E76F51', fontSize: 13, fontWeight: '700', letterSpacing: 0.2 },
   chev: { fontSize: 11, color: Colors.MUTED, marginTop: 4 },
   openMap: { paddingVertical: 6, paddingHorizontal: 38, alignItems: 'flex-end' },
   openMapTxt: { fontSize: 12, fontWeight: '700' },
-  accHead: { flexDirection: 'row-reverse', alignItems: 'center', padding: 14 },
+  accHead: { flexDirection: 'row-reverse', alignItems: 'center', paddingHorizontal: 16, paddingVertical: 18, minHeight: 104, overflow: 'hidden' },
   accBadge: { width: 48, height: 48, borderRadius: 24, alignItems: 'center', justifyContent: 'center' },
   accBadgeIcon: { fontSize: 24 },
-  accTitle: { color: Colors.TEXT, fontWeight: '900', fontSize: 15, writingDirection: 'rtl', textAlign: 'right', lineHeight: 20 },
-  accMeta: { color: Colors.MUTED, fontSize: 12, marginTop: 3, writingDirection: 'rtl', textAlign: 'right' },
+  accTitle: { color: '#fff', fontWeight: '600', fontSize: 21, letterSpacing: 0.2, writingDirection: 'rtl', textAlign: 'right', lineHeight: 26, textShadowColor: 'rgba(0,0,0,0.5)', textShadowOffset: { width: 0, height: 1 }, textShadowRadius: 4 },
+  accMeta: { color: 'rgba(255,255,255,0.95)', fontSize: 13, marginTop: 4, writingDirection: 'rtl', textAlign: 'right', textShadowColor: 'rgba(0,0,0,0.5)', textShadowRadius: 3 },
   accChev: { fontSize: 14, fontWeight: '800' },
   countHead: { backgroundColor: '#fff', paddingHorizontal: 16, paddingVertical: 14, marginBottom: 10, alignItems: 'center' },
   countHeadNum: { color: Colors.PRIMARY, fontSize: 36, fontWeight: '300', letterSpacing: -1 },

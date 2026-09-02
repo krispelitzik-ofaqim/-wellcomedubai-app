@@ -1,23 +1,46 @@
 import { useState, useEffect, useRef } from 'react';
-import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Image, Linking, ImageBackground, Modal, Pressable, Dimensions } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Image, Linking, ImageBackground, Modal, Pressable, Dimensions, Alert, Platform } from 'react-native';
 
 const SCREEN_W = Dimensions.get('window').width;
 const TAB_FONT = Math.max(10, Math.round(10 * (SCREEN_W / 390)));
 const TAB_LINE = TAB_FONT + 2;
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { WebView } from 'react-native-webview';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { WebView } from '../components/WebView';
+import { PhotoCarousel } from '../components/PhotoCarousel';
 import { LinearGradient } from 'expo-linear-gradient';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { Colors } from '../constants/colors';
 import { useI18n } from '../constants/i18n';
+import { tcRu } from '../constants/contentRu';
+import { tcHi } from '../constants/contentHi';
+import { tcAr } from '../constants/contentAr';
 import { RE_ARTICLES, RE_INVESTMENTS } from '../constants/realestate';
+
+// Cached news loader: shows last-fetched items INSTANTLY (memory → disk), then refreshes
+// in the background with an 8s timeout. Fixes the slow blank "loading" on every visit.
+const NEWS_MEM: Record<string, any[]> = {};
+async function loadNewsCached(rss: string, key: string, setNews: (x: any[]) => void) {
+  if (NEWS_MEM[key]?.length) setNews(NEWS_MEM[key]);
+  else {
+    try { const c = await AsyncStorage.getItem('news:' + key); if (c) { const arr = JSON.parse(c); if (arr?.length) { NEWS_MEM[key] = arr; setNews(arr); } } } catch {}
+  }
+  try {
+    const ctrl = new AbortController();
+    const to = setTimeout(() => ctrl.abort(), 8000);
+    const r = await fetch('https://wellcomedubaicom-production.up.railway.app/api/news?rss=' + encodeURIComponent(rss), { signal: ctrl.signal });
+    clearTimeout(to);
+    const j = await r.json();
+    const items = (j.items || []).slice(0, 10);
+    if (items.length) { NEWS_MEM[key] = items; setNews(items); try { await AsyncStorage.setItem('news:' + key, JSON.stringify(items)); } catch {} }
+  } catch {}
+}
 
 const TABS = [
   { id: 'sale',     line1: 'דירות', line2: 'למכירה', line1En: 'Apartments', line2En: 'For Sale', color: Colors.PRIMARY },
   { id: 'rent',     line1: 'דירות', line2: 'להשכרה', line1En: 'Apartments', line2En: 'For Rent', color: Colors.SECONDARY },
   { id: 'invest',   line1: 'פורטל', line2: 'הנדל"ן',  line1En: 'Real Estate', line2En: 'Portal', color: Colors.ACCENT },
   { id: 'business', line1: 'פורטל', line2: 'העסקים', line1En: 'Business', line2En: 'Portal', color: Colors.GOLD },
-  { id: 'israeli',  line1: 'השקעות', line2: 'ישראליות', line1En: 'Israeli', line2En: 'Investments', color: Colors.PINK },
 ];
 
 const STAT_INDICATORS = [
@@ -99,7 +122,8 @@ type StatRow = { year: string; value: number };
 type StatSlide = { icon: string; label: string; sublabel: string; grad: [string, string]; rows: StatRow[]; unit: '$' | '%' | 'M' | 'K' };
 
 function StatSlideCard({ slide }: { slide: StatSlide }) {
-  const { t } = useI18n();
+  const { t, isRTL } = useI18n();
+  const s = makeS(isRTL); const ss = makeSS(isRTL);
   const max = Math.max(...slide.rows.map(r => Math.abs(r.value || 0))) || 1;
   return (
     <LinearGradient colors={slide.grad} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={ss.slide}>
@@ -129,7 +153,8 @@ function StatSlideCard({ slide }: { slide: StatSlide }) {
 }
 
 function UAEStatsCarousel() {
-  const { t, lang } = useI18n();
+  const { t, lang, isRTL } = useI18n();
+  const s = makeS(isRTL); const ss = makeSS(isRTL);
   const [stats, setStats] = useState<StatSlide[] | null>(null);
   const sp = useScrollProgress();
 
@@ -151,7 +176,7 @@ function UAEStatsCarousel() {
       if (cancelled) return;
       const uaeSlides: StatSlide[] = fetched.map(({ ind, rows }) => ({
         icon: ind.icon,
-        label: lang === 'en' ? ind.labelEn : ind.label,
+        label: lang === 'ar' ? tcAr(ind.label) : lang === 'hi' ? tcHi(ind.label) : lang === 'ru' ? tcRu(ind.label) : lang === 'en' ? ind.labelEn : ind.label,
         sublabel: t('re.uae'),
         grad: ind.grad as [string, string],
         rows: ind.code === 'FR.INR.LEND' && rows.length === 0 ? LENDING_FALLBACK : rows,
@@ -197,15 +222,15 @@ function UAEStatsCarousel() {
   );
 }
 
-const ss = StyleSheet.create({
+const makeSS = (isRTL: boolean) => StyleSheet.create({
   slide: { width: 260, borderRadius: 14, padding: 16, shadowColor: '#000', shadowOpacity: 0.15, shadowRadius: 10, shadowOffset: { width: 0, height: 6 } },
-  slideHead: { flexDirection: 'row-reverse', alignItems: 'center', gap: 10, marginBottom: 12 },
+  slideHead: { flexDirection: isRTL ? 'row-reverse' : 'row', alignItems: 'center', gap: 10, marginBottom: 12 },
   slideIcon: { fontSize: 26, lineHeight: 28 },
-  slideSub: { color: 'rgba(255,255,255,0.9)', fontSize: 10, fontWeight: '700', letterSpacing: 1.3, textAlign: 'right', writingDirection: 'rtl' },
-  slideLabel: { color: '#fff', fontSize: 14, fontWeight: '800', writingDirection: 'rtl', textAlign: 'right', marginTop: 2 },
+  slideSub: { color: 'rgba(255,255,255,0.9)', fontSize: 10, fontWeight: '700', letterSpacing: 1.3, textAlign: isRTL ? 'right' : 'left', writingDirection: isRTL ? 'rtl' : 'ltr' },
+  slideLabel: { color: '#fff', fontSize: 14, fontWeight: '800', writingDirection: isRTL ? 'rtl' : 'ltr', textAlign: isRTL ? 'right' : 'left', marginTop: 2 },
   slideEmpty: { color: 'rgba(255,255,255,0.85)', fontSize: 12, textAlign: 'center', paddingVertical: 14 },
-  row: { flexDirection: 'row-reverse', alignItems: 'center', gap: 8, marginBottom: 6 },
-  rowYear: { width: 42, color: '#fff', fontSize: 12, fontWeight: '700', opacity: 0.95, textAlign: 'right' },
+  row: { flexDirection: isRTL ? 'row-reverse' : 'row', alignItems: 'center', gap: 8, marginBottom: 6 },
+  rowYear: { width: 42, color: '#fff', fontSize: 12, fontWeight: '700', opacity: 0.95, textAlign: isRTL ? 'right' : 'left' },
   barTrack: { flex: 1, height: 14, backgroundColor: 'rgba(255,255,255,0.18)', borderRadius: 4, overflow: 'hidden' },
   barFill: { height: '100%', backgroundColor: '#fff', borderRadius: 4 },
   rowVal: { width: 72, textAlign: 'left', color: '#fff', fontSize: 12, fontWeight: '800' },
@@ -234,8 +259,11 @@ const FUNDS = [
 ];
 
 export default function RealEstateScreen() {
-  const { t, lang } = useI18n();
-  const [tab, setTab] = useState<'sale' | 'rent' | 'invest' | 'israeli' | 'business'>('invest');
+  const { t, lang, isRTL } = useI18n();
+  const s = makeS(isRTL); const ss = makeSS(isRTL);
+  const { tab: tabParam } = useLocalSearchParams<{ tab?: string }>();
+  const initialTab = (tabParam === 'sale' || tabParam === 'rent' || tabParam === 'invest' || tabParam === 'business') ? tabParam : 'invest';
+  const [tab, setTab] = useState<'sale' | 'rent' | 'invest' | 'business'>(initialTab);
 
   return (
     <View style={s.container}>
@@ -245,7 +273,7 @@ export default function RealEstateScreen() {
         <LinearGradient colors={['#0E2A38', '#1A4A5E']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}>
           <View style={s.header}>
             <Text style={[s.title, { flex: 1 }]}>{t('re.title')}</Text>
-            <TouchableOpacity onPress={() => router.back()} style={s.closeBtn}>
+            <TouchableOpacity onPress={() => { if (router.canGoBack()) router.back(); else router.replace('/(tabs)/'); }} style={s.closeBtn}>
               <Text style={{ color: '#fff', fontSize: 16, fontWeight: '700' }}>✕</Text>
             </TouchableOpacity>
           </View>
@@ -284,8 +312,8 @@ export default function RealEstateScreen() {
                 style={s.tabBtn}
                 onPress={() => setTab(tb.id as any)}
               >
-                <Text style={[s.tabL1, { color: isActive ? tb.color : Colors.MUTED, fontWeight: isActive ? '900' : '600' }]} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.6}>{lang === 'en' ? tb.line1En : tb.line1}</Text>
-                <Text style={[s.tabL2, { color: isActive ? tb.color : Colors.MUTED, fontWeight: isActive ? '900' : '600' }]} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.6}>{lang === 'en' ? tb.line2En : tb.line2}</Text>
+                <Text style={[s.tabL1, { color: isActive ? tb.color : Colors.MUTED, fontWeight: isActive ? '700' : '500' }]} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.6}>{lang === 'ar' ? tcAr(tb.line1) : lang === 'hi' ? tcHi(tb.line1) : lang === 'ru' ? tcRu(tb.line1) : lang === 'en' ? tb.line1En : tb.line1}</Text>
+                <Text style={[s.tabL2, { color: isActive ? tb.color : Colors.MUTED, fontWeight: isActive ? '700' : '500' }]} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.6}>{lang === 'ar' ? tcAr(tb.line2) : lang === 'hi' ? tcHi(tb.line2) : lang === 'ru' ? tcRu(tb.line2) : lang === 'en' ? tb.line2En : tb.line2}</Text>
                 {isActive && <View style={[s.tabUnderline, { backgroundColor: tb.color }]} />}
               </TouchableOpacity>
             );
@@ -294,7 +322,6 @@ export default function RealEstateScreen() {
 
         <View style={{ padding: 14 }}>
           {tab === 'invest' && <InvestContent />}
-          {tab === 'israeli' && <IsraeliContent />}
           {tab === 'business' && <BusinessContent />}
           {(tab === 'sale' || tab === 'rent') && <ListingsPlaceholder type={tab} />}
           <BrokersBanner />
@@ -305,19 +332,48 @@ export default function RealEstateScreen() {
 }
 
 function InvestContent() {
-  const { t, lang } = useI18n();
+  const { t, lang, isRTL } = useI18n();
+  const s = makeS(isRTL); const ss = makeSS(isRTL);
   const [news, setNews] = useState<any[]>([]);
   const [preview, setPreview] = useState<any | null>(null);
   const newsSp = useScrollProgress();
 
   useEffect(() => {
-    const rss = lang === 'en'
+    const rss = lang === 'ru'
+      ? 'https://news.google.com/rss/search?q=' + encodeURIComponent('Дубай недвижимость') + '&hl=ru&gl=AE&ceid=AE:ru'
+      : lang === 'en'
       ? 'https://news.google.com/rss/search?q=' + encodeURIComponent('Dubai real estate') + '&hl=en&gl=AE&ceid=AE:en'
+      : lang === 'ar'
+      ? 'https://news.google.com/rss/search?q=' + encodeURIComponent('دبي عقارات') + '&hl=ar&gl=AE&ceid=AE:ar'
+      : lang === 'hi'
+      ? 'https://news.google.com/rss/search?q=' + encodeURIComponent('दुबई रियल एस्टेट') + '&hl=hi&gl=IN&ceid=IN:hi'
       : 'https://news.google.com/rss/search?q=' + encodeURIComponent('דובאי נדלן') + '&hl=he&gl=IL&ceid=IL:he';
-    fetch('https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent(rss))
+    // Native has no CORS — fetch the RSS directly (reliable), fall back to rss2json if it fails.
+    const parseRss = (xml: string) => {
+      const out: any[] = [];
+      const re = /<item>([\s\S]*?)<\/item>/g;
+      let m: RegExpExecArray | null;
+      while ((m = re.exec(xml)) && out.length < 8) {
+        const b = m[1];
+        const g = (tag: string) => {
+          const mm = b.match(new RegExp('<' + tag + '[^>]*>([\\s\\S]*?)<\\/' + tag + '>'));
+          return mm ? mm[1].replace(/<!\[CDATA\[|\]\]>/g, '').trim() : '';
+        };
+        const title = g('title');
+        if (title) out.push({ title, link: g('link'), pubDate: g('pubDate'), description: g('description'), content: g('description'), author: g('source') });
+      }
+      return out;
+    };
+    // rss2json first (works in browser via CORS + on device); direct RSS as fallback.
+    fetch('https://wellcomedubaicom-production.up.railway.app/api/news?rss=' + encodeURIComponent(rss))
       .then(r => r.json())
-      .then(j => setNews((j.items || []).slice(0, 8)))
-      .catch(() => {});
+      .then(j => { const it = (j.items || []).slice(0, 8); if (it.length) { setNews(it); } else { throw new Error('empty'); } })
+      .catch(() => {
+        fetch(rss)
+          .then(r => r.text())
+          .then(xml => setNews(parseRss(xml)))
+          .catch(() => {});
+      });
   }, [lang]);
 
   return (
@@ -359,9 +415,9 @@ function InvestContent() {
           <Pressable onPress={() => setPreview(null)} style={StyleSheet.absoluteFill} />
           <View style={s.modalCard}>
             <LinearGradient colors={['#0E2A38', '#1A4A5E']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={s.modalHead}>
-              <View style={{ flexDirection: 'row-reverse', alignItems: 'center', gap: 8 }}>
+              <View style={{ flexDirection: isRTL ? 'row-reverse' : 'row', alignItems: 'center', gap: 8 }}>
                 <Text style={s.modalKicker}>{t('re.modalNews')}</Text>
-                {preview?.pubDate ? <Text style={s.modalDate}>{new Date(preview.pubDate).toLocaleDateString(lang === 'en' ? 'en-US' : 'he-IL', { day: 'numeric', month: 'long', year: 'numeric' })}</Text> : null}
+                {preview?.pubDate ? <Text style={s.modalDate}>{new Date(preview.pubDate).toLocaleDateString(lang === 'ru' ? 'ru-RU' : lang === 'en' ? 'en-US' : 'he-IL', { day: 'numeric', month: 'long', year: 'numeric' })}</Text> : null}
               </View>
               <TouchableOpacity onPress={() => setPreview(null)} style={s.modalClose}>
                 <Text style={{ color: '#fff', fontSize: 18 }}>×</Text>
@@ -401,9 +457,9 @@ function InvestContent() {
         <View key={a.id} style={s.articleCard}>
           <View style={s.articleHeader}>
             <Text style={{ fontSize: 22 }}>{a.icon}</Text>
-            <Text style={[s.articleTitle, { writingDirection: lang === 'en' ? 'ltr' : 'rtl', textAlign: lang === 'en' ? 'left' : 'right' }]}>{lang === 'en' ? (a.titleEn || a.title) : a.title}</Text>
+            <Text style={[s.articleTitle, { writingDirection: isRTL ? 'rtl' : 'ltr', textAlign: isRTL ? 'right' : 'left' }]}>{lang === 'ar' ? tcAr(a.title) : lang === 'hi' ? tcHi(a.title) : lang === 'ru' ? tcRu(a.title) : lang === 'en' ? (a.titleEn || a.title) : a.title}</Text>
           </View>
-          <Text style={[s.articleBody, { writingDirection: lang === 'en' ? 'ltr' : 'rtl', textAlign: lang === 'en' ? 'left' : 'right' }]}>{lang === 'en' ? (a.bodyEn || a.body) : a.body}</Text>
+          <Text style={[s.articleBody, { writingDirection: isRTL ? 'rtl' : 'ltr', textAlign: isRTL ? 'right' : 'left' }]}>{lang === 'ar' ? tcAr(a.body) : lang === 'hi' ? tcHi(a.body) : lang === 'ru' ? tcRu(a.body) : lang === 'en' ? (a.bodyEn || a.body) : a.body}</Text>
         </View>
       ))}
 
@@ -422,7 +478,7 @@ function InvestContent() {
       <View style={s.investMapWrap}>
         <WebView
           originWhitelist={['*']}
-          source={{ html: `<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><style>html,body,#m{margin:0;padding:0;height:100%;width:100%;}</style></head><body><div id="m"></div><script>function init(){const map=new google.maps.Map(document.getElementById('m'),{center:{lat:25.18,lng:55.25},zoom:11,mapTypeControl:false,streetViewControl:false,fullscreenControl:false});const pts=${JSON.stringify(RE_INVESTMENTS.filter((i: any) => i.lat && i.lng).map((i: any, idx: number) => ({ lat: i.lat, lng: i.lng, name: i.area, num: idx + 1, yield: i.yield })))};const bounds=new google.maps.LatLngBounds();pts.forEach(p=>{const m=new google.maps.Marker({position:{lat:p.lat,lng:p.lng},map,label:{text:String(p.num),color:'#fff',fontWeight:'800',fontSize:'12px'},icon:{path:google.maps.SymbolPath.CIRCLE,scale:14,fillColor:'#E76F51',fillOpacity:1,strokeColor:'#fff',strokeWeight:2}});bounds.extend({lat:p.lat,lng:p.lng});const iw=new google.maps.InfoWindow({content:'<div style="direction:rtl;font-family:-apple-system,sans-serif;"><b>'+p.num+'. '+p.name+'</b><br><span style="color:#E76F51;">${lang === 'en' ? 'Yield' : 'תשואה'} '+p.yield+'</span></div>'});m.addListener('click',()=>iw.open({anchor:m,map}));});if(pts.length>1)map.fitBounds(bounds,30);}</script><script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDw09Bg7XaH7apEWJBcFtogVfrdUwF_gEM&language=${lang}&callback=init" async defer></script></body></html>` }}
+          source={{ html: `<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><style>html,body,#m{margin:0;padding:0;height:100%;width:100%;}</style></head><body><div id="m"></div><script>function init(){const map=new google.maps.Map(document.getElementById('m'),{center:{lat:25.18,lng:55.25},zoom:11,mapTypeControl:false,streetViewControl:false,fullscreenControl:false,gestureHandling:'cooperative'});const pts=${JSON.stringify(RE_INVESTMENTS.filter((i: any) => i.lat && i.lng).map((i: any, idx: number) => ({ lat: i.lat, lng: i.lng, name: i.area, num: idx + 1, yield: i.yield })))};const bounds=new google.maps.LatLngBounds();pts.forEach(p=>{const m=new google.maps.Marker({position:{lat:p.lat,lng:p.lng},map,label:{text:String(p.num),color:'#fff',fontWeight:'800',fontSize:'12px'},icon:{path:google.maps.SymbolPath.CIRCLE,scale:14,fillColor:'#E76F51',fillOpacity:1,strokeColor:'#fff',strokeWeight:2}});bounds.extend({lat:p.lat,lng:p.lng});const iw=new google.maps.InfoWindow({content:'<div style="direction:rtl;font-family:-apple-system,sans-serif;"><b>'+p.num+'. '+p.name+'</b><br><span style="color:#E76F51;">${lang === 'ar' ? tcAr('תשואה') : lang === 'hi' ? tcHi('תשואה') : lang === 'ru' ? tcRu('תשואה') : lang === 'en' ? 'Yield' : 'תשואה'} '+p.yield+'</span></div>'});m.addListener('click',()=>iw.open({anchor:m,map}));});if(pts.length>1)map.fitBounds(bounds,30);}</script><script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDw09Bg7XaH7apEWJBcFtogVfrdUwF_gEM&language=${lang}&callback=init" async defer></script></body></html>` }}
           style={{ flex: 1 }}
           scrollEnabled={false}
         />
@@ -437,7 +493,7 @@ function InvestContent() {
             <View style={s.yieldBadge}><Text style={s.yieldTxt}>⚡ {inv.yield}</Text></View>
           </View>
           <Text style={s.investEntry}>{t('re.entryFrom')}<Text style={{ fontWeight: '900', color: Colors.PRIMARY }}>{inv.entry}</Text></Text>
-          <Text style={[s.investHl, { writingDirection: lang === 'en' ? 'ltr' : 'rtl', textAlign: lang === 'en' ? 'left' : 'right' }]}>{lang === 'en' ? (inv.highlightEn || inv.highlight) : inv.highlight}</Text>
+          <Text style={[s.investHl, { writingDirection: isRTL ? 'rtl' : 'ltr', textAlign: isRTL ? 'right' : 'left' }]}>{lang === 'ar' ? tcAr(inv.highlight) : lang === 'hi' ? tcHi(inv.highlight) : lang === 'ru' ? tcRu(inv.highlight) : lang === 'en' ? (inv.highlightEn || inv.highlight) : inv.highlight}</Text>
         </View>
       ))}
     </>
@@ -445,6 +501,8 @@ function InvestContent() {
 }
 
 function TradingChart({ title, symbol }: { title: string; symbol: string }) {
+  const { isRTL } = useI18n();
+  const s = makeS(isRTL);
   const cfg = encodeURIComponent(JSON.stringify({
     symbols: [[symbol + '|1Y']],
     chartOnly: false,
@@ -483,13 +541,18 @@ function TradingChart({ title, symbol }: { title: string; symbol: string }) {
 }
 
 function CurrencyTicker() {
+  const { isRTL } = useI18n();
+  const s = makeS(isRTL);
   const cfg = encodeURIComponent(JSON.stringify({
     symbols: [
       { description: 'USD/AED', proName: 'FX_IDC:USDAED' },
       { description: 'EUR/AED', proName: 'FX_IDC:EURAED' },
+      { description: 'AED/ILS', proName: 'FX_IDC:AEDILS' },
+      { description: 'AED/INR', proName: 'FX_IDC:AEDINR' },
+      { description: 'AED/SAR', proName: 'FX_IDC:AEDSAR' },
+      { description: 'AED/RUB', proName: 'FX_IDC:AEDRUB' },
       { description: 'USD/ILS', proName: 'FX_IDC:USDILS' },
       { description: 'EUR/ILS', proName: 'FX_IDC:EURILS' },
-      { description: 'AED/ILS', proName: 'FX_IDC:AEDILS' },
     ],
     isTransparent: false,
     showSymbolLogo: true,
@@ -512,19 +575,23 @@ function CurrencyTicker() {
 }
 
 function BusinessContent() {
-  const { t, lang } = useI18n();
+  const { t, lang, isRTL } = useI18n();
+  const s = makeS(isRTL); const ss = makeSS(isRTL);
   const [news, setNews] = useState<any[]>([]);
   const [preview, setPreview] = useState<any | null>(null);
   const newsSp = useScrollProgress();
 
   useEffect(() => {
-    const rss = lang === 'en'
+    const rss = lang === 'ru'
+      ? 'https://news.google.com/rss/search?q=' + encodeURIComponent('Дубай бизнес экономика') + '&hl=ru&gl=AE&ceid=AE:ru'
+      : lang === 'en'
       ? 'https://news.google.com/rss/search?q=' + encodeURIComponent('Dubai business economy') + '&hl=en&gl=AE&ceid=AE:en'
+      : lang === 'ar'
+      ? 'https://news.google.com/rss/search?q=' + encodeURIComponent('دبي أعمال اقتصاد') + '&hl=ar&gl=AE&ceid=AE:ar'
+      : lang === 'hi'
+      ? 'https://news.google.com/rss/search?q=' + encodeURIComponent('दुबई व्यापार अर्थव्यवस्था') + '&hl=hi&gl=IN&ceid=IN:hi'
       : 'https://news.google.com/rss/search?q=' + encodeURIComponent('דובאי עסקים כלכלה') + '&hl=he&gl=IL&ceid=IL:he';
-    fetch('https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent(rss))
-      .then(r => r.json())
-      .then(j => setNews((j.items || []).slice(0, 10)))
-      .catch(() => {});
+    loadNewsCached(rss, 'biz:' + lang, setNews);
   }, [lang]);
 
   return (
@@ -567,9 +634,9 @@ function BusinessContent() {
           <Pressable onPress={() => setPreview(null)} style={StyleSheet.absoluteFill} />
           <View style={s.modalCard}>
             <LinearGradient colors={['#0E2A38', '#1A4A5E']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={s.modalHead}>
-              <View style={{ flexDirection: 'row-reverse', alignItems: 'center', gap: 8 }}>
+              <View style={{ flexDirection: isRTL ? 'row-reverse' : 'row', alignItems: 'center', gap: 8 }}>
                 <Text style={s.modalKicker}>{t('re.modalBiz')}</Text>
-                {preview?.pubDate ? <Text style={s.modalDate}>{new Date(preview.pubDate).toLocaleDateString(lang === 'en' ? 'en-US' : 'he-IL', { day: 'numeric', month: 'long', year: 'numeric' })}</Text> : null}
+                {preview?.pubDate ? <Text style={s.modalDate}>{new Date(preview.pubDate).toLocaleDateString(lang === 'ru' ? 'ru-RU' : lang === 'en' ? 'en-US' : 'he-IL', { day: 'numeric', month: 'long', year: 'numeric' })}</Text> : null}
               </View>
               <TouchableOpacity onPress={() => setPreview(null)} style={s.modalClose}>
                 <Text style={{ color: '#fff', fontSize: 18 }}>×</Text>
@@ -616,7 +683,8 @@ const BIG_PICTURE_STATS = [
 ];
 
 function IsraeliContent() {
-  const { t, lang } = useI18n();
+  const { t, lang, isRTL } = useI18n();
+  const s = makeS(isRTL); const ss = makeSS(isRTL);
   const slideW = SCREEN_W - 36;
   const [activeSlide, setActiveSlide] = useState(0);
   const onSlideScroll = (e: any) => {
@@ -627,7 +695,7 @@ function IsraeliContent() {
 
   const slides = [
     <View key="big" style={[s.bigCard, { width: slideW }]}>
-      <View style={{ flexDirection: 'row-reverse', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
+      <View style={{ flexDirection: isRTL ? 'row-reverse' : 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
         <Text style={s.bigCardTitle}>{t('re.bigPicture')}</Text>
         <View style={s.yearChip}><Text style={s.yearChipTxt}>2026</Text></View>
       </View>
@@ -635,7 +703,7 @@ function IsraeliContent() {
         {BIG_PICTURE_STATS.map((st, i) => (
           <View key={i} style={[s.statRow, i === BIG_PICTURE_STATS.length - 1 && { borderBottomWidth: 0 }]}>
             <Text style={[s.statVal, { color: st.color }]}>{st.val}</Text>
-            <Text style={[s.statLabel, { writingDirection: lang === 'en' ? 'ltr' : 'rtl' }]}>{lang === 'en' ? st.labelEn : st.label}</Text>
+            <Text style={[s.statLabel, { writingDirection: isRTL ? 'rtl' : 'ltr' }]}>{lang === 'ar' ? tcAr(st.label) : lang === 'hi' ? tcHi(st.label) : lang === 'ru' ? tcRu(st.label) : lang === 'en' ? st.labelEn : st.label}</Text>
           </View>
         ))}
       </ScrollView>
@@ -649,7 +717,7 @@ function IsraeliContent() {
             <View style={s.areaNum}><Text style={s.areaNumTxt}>{i + 1}</Text></View>
             <View style={{ flex: 1 }}>
               <Text style={s.areaName}>{a.name}</Text>
-              <Text style={[s.areaNote, { writingDirection: lang === 'en' ? 'ltr' : 'rtl' }]}>{lang === 'en' ? a.noteEn : a.note}</Text>
+              <Text style={[s.areaNote, { writingDirection: isRTL ? 'rtl' : 'ltr' }]}>{lang === 'ar' ? tcAr(a.note) : lang === 'hi' ? tcHi(a.note) : lang === 'ru' ? tcRu(a.note) : lang === 'en' ? a.noteEn : a.note}</Text>
             </View>
             <View style={{ alignItems: 'flex-end' }}>
               <Text style={s.areaYield}>{a.yield}</Text>
@@ -667,11 +735,11 @@ function IsraeliContent() {
           <View key={i} style={[s.sectorRow, i === SECTORS.length - 1 && { borderBottomWidth: 0 }]}>
             <Text style={{ fontSize: 20 }}>{sec.icon}</Text>
             <View style={{ flex: 1 }}>
-              <View style={{ flexDirection: 'row-reverse', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Text style={s.sectorName}>{lang === 'en' ? sec.nameEn : sec.name}</Text>
-                <View style={s.kpiChip}><Text style={s.kpiChipTxt}>{lang === 'en' ? sec.kpiEn : sec.kpi}</Text></View>
+              <View style={{ flexDirection: isRTL ? 'row-reverse' : 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Text style={s.sectorName}>{lang === 'ar' ? tcAr(sec.name) : lang === 'hi' ? tcHi(sec.name) : lang === 'ru' ? tcRu(sec.name) : lang === 'en' ? sec.nameEn : sec.name}</Text>
+                <View style={s.kpiChip}><Text style={s.kpiChipTxt}>{lang === 'ar' ? tcAr(sec.kpi) : lang === 'hi' ? tcHi(sec.kpi) : lang === 'ru' ? tcRu(sec.kpi) : lang === 'en' ? sec.kpiEn : sec.kpi}</Text></View>
               </View>
-              <Text style={[s.sectorDesc, { writingDirection: lang === 'en' ? 'ltr' : 'rtl' }]}>{lang === 'en' ? sec.descEn : sec.desc}</Text>
+              <Text style={[s.sectorDesc, { writingDirection: isRTL ? 'rtl' : 'ltr' }]}>{lang === 'ar' ? tcAr(sec.desc) : lang === 'hi' ? tcHi(sec.desc) : lang === 'ru' ? tcRu(sec.desc) : lang === 'en' ? sec.descEn : sec.desc}</Text>
             </View>
           </View>
         ))}
@@ -686,7 +754,7 @@ function IsraeliContent() {
             <View style={s.fundTag}><Text style={s.fundTagTxt}>{f.tag}</Text></View>
             <View style={{ flex: 1 }}>
               <Text style={s.fundName}>{f.name}</Text>
-              <Text style={[s.fundDesc, { writingDirection: lang === 'en' ? 'ltr' : 'rtl' }]}>{lang === 'en' ? f.descEn : f.desc}</Text>
+              <Text style={[s.fundDesc, { writingDirection: isRTL ? 'rtl' : 'ltr' }]}>{lang === 'ar' ? tcAr(f.desc) : lang === 'hi' ? tcHi(f.desc) : lang === 'ru' ? tcRu(f.desc) : lang === 'en' ? f.descEn : f.desc}</Text>
             </View>
           </View>
         ))}
@@ -725,7 +793,8 @@ function IsraeliContent() {
 }
 
 function UserProjectsList() {
-  const { t } = useI18n();
+  const { t, isRTL } = useI18n();
+  const s = makeS(isRTL); const ss = makeSS(isRTL);
   const [projects, setProjects] = useState<any[] | null>(null);
 
   useEffect(() => {
@@ -750,19 +819,20 @@ function UserProjectsList() {
 }
 
 function ProjectCard({ project: p }: { project: any }) {
-  const { t } = useI18n();
+  const { t, isRTL } = useI18n();
+  const s = makeS(isRTL); const ss = makeSS(isRTL);
   const photo = p.photos?.[0] ? (p.photos[0].startsWith('http') ? p.photos[0] : 'https://wellcomedubaicom-production.up.railway.app' + p.photos[0]) : '';
   return (
     <TouchableOpacity activeOpacity={0.9} style={s.projectCard} onPress={() => Linking.openURL('https://wellcomedubai.com/#realestate')}>
       {photo ? <Image source={{ uri: photo }} style={s.projectImg} /> : <View style={[s.projectImg, { backgroundColor: '#0E2A38', alignItems: 'center', justifyContent: 'center' }]}><Text style={{ color: '#fff', opacity: 0.5 }}>{t('re.noMedia')}</Text></View>}
       <View style={s.projectBody}>
-        <View style={{ flexDirection: 'row-reverse', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
+        <View style={{ flexDirection: isRTL ? 'row-reverse' : 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
           <Text style={s.projectTitle} numberOfLines={1}>{p.title}</Text>
           {p.yieldPct ? <View style={s.projectYield}><Text style={s.projectYieldTxt}>{p.yieldPct}%</Text></View> : null}
         </View>
         {p.developer ? <Text style={s.projectMeta}>🏢 {p.developer}</Text> : null}
         <Text style={s.projectMeta}>📍 {p.area}{p.delivery ? ` · 📅 ${t('re.delivery')} ${p.delivery}` : ''}</Text>
-        <View style={{ flexDirection: 'row-reverse', justifyContent: 'space-between', alignItems: 'center', marginTop: 8 }}>
+        <View style={{ flexDirection: isRTL ? 'row-reverse' : 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 8 }}>
           <Text style={s.projectPrice}>{t('re.priceFrom')}{p.price}</Text>
           <Text style={s.projectCta}>{t('re.fullDetails')}</Text>
         </View>
@@ -772,13 +842,19 @@ function ProjectCard({ project: p }: { project: any }) {
 }
 
 function ListingsPlaceholder({ type }: { type: 'sale' | 'rent' }) {
-  const { t } = useI18n();
+  const { t, isRTL, lang } = useI18n();
+  const s = makeS(isRTL); const ss = makeSS(isRTL);
   const typeLabel = type === 'sale' ? t('re.forSale') : t('re.forRent');
   const [listings, setListings] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [owned, setOwned] = useState<Record<string, string>>({}); // id -> delete token (this device's listings)
 
   useEffect(() => {
     let cancelled = false;
+    AsyncStorage.getItem('myListings').then(v => {
+      if (cancelled || !v) return;
+      try { const map: Record<string, string> = {}; JSON.parse(v).forEach((x: any) => { if (x?.id && x?.token) map[x.id] = x.token; }); setOwned(map); } catch {}
+    }).catch(() => {});
     fetch('https://wellcomedubaicom-production.up.railway.app/api/listings?_t=' + Date.now())
       .then(r => r.json())
       .then(j => { if (!cancelled) { setListings((j.listings || []).filter((l: any) => l.type === type)); setLoading(false); } })
@@ -786,13 +862,30 @@ function ListingsPlaceholder({ type }: { type: 'sale' | 'rent' }) {
     return () => { cancelled = true; };
   }, [type]);
 
+  const delLabel = ({ he: 'מחק מודעה', en: 'Delete listing', ru: 'Удалить', ar: 'حذف الإعلان', hi: 'हटाएँ' } as any)[lang] || 'Delete';
+  const confirmMsg = ({ he: 'למחוק את המודעה?', en: 'Delete this listing?', ru: 'Удалить объявление?', ar: 'حذف هذا الإعلان؟', hi: 'यह लिस्टिंग हटाएँ?' } as any)[lang] || 'Delete this listing?';
+  const doDelete = (id: string) => {
+    const token = owned[id]; if (!token) return;
+    const run = async () => {
+      try {
+        const r = await fetch(`https://wellcomedubaicom-production.up.railway.app/api/listings/${id}?token=${encodeURIComponent(token)}`, { method: 'DELETE' });
+        if (!r.ok) throw new Error('failed');
+        setListings(prev => prev.filter(l => l.id !== id));
+        const next = { ...owned }; delete next[id]; setOwned(next);
+        try { const raw = await AsyncStorage.getItem('myListings'); const arr = raw ? JSON.parse(raw) : []; await AsyncStorage.setItem('myListings', JSON.stringify(arr.filter((x: any) => x.id !== id))); } catch {}
+      } catch { Alert.alert('', ({ he: 'המחיקה נכשלה', en: 'Delete failed', ru: 'Ошибка удаления', ar: 'فشل الحذف', hi: 'हटाना विफल' } as any)[lang] || 'Delete failed'); }
+    };
+    if (Platform.OS === 'web') { if (typeof window !== 'undefined' && window.confirm(confirmMsg)) run(); }
+    else Alert.alert('', confirmMsg, [{ text: 'ביטול', style: 'cancel' }, { text: delLabel, style: 'destructive', onPress: run }]);
+  };
+
   if (loading) {
     return <View style={s.placeholder}><Text style={s.placeholderSub}>{t('re.loadingAds')}</Text></View>;
   }
 
   return (
     <View>
-      <TouchableOpacity style={s.publishBtn} onPress={() => Linking.openURL('https://wellcomedubai.com/#realestate')}>
+      <TouchableOpacity style={s.publishBtn} onPress={() => router.push(('/submit-apartment?type=' + type) as any)}>
         <Text style={s.publishTxt}>{t('re.publishAd')}{typeLabel}</Text>
         <Text style={s.publishArrow}>‹</Text>
       </TouchableOpacity>
@@ -801,16 +894,15 @@ function ListingsPlaceholder({ type }: { type: 'sale' | 'rent' }) {
           <Text style={s.placeholderSub}>{t('re.noAdsPre')}{typeLabel}{t('re.noAdsPost')}</Text>
         </View>
       ) : listings.map(l => {
-        const photo = l.photos?.[0] ? (l.photos[0].startsWith('http') ? l.photos[0] : 'https://wellcomedubaicom-production.up.railway.app' + l.photos[0]) : '';
         return (
           <View key={l.id} style={s.listingCard}>
-            {photo ? <Image source={{ uri: photo }} style={s.listingImg} /> : null}
+            <PhotoCarousel photos={l.photos || []} height={210} resolve={(p) => (p.startsWith('http') ? p : 'https://wellcomedubaicom-production.up.railway.app' + p)} />
             <View style={s.listingBody}>
               <Text style={s.listingTitle}>{l.title}</Text>
               <Text style={s.listingArea}>📍 {l.area}</Text>
               <Text style={s.listingPrice}>AED {l.price}</Text>
               {l.desc ? <Text style={s.listingDesc} numberOfLines={3}>{l.desc}</Text> : null}
-              <View style={{ flexDirection: 'row-reverse', gap: 6, marginTop: 8 }}>
+              <View style={{ flexDirection: isRTL ? 'row-reverse' : 'row', gap: 6, marginTop: 8 }}>
                 <TouchableOpacity style={[s.actionBtn, { backgroundColor: '#25D366' }]} onPress={() => Linking.openURL(`https://wa.me/${(l.phone || '').replace(/\D/g, '')}`)}>
                   <Text style={s.actionTxt}>💬 WhatsApp</Text>
                 </TouchableOpacity>
@@ -818,6 +910,11 @@ function ListingsPlaceholder({ type }: { type: 'sale' | 'rent' }) {
                   <Text style={s.actionTxt}>{t('re.call')}</Text>
                 </TouchableOpacity>
               </View>
+              {owned[l.id] ? (
+                <TouchableOpacity style={s.deleteBtn} onPress={() => doDelete(l.id)}>
+                  <Text style={s.deleteTxt}>🗑 {delLabel}</Text>
+                </TouchableOpacity>
+              ) : null}
             </View>
           </View>
         );
@@ -827,7 +924,8 @@ function ListingsPlaceholder({ type }: { type: 'sale' | 'rent' }) {
 }
 
 function BrokersBanner() {
-  const { t } = useI18n();
+  const { t, isRTL } = useI18n();
+  const s = makeS(isRTL); const ss = makeSS(isRTL);
   return (
     <TouchableOpacity activeOpacity={0.85} onPress={() => router.push('/brokers' as any)} style={s.brokersBanner}>
       <ImageBackground
@@ -845,128 +943,130 @@ function BrokersBanner() {
   );
 }
 
-const s = StyleSheet.create({
+const makeS = (isRTL: boolean) => StyleSheet.create({
   container: { flex: 1, backgroundColor: '#FDF6EC' },
-  header: { flexDirection: 'row-reverse', alignItems: 'center', paddingHorizontal: 14, paddingVertical: 12, gap: 10 },
+  header: { flexDirection: isRTL ? 'row-reverse' : 'row', alignItems: 'center', paddingHorizontal: 14, paddingVertical: 12, gap: 10 },
   back: { padding: 4 },
   closeBtn: { width: 36, height: 36, borderRadius: 18, backgroundColor: 'rgba(255,255,255,0.2)', alignItems: 'center', justifyContent: 'center' },
-  title: { color: '#fff', fontSize: 17, fontWeight: '900', writingDirection: 'rtl' },
+  title: { color: '#fff', fontSize: 24, fontWeight: '400', letterSpacing: 0.3, writingDirection: isRTL ? 'rtl' : 'ltr' },
 
   kpiHero: { paddingHorizontal: 16, paddingBottom: 18, paddingTop: 6 },
   kpiHeroHead: { alignItems: 'center', marginBottom: 12 },
   kpiKicker: { color: Colors.GOLD, fontSize: 14, fontWeight: '800', letterSpacing: 1.6, textAlign: 'center' },
   kpiLive: { color: 'rgba(255,255,255,0.7)', fontSize: 11.5, marginTop: 3, textAlign: 'center', letterSpacing: 0.8 },
-  kpiGrid: { flexDirection: 'row-reverse', gap: 8, alignItems: 'stretch' },
+  kpiGrid: { flexDirection: isRTL ? 'row-reverse' : 'row', gap: 8, alignItems: 'stretch' },
   kpiBox: { flex: 1, flexBasis: 0, backgroundColor: 'rgba(255,255,255,0.06)', borderColor: 'rgba(233,196,106,0.25)', borderWidth: 1, borderRadius: 10, paddingHorizontal: 10, paddingVertical: 12, justifyContent: 'space-between', minHeight: 86 },
-  kpiLabel: { color: 'rgba(255,255,255,0.6)', fontSize: 10, fontWeight: '600', marginBottom: 6, textAlign: 'right', writingDirection: 'rtl' },
-  kpiVal: { color: '#fff', fontSize: 15, fontWeight: '800', textAlign: 'right' },
-  kpiDelta: { fontSize: 10.5, fontWeight: '700', marginTop: 4, textAlign: 'right' },
+  kpiLabel: { color: 'rgba(255,255,255,0.6)', fontSize: 10, fontWeight: '600', marginBottom: 6, textAlign: isRTL ? 'right' : 'left', writingDirection: isRTL ? 'rtl' : 'ltr' },
+  kpiVal: { color: '#fff', fontSize: 15, fontWeight: '800', textAlign: isRTL ? 'right' : 'left' },
+  kpiDelta: { fontSize: 10.5, fontWeight: '700', marginTop: 4, textAlign: isRTL ? 'right' : 'left' },
 
-  tabsStrip: { flexDirection: 'row-reverse', backgroundColor: '#FDF6EC', borderBottomWidth: 1, borderBottomColor: '#E8DEC8', paddingVertical: 4 },
+  tabsStrip: { flexDirection: isRTL ? 'row-reverse' : 'row', backgroundColor: '#FDF6EC', borderBottomWidth: 1, borderBottomColor: '#E8DEC8', paddingVertical: 4 },
   tabBtn: { flex: 1, alignItems: 'center', paddingVertical: 6, paddingHorizontal: 1, position: 'relative', minWidth: 0 },
   tabL1: { fontSize: TAB_FONT, lineHeight: TAB_LINE, textAlign: 'center' },
   tabL2: { fontSize: TAB_FONT, lineHeight: TAB_LINE, textAlign: 'center' },
   tabUnderline: { position: 'absolute', bottom: 0, left: 14, right: 14, height: 1.5 },
 
-  sectionTitle: { fontWeight: '900', color: '#1A4A5E', fontSize: 16, marginTop: 18, marginBottom: 12, textAlign: 'right', writingDirection: 'rtl', alignSelf: 'stretch' },
+  sectionTitle: { fontWeight: '600', color: '#1A4A5E', fontSize: 20, letterSpacing: 0.2, marginTop: 18, marginBottom: 12, textAlign: isRTL ? 'right' : 'left', writingDirection: isRTL ? 'rtl' : 'ltr', alignSelf: 'stretch' },
   whyBanner: { backgroundColor: '#E76F51', borderRadius: 14, padding: 18, marginVertical: 12, shadowColor: '#000', shadowOpacity: 0.15, shadowRadius: 8 },
-  whyKicker: { color: 'rgba(255,255,255,0.9)', fontSize: 11, letterSpacing: 1.3, fontWeight: '700', writingDirection: 'rtl', textAlign: 'right' },
-  whyTitle: { color: '#fff', fontSize: 16, fontWeight: '800', marginTop: 6, marginBottom: 12, writingDirection: 'rtl', textAlign: 'right' },
-  whyGrid: { flexDirection: 'row-reverse', flexWrap: 'wrap', gap: 8 },
-  whyItem: { color: '#fff', fontSize: 12, fontWeight: '600', width: '48%', writingDirection: 'rtl', textAlign: 'right' },
+  whyKicker: { color: 'rgba(255,255,255,0.9)', fontSize: 11, letterSpacing: 1.3, fontWeight: '700', writingDirection: isRTL ? 'rtl' : 'ltr', textAlign: isRTL ? 'right' : 'left' },
+  whyTitle: { color: '#fff', fontSize: 16, fontWeight: '800', marginTop: 6, marginBottom: 12, writingDirection: isRTL ? 'rtl' : 'ltr', textAlign: isRTL ? 'right' : 'left' },
+  whyGrid: { flexDirection: isRTL ? 'row-reverse' : 'row', flexWrap: 'wrap', gap: 8 },
+  whyItem: { color: '#fff', fontSize: 12, fontWeight: '600', width: '48%', writingDirection: isRTL ? 'rtl' : 'ltr', textAlign: isRTL ? 'right' : 'left' },
   investMapWrap: { height: 260, borderRadius: 14, overflow: 'hidden', borderWidth: 1, borderColor: '#E5E7EB', marginBottom: 16 },
 
   bigCard: { backgroundColor: '#fff', borderRadius: 16, paddingHorizontal: 16, paddingTop: 16, paddingBottom: 14, marginBottom: 4, height: 400, overflow: 'hidden', borderWidth: 1, borderColor: '#E8DEC8', shadowColor: '#0E2A38', shadowOpacity: 0.08, shadowRadius: 14, shadowOffset: { width: 0, height: 6 } },
-  bigCardHead: { flexDirection: 'row-reverse', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12, paddingBottom: 12, borderBottomWidth: 1, borderBottomColor: '#F0E6D2' },
-  bigCardTitle: { fontWeight: '900', color: '#1A4A5E', fontSize: 16, writingDirection: 'rtl', letterSpacing: -0.3 },
-  bigCardSub: { color: Colors.MUTED, fontSize: 11.5, marginTop: 2, marginBottom: 14, writingDirection: 'rtl', lineHeight: 16 },
+  bigCardHead: { flexDirection: isRTL ? 'row-reverse' : 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12, paddingBottom: 12, borderBottomWidth: 1, borderBottomColor: '#F0E6D2' },
+  bigCardTitle: { fontWeight: '600', color: '#1A4A5E', fontSize: 18, writingDirection: isRTL ? 'rtl' : 'ltr', letterSpacing: 0.1 },
+  bigCardSub: { color: Colors.MUTED, fontSize: 11.5, marginTop: 2, marginBottom: 14, writingDirection: isRTL ? 'rtl' : 'ltr', lineHeight: 16 },
   yearChip: { backgroundColor: '#FDF6EC', paddingHorizontal: 10, paddingVertical: 4, borderRadius: 8, borderWidth: 1, borderColor: '#E8DEC8' },
   yearChipTxt: { color: '#B8923A', fontSize: 10, fontWeight: '800', letterSpacing: 0.8 },
 
-  statRow: { flexDirection: 'row-reverse', alignItems: 'center', gap: 12, paddingVertical: 8, borderBottomWidth: 1, borderBottomColor: '#F5EDD8' },
-  statVal: { fontSize: 17, fontWeight: '900', minWidth: 70, textAlign: 'right', letterSpacing: -0.4 },
-  statLabel: { color: '#1A4A5E', fontSize: 12, fontWeight: '600', flex: 1, lineHeight: 16, textAlign: 'right', writingDirection: 'rtl' },
+  statRow: { flexDirection: isRTL ? 'row-reverse' : 'row', alignItems: 'center', gap: 12, paddingVertical: 8, borderBottomWidth: 1, borderBottomColor: '#F5EDD8' },
+  statVal: { fontSize: 17, fontWeight: '900', minWidth: 70, textAlign: isRTL ? 'right' : 'left', letterSpacing: -0.4 },
+  statLabel: { color: '#1A4A5E', fontSize: 12, fontWeight: '600', flex: 1, lineHeight: 16, textAlign: isRTL ? 'right' : 'left', writingDirection: isRTL ? 'rtl' : 'ltr' },
 
-  areaRow: { flexDirection: 'row-reverse', alignItems: 'center', gap: 13, paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: '#F0E6D2' },
+  areaRow: { flexDirection: isRTL ? 'row-reverse' : 'row', alignItems: 'center', gap: 13, paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: '#F0E6D2' },
   areaNum: { width: 32, height: 32, borderRadius: 9, backgroundColor: Colors.PINK, alignItems: 'center', justifyContent: 'center', shadowColor: Colors.PINK, shadowOpacity: 0.3, shadowRadius: 4, shadowOffset: { width: 0, height: 2 } },
   areaNumTxt: { color: '#fff', fontWeight: '900', fontSize: 14 },
-  areaName: { fontWeight: '800', color: '#1A4A5E', fontSize: 15, writingDirection: 'rtl', textAlign: 'right' },
-  areaNote: { color: Colors.MUTED, fontSize: 12, marginTop: 3, writingDirection: 'rtl', textAlign: 'right' },
+  areaName: { fontWeight: '800', color: '#1A4A5E', fontSize: 15, writingDirection: isRTL ? 'rtl' : 'ltr', textAlign: isRTL ? 'right' : 'left' },
+  areaNote: { color: Colors.MUTED, fontSize: 12, marginTop: 3, writingDirection: isRTL ? 'rtl' : 'ltr', textAlign: isRTL ? 'right' : 'left' },
   areaYield: { color: Colors.SECONDARY, fontWeight: '900', fontSize: 16, letterSpacing: -0.3 },
   areaEntry: { color: Colors.MUTED, fontSize: 11.5, marginTop: 2 },
 
-  sectorRow: { flexDirection: 'row-reverse', alignItems: 'flex-start', gap: 13, paddingVertical: 13, borderBottomWidth: 1, borderBottomColor: '#F0E6D2' },
-  sectorName: { fontWeight: '800', color: '#1A4A5E', fontSize: 15, writingDirection: 'rtl' },
-  sectorDesc: { color: Colors.MUTED, fontSize: 13, lineHeight: 19, marginTop: 4, writingDirection: 'rtl', textAlign: 'right' },
+  sectorRow: { flexDirection: isRTL ? 'row-reverse' : 'row', alignItems: 'flex-start', gap: 13, paddingVertical: 13, borderBottomWidth: 1, borderBottomColor: '#F0E6D2' },
+  sectorName: { fontWeight: '800', color: '#1A4A5E', fontSize: 15, writingDirection: isRTL ? 'rtl' : 'ltr' },
+  sectorDesc: { color: Colors.MUTED, fontSize: 13, lineHeight: 19, marginTop: 4, writingDirection: isRTL ? 'rtl' : 'ltr', textAlign: isRTL ? 'right' : 'left' },
   kpiChip: { backgroundColor: '#FDF6EC', paddingHorizontal: 9, paddingVertical: 4, borderRadius: 6, borderWidth: 1, borderColor: '#E8DEC8' },
   kpiChipTxt: { color: '#B8923A', fontSize: 11, fontWeight: '800' },
 
-  fundRow: { flexDirection: 'row-reverse', alignItems: 'flex-start', gap: 13, paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: '#F0E6D2' },
+  fundRow: { flexDirection: isRTL ? 'row-reverse' : 'row', alignItems: 'flex-start', gap: 13, paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: '#F0E6D2' },
   fundTag: { width: 40, height: 40, borderRadius: 10, backgroundColor: '#1A4A5E', alignItems: 'center', justifyContent: 'center', shadowColor: '#1A4A5E', shadowOpacity: 0.25, shadowRadius: 4, shadowOffset: { width: 0, height: 2 } },
   fundTagTxt: { color: Colors.GOLD, fontSize: 11.5, fontWeight: '900', letterSpacing: 0.8 },
-  fundName: { fontWeight: '800', color: '#1A4A5E', fontSize: 15, writingDirection: 'rtl', textAlign: 'right' },
-  fundDesc: { color: Colors.MUTED, fontSize: 13, marginTop: 4, lineHeight: 19, writingDirection: 'rtl', textAlign: 'right' },
+  fundName: { fontWeight: '800', color: '#1A4A5E', fontSize: 15, writingDirection: isRTL ? 'rtl' : 'ltr', textAlign: isRTL ? 'right' : 'left' },
+  fundDesc: { color: Colors.MUTED, fontSize: 13, marginTop: 4, lineHeight: 19, writingDirection: isRTL ? 'rtl' : 'ltr', textAlign: isRTL ? 'right' : 'left' },
 
-  submitProject: { flexDirection: 'row-reverse', alignItems: 'center', justifyContent: 'space-between', backgroundColor: Colors.PRIMARY, padding: 12, borderRadius: 8, marginTop: 14 },
+  submitProject: { flexDirection: isRTL ? 'row-reverse' : 'row', alignItems: 'center', justifyContent: 'space-between', backgroundColor: Colors.PRIMARY, padding: 12, borderRadius: 8, marginTop: 14 },
   submitProjectTxt: { color: '#fff', fontWeight: '700', fontSize: 14 },
   submitProjectArrow: { color: '#fff', fontSize: 16 },
 
-  articleCard: { backgroundColor: '#fff', borderRadius: 12, padding: 14, marginBottom: 10, borderWidth: 1, borderColor: '#E5E7EB' },
-  articleHeader: { flexDirection: 'row-reverse', alignItems: 'center', gap: 10, marginBottom: 8 },
-  articleTitle: { flex: 1, fontWeight: '800', color: Colors.TEXT, fontSize: 14, writingDirection: 'rtl', textAlign: 'right' },
-  articleBody: { fontSize: 12.5, color: Colors.TEXT, lineHeight: 19, writingDirection: 'rtl', textAlign: 'right' },
+  articleCard: { backgroundColor: '#fff', borderRadius: 0, padding: 16, marginBottom: 0, borderBottomWidth: 1, borderBottomColor: '#EAE0CE' },
+  articleHeader: { flexDirection: isRTL ? 'row-reverse' : 'row', alignItems: 'center', gap: 10, marginBottom: 8 },
+  articleTitle: { flex: 1, fontWeight: '500', color: Colors.TEXT, fontSize: 17, letterSpacing: 0.2, writingDirection: isRTL ? 'rtl' : 'ltr', textAlign: isRTL ? 'right' : 'left' },
+  articleBody: { fontSize: 12.5, color: Colors.TEXT, lineHeight: 19, writingDirection: isRTL ? 'rtl' : 'ltr', textAlign: isRTL ? 'right' : 'left' },
 
-  investCard: { backgroundColor: '#fff', borderRadius: 12, padding: 12, marginBottom: 8, borderWidth: 1, borderColor: '#E5E7EB' },
-  investHeader: { flexDirection: 'row-reverse', alignItems: 'center', gap: 8, marginBottom: 6 },
-  investNum: { width: 28, height: 28, borderRadius: 14, backgroundColor: Colors.WARM, alignItems: 'center', justifyContent: 'center' },
-  investNumTxt: { color: '#fff', fontWeight: '900', fontSize: 13 },
-  investArea: { flex: 1, fontWeight: '800', color: Colors.TEXT, fontSize: 14, writingDirection: 'rtl' },
-  yieldBadge: { backgroundColor: Colors.WARM + '20', paddingHorizontal: 10, paddingVertical: 4, borderRadius: 10 },
-  yieldTxt: { color: Colors.ACCENT, fontWeight: '800', fontSize: 11 },
-  investEntry: { fontSize: 12, color: Colors.MUTED, marginBottom: 4, writingDirection: 'rtl', textAlign: 'right' },
-  investHl: { fontSize: 12, color: Colors.MUTED, lineHeight: 17, writingDirection: 'rtl', textAlign: 'right' },
+  investCard: { backgroundColor: '#fff', borderRadius: 0, paddingHorizontal: 4, paddingVertical: 16, marginBottom: 0, borderBottomWidth: 1, borderBottomColor: '#EAE0CE' },
+  investHeader: { flexDirection: isRTL ? 'row-reverse' : 'row', alignItems: 'center', gap: 10, marginBottom: 8 },
+  investNum: { width: 32, height: 32, borderRadius: 16, backgroundColor: '#E24B32', alignItems: 'center', justifyContent: 'center' },
+  investNumTxt: { color: '#fff', fontWeight: '700', fontSize: 14 },
+  investArea: { flex: 1, fontWeight: '500', color: Colors.TEXT, fontSize: 19, letterSpacing: 0.2, writingDirection: isRTL ? 'rtl' : 'ltr' },
+  yieldBadge: { backgroundColor: '#2A9D8F', paddingHorizontal: 12, paddingVertical: 5, borderRadius: 0 },
+  yieldTxt: { color: '#fff', fontWeight: '700', fontSize: 13 },
+  investEntry: { fontSize: 14, color: Colors.MUTED, marginBottom: 4, writingDirection: isRTL ? 'rtl' : 'ltr', textAlign: isRTL ? 'right' : 'left' },
+  investHl: { fontSize: 14, color: Colors.MUTED, lineHeight: 20, writingDirection: isRTL ? 'rtl' : 'ltr', textAlign: isRTL ? 'right' : 'left' },
 
   placeholder: { alignItems: 'center', padding: 30, gap: 10 },
   placeholderTitle: { fontSize: 18, fontWeight: '800', color: Colors.TEXT },
   placeholderSub: { fontSize: 13, color: Colors.MUTED, textAlign: 'center' },
   openWebBtn: { backgroundColor: Colors.PRIMARY, paddingHorizontal: 18, paddingVertical: 10, borderRadius: 8, marginTop: 8 },
   openWebBtnTxt: { color: '#fff', fontWeight: '700' },
-  publishBtn: { flexDirection: 'row-reverse', alignItems: 'center', justifyContent: 'space-between', backgroundColor: Colors.PRIMARY, padding: 12, borderRadius: 8, marginBottom: 14 },
-  publishTxt: { color: '#fff', fontWeight: '700', fontSize: 14 },
-  publishArrow: { color: '#fff', fontSize: 16 },
-  listingCard: { backgroundColor: '#fff', borderRadius: 12, marginBottom: 12, overflow: 'hidden', borderWidth: 1, borderColor: '#E8DEC8' },
-  listingImg: { width: '100%', height: 180 },
-  listingBody: { padding: 12 },
-  listingTitle: { fontWeight: '900', color: Colors.TEXT, fontSize: 15, writingDirection: 'rtl', textAlign: 'right' },
-  listingArea: { color: Colors.MUTED, fontSize: 12, marginTop: 4, writingDirection: 'rtl', textAlign: 'right' },
-  listingPrice: { color: Colors.ACCENT, fontWeight: '900', fontSize: 16, marginTop: 6 },
-  listingDesc: { color: Colors.TEXT, fontSize: 12, marginTop: 6, lineHeight: 17, writingDirection: 'rtl', textAlign: 'right' },
-  actionBtn: { flex: 1, paddingVertical: 8, borderRadius: 6, alignItems: 'center' },
-  actionTxt: { color: '#fff', fontSize: 12, fontWeight: '800' },
+  publishBtn: { flexDirection: isRTL ? 'row-reverse' : 'row', alignItems: 'center', justifyContent: 'space-between', backgroundColor: '#0F2547', paddingVertical: 15, paddingHorizontal: 16, borderRadius: 0, marginBottom: 16, shadowColor: '#0F2547', shadowOpacity: 0.25, shadowRadius: 7, shadowOffset: { width: 0, height: 3 }, elevation: 4 },
+  publishTxt: { color: '#fff', fontWeight: '800', fontSize: 15, letterSpacing: 0.2 },
+  publishArrow: { color: '#E9C46A', fontSize: 18, fontWeight: '800' },
+  listingCard: { backgroundColor: '#fff', borderRadius: 0, marginBottom: 16, overflow: 'hidden', shadowColor: '#000', shadowOpacity: 0.12, shadowRadius: 9, shadowOffset: { width: 0, height: 4 }, elevation: 4 },
+  listingImg: { width: '100%', height: 210 },
+  listingBody: { padding: 15 },
+  listingTitle: { fontWeight: '800', color: Colors.TEXT, fontSize: 18.5, letterSpacing: 0.2, writingDirection: isRTL ? 'rtl' : 'ltr', textAlign: isRTL ? 'right' : 'left' },
+  listingArea: { color: Colors.MUTED, fontSize: 13, marginTop: 5, writingDirection: isRTL ? 'rtl' : 'ltr', textAlign: isRTL ? 'right' : 'left' },
+  listingPrice: { color: Colors.ACCENT, fontWeight: '900', fontSize: 22, marginTop: 9, letterSpacing: 0.3, writingDirection: isRTL ? 'rtl' : 'ltr', textAlign: isRTL ? 'right' : 'left' },
+  listingDesc: { color: '#5A6B72', fontSize: 13, marginTop: 9, lineHeight: 19, writingDirection: isRTL ? 'rtl' : 'ltr', textAlign: isRTL ? 'right' : 'left' },
+  actionBtn: { flex: 1, paddingVertical: 12, borderRadius: 0, alignItems: 'center', justifyContent: 'center' },
+  actionTxt: { color: '#fff', fontSize: 13, fontWeight: '800' },
+  deleteBtn: { marginTop: 8, paddingVertical: 10, borderRadius: 0, alignItems: 'center', justifyContent: 'center', borderWidth: 1.5, borderColor: '#E24B32' },
+  deleteTxt: { color: '#E24B32', fontSize: 13, fontWeight: '800' },
 
   newsCard: { width: 240, backgroundColor: '#fff', borderRadius: 10, overflow: 'hidden', borderWidth: 1, borderColor: '#E5E7EB' },
   newsImg: { width: '100%', height: 110 },
-  newsTitle: { fontSize: 12, fontWeight: '800', color: Colors.TEXT, lineHeight: 16, writingDirection: 'rtl', textAlign: 'right' },
+  newsTitle: { fontSize: 12, fontWeight: '800', color: Colors.TEXT, lineHeight: 16, writingDirection: isRTL ? 'rtl' : 'ltr', textAlign: isRTL ? 'right' : 'left' },
   newsDate: { fontSize: 10, color: Colors.MUTED, marginTop: 4 },
   modalBackdrop: { flex: 1, backgroundColor: 'rgba(0,0,0,0.6)', justifyContent: 'center', alignItems: 'center', padding: 14 },
   modalCard: { backgroundColor: '#fff', borderRadius: 14, width: '100%', maxWidth: 520, height: '85%', overflow: 'hidden', flexDirection: 'column', shadowColor: '#000', shadowOpacity: 0.35, shadowRadius: 20, shadowOffset: { width: 0, height: 12 } },
-  modalHead: { flexDirection: 'row-reverse', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 18, paddingVertical: 14 },
+  modalHead: { flexDirection: isRTL ? 'row-reverse' : 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 18, paddingVertical: 14 },
   modalKicker: { color: '#fff', backgroundColor: Colors.ACCENT, paddingHorizontal: 8, paddingVertical: 3, borderRadius: 6, fontSize: 11, fontWeight: '800' },
   modalDate: { color: 'rgba(255,255,255,0.75)', fontSize: 11 },
   modalClose: { width: 32, height: 32, borderRadius: 16, backgroundColor: 'rgba(255,255,255,0.2)', alignItems: 'center', justifyContent: 'center' },
   modalImg: { width: '100%', height: 200 },
-  modalTitle: { fontWeight: '900', color: '#1A4A5E', fontSize: 16, marginBottom: 10, lineHeight: 22, writingDirection: 'rtl', textAlign: 'right' },
-  modalSummary: { color: Colors.TEXT, fontSize: 14, lineHeight: 24, writingDirection: 'rtl', textAlign: 'right' },
+  modalTitle: { fontWeight: '900', color: '#1A4A5E', fontSize: 16, marginBottom: 10, lineHeight: 22, writingDirection: isRTL ? 'rtl' : 'ltr', textAlign: isRTL ? 'right' : 'left' },
+  modalSummary: { color: Colors.TEXT, fontSize: 14, lineHeight: 24, writingDirection: isRTL ? 'rtl' : 'ltr', textAlign: isRTL ? 'right' : 'left' },
   modalLink: { color: Colors.PRIMARY, fontWeight: '800', fontSize: 14, marginTop: 14, textAlign: 'left', textDecorationLine: 'underline' },
-  modalSource: { color: Colors.MUTED, fontSize: 12, fontWeight: '600', marginBottom: 12, writingDirection: 'rtl', textAlign: 'right' },
-  modalChips: { flexDirection: 'row-reverse', flexWrap: 'wrap', gap: 6, marginTop: 14 },
+  modalSource: { color: Colors.MUTED, fontSize: 12, fontWeight: '600', marginBottom: 12, writingDirection: isRTL ? 'rtl' : 'ltr', textAlign: isRTL ? 'right' : 'left' },
+  modalChips: { flexDirection: isRTL ? 'row-reverse' : 'row', flexWrap: 'wrap', gap: 6, marginTop: 14 },
   modalChip: { backgroundColor: '#FDF6EC', paddingHorizontal: 10, paddingVertical: 5, borderRadius: 14, borderWidth: 1, borderColor: '#E8DEC8' },
   modalChipTxt: { color: '#B8923A', fontSize: 11, fontWeight: '800' },
   modalDivider: { height: 1, backgroundColor: '#F0E6D2', marginTop: 18, marginBottom: 4 },
   modalLinkBtn: { backgroundColor: Colors.PRIMARY, paddingVertical: 12, paddingHorizontal: 18, borderRadius: 10, marginTop: 14, alignItems: 'center' },
   modalLinkBtnTxt: { color: '#fff', fontWeight: '800', fontSize: 14 },
   disclaimer: { backgroundColor: '#FAF3DE', borderColor: '#B8923A', borderWidth: 1, borderRadius: 12, padding: 14, marginTop: 10 },
-  disclaimerTxt: { color: '#7B5E1F', fontSize: 12, lineHeight: 20, writingDirection: 'rtl', textAlign: 'right' },
+  disclaimerTxt: { color: '#7B5E1F', fontSize: 12, lineHeight: 20, writingDirection: isRTL ? 'rtl' : 'ltr', textAlign: isRTL ? 'right' : 'left' },
   dots: { flexDirection: 'row', justifyContent: 'center', gap: 5, marginTop: 10, marginBottom: 4 },
   dot: { width: 6, height: 6, borderRadius: 3, backgroundColor: '#D4C9B0' },
   dotActive: { width: 18, backgroundColor: '#1A4A5E' },
@@ -974,15 +1074,15 @@ const s = StyleSheet.create({
   projectCard: { backgroundColor: '#fff', borderRadius: 14, overflow: 'hidden', borderWidth: 1, borderColor: '#E8DEC8', shadowColor: '#000', shadowOpacity: 0.08, shadowRadius: 10, shadowOffset: { width: 0, height: 4 } },
   projectImg: { width: '100%', height: 200 },
   projectBody: { padding: 14 },
-  projectTitle: { flex: 1, fontWeight: '900', color: '#1A4A5E', fontSize: 16, writingDirection: 'rtl', textAlign: 'right' },
+  projectTitle: { flex: 1, fontWeight: '900', color: '#1A4A5E', fontSize: 16, writingDirection: isRTL ? 'rtl' : 'ltr', textAlign: isRTL ? 'right' : 'left' },
   projectYield: { backgroundColor: Colors.SECONDARY, paddingHorizontal: 10, paddingVertical: 4, borderRadius: 6, marginLeft: 8 },
   projectYieldTxt: { color: '#fff', fontWeight: '800', fontSize: 12 },
-  projectMeta: { color: Colors.MUTED, fontSize: 12.5, marginTop: 2, writingDirection: 'rtl', textAlign: 'right' },
+  projectMeta: { color: Colors.MUTED, fontSize: 12.5, marginTop: 2, writingDirection: isRTL ? 'rtl' : 'ltr', textAlign: isRTL ? 'right' : 'left' },
   projectPrice: { color: Colors.ACCENT, fontWeight: '900', fontSize: 16 },
   projectCta: { color: Colors.PRIMARY, fontWeight: '700', fontSize: 12.5 },
   brokersBanner: { height: 110, marginTop: 16, borderRadius: 14, overflow: 'hidden' },
   brokersOverlay: { flex: 1, backgroundColor: 'rgba(184,92,142,0.65)', alignItems: 'center', justifyContent: 'center', padding: 14, borderRadius: 14 },
   brokersKicker: { color: '#fff', fontSize: 10, fontWeight: '700', letterSpacing: 1.5, opacity: 0.85 },
-  brokersTitle: { color: '#fff', fontSize: 17, fontWeight: '900', marginTop: 4, writingDirection: 'rtl' },
-  brokersSub: { color: 'rgba(255,255,255,0.95)', fontSize: 12, marginTop: 4, writingDirection: 'rtl' },
+  brokersTitle: { color: '#fff', fontSize: 17, fontWeight: '900', marginTop: 4, writingDirection: isRTL ? 'rtl' : 'ltr' },
+  brokersSub: { color: 'rgba(255,255,255,0.95)', fontSize: 12, marginTop: 4, writingDirection: isRTL ? 'rtl' : 'ltr' },
 });

@@ -1,0 +1,10 @@
+node_modules/
+.git/
+dist/
+web-build/
+.expo/
+ios/
+android/
+data_backup_stale_20260809/
+*.log
+.DS_Store

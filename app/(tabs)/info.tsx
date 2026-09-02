@@ -12,7 +12,8 @@ const ITEMS = [
 ];
 
 export default function InfoScreen() {
-  const { t, lang } = useI18n();
+  const { t, lang, isRTL } = useI18n();
+  const s = makeStyles(isRTL);
   return (
     <View style={s.container}>
       <SafeAreaView edges={['top']} style={{ backgroundColor: '#000' }} />
@@ -23,13 +24,13 @@ export default function InfoScreen() {
           <Text style={s.closeBtnTxt}>✕</Text>
         </TouchableOpacity>
       </View>
-      <ScrollView contentContainerStyle={{ padding: 14, paddingBottom: 80, gap: 10 }}>
+      <ScrollView contentContainerStyle={{ paddingBottom: 80 }}>
         {ITEMS.map(it => (
           <TouchableOpacity key={it.key} onPress={() => router.push(`/info/${it.key}` as any)} style={[s.row, { borderRightColor: it.color }]}>
             <View style={[s.icon, { backgroundColor: it.color }]}>
-              <Text style={{ color: '#fff', fontSize: 18, fontWeight: '900' }}>{it.icon}</Text>
+              <Text style={{ color: '#fff', fontSize: 18, fontWeight: '700' }}>{it.icon}</Text>
             </View>
-            <Text style={[s.rowTitle, { writingDirection: lang === 'en' ? 'ltr' : 'rtl', textAlign: lang === 'en' ? 'left' : 'right' }]}>{t('info.' + it.key)}</Text>
+            <Text style={[s.rowTitle, { writingDirection: isRTL ? 'rtl' : 'ltr', textAlign: isRTL ? 'right' : 'left' }]}>{t('info.' + it.key)}</Text>
             <Text style={[s.chev, { color: it.color }]}>‹</Text>
           </TouchableOpacity>
         ))}
@@ -39,17 +40,17 @@ export default function InfoScreen() {
   );
 }
 
-const s = StyleSheet.create({
+const makeStyles = (isRTL: boolean) => StyleSheet.create({
   container: { flex: 1, backgroundColor: Colors.BG },
   brandBar: { paddingHorizontal: 14, paddingVertical: 10, backgroundColor: '#fff', borderBottomWidth: 1, borderBottomColor: '#E5E7EB', alignItems: 'center' },
   brandTxt: { fontSize: 22, fontWeight: '900', letterSpacing: -0.3 },
-  header: { paddingHorizontal: 14, paddingVertical: 12, backgroundColor: Colors.PRIMARY, flexDirection: 'row-reverse', alignItems: 'center', justifyContent: 'space-between' },
-  title: { color: '#fff', fontSize: 17, fontWeight: '900', writingDirection: 'rtl', textAlign: 'center', flex: 1 },
+  header: { paddingHorizontal: 16, paddingVertical: 14, backgroundColor: Colors.PRIMARY, flexDirection: isRTL ? 'row-reverse' : 'row', alignItems: 'center', justifyContent: 'space-between' },
+  title: { color: '#fff', fontSize: 24, fontWeight: '400', letterSpacing: 0.3, writingDirection: isRTL ? 'rtl' : 'ltr', textAlign: 'center', flex: 1 },
   closeBtn: { width: 32, height: 32, borderRadius: 16, backgroundColor: '#E76F51', alignItems: 'center', justifyContent: 'center' },
-  closeBtnTxt: { color: '#fff', fontSize: 18, fontWeight: '900', lineHeight: 20 },
-  row: { flexDirection: 'row-reverse', alignItems: 'center', gap: 12, backgroundColor: '#fff', borderRadius: 10, padding: 14, borderWidth: 1, borderColor: '#E5E7EB', borderRightWidth: 5 },
+  closeBtnTxt: { color: '#fff', fontSize: 18, fontWeight: '600', lineHeight: 20 },
+  row: { flexDirection: isRTL ? 'row-reverse' : 'row', alignItems: 'center', gap: 12, backgroundColor: '#fff', borderRadius: 0, paddingHorizontal: 16, paddingVertical: 16, borderRightWidth: 4, borderBottomWidth: 1, borderBottomColor: '#EAE0CE' },
   icon: { width: 40, height: 40, borderRadius: 20, alignItems: 'center', justifyContent: 'center' },
-  rowTitle: { flex: 1, color: Colors.TEXT, fontWeight: '700', fontSize: 15, writingDirection: 'rtl', textAlign: 'right' },
+  rowTitle: { flex: 1, color: Colors.TEXT, fontWeight: '500', fontSize: 19, letterSpacing: 0.2, writingDirection: isRTL ? 'rtl' : 'ltr', textAlign: isRTL ? 'right' : 'left' },
   chev: { fontSize: 22, fontWeight: '300' },
-  footer: { textAlign: 'center', color: Colors.MUTED, fontSize: 11, marginTop: 20 },
+  footer: { textAlign: 'center', color: Colors.MUTED, fontSize: 12, marginTop: 24 },
 });

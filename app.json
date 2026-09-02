@@ -3,7 +3,7 @@
     "name": "WellCome Dubai",
     "slug": "wellcomedubai-app",
     "scheme": "wellcomedubai",
-    "version": "1.0.0",
+    "version": "1.0.3",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -14,7 +14,8 @@
       "backgroundColor": "#FDF6EC"
     },
     "ios": {
-      "supportsTablet": true,
+      "supportsTablet": false,
+      "buildNumber": "8",
       "bundleIdentifier": "com.wellcomedubai.app",
       "infoPlist": {
         "NSLocationWhenInUseUsageDescription": "אנחנו משתמשים במיקום שלך כדי להראות מסעדות, אטרקציות ומלונות קרובים בדובאי."
@@ -27,7 +28,8 @@
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
-      "package": "com.wellcomedubai.app"
+      "package": "com.wellcomedubai.app",
+      "versionCode": 7
     },
     "web": {
       "favicon": "./assets/favicon.png",
@@ -41,7 +43,14 @@
           "locationWhenInUsePermission": "אנחנו משתמשים במיקום שלך כדי להראות מסעדות, אטרקציות ומלונות קרובים בדובאי."
         }
       ],
-      "@react-native-community/datetimepicker"
+      "@react-native-community/datetimepicker",
+      [
+        "expo-speech-recognition",
+        {
+          "microphonePermission": "אנחנו משתמשים במיקרופון כדי שתוכל לדבר עם מסייע ה-AI במקום להקליד.",
+          "speechRecognitionPermission": "אנחנו משתמשים בזיהוי דיבור כדי להפוך את מה שאמרת לשאלה למסייע ה-AI."
+        }
+      ]
     ],
     "extra": {
       "router": {},
