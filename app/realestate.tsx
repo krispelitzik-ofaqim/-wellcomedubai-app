@@ -597,6 +597,22 @@ function BusinessContent() {
   return (
     <>
       <CurrencyTicker />
+
+      {/* Investments — a full service of its own, so it gets a banner, not a link. */}
+      <TouchableOpacity activeOpacity={0.92} onPress={() => router.push('/investments' as any)} style={s.invBanner}>
+        <ImageBackground
+          source={{ uri: 'https://wellcomedubai.com/images/Yizhak/investments-hero.jpg' }}
+          resizeMode="cover"
+          style={{ flex: 1 }}
+        >
+          <View style={s.invOverlay}>
+            <Text style={s.invKicker}>WELLCOME DUBAI · INVESTMENTS</Text>
+            <Text style={[s.invTitle, { writingDirection: isRTL ? 'rtl' : 'ltr' }]}>{t('inv.title')}</Text>
+            <Text style={[s.invSub, { writingDirection: isRTL ? 'rtl' : 'ltr' }]}>{t('inv.sub')}</Text>
+          </View>
+        </ImageBackground>
+      </TouchableOpacity>
+
       <Text style={s.sectionTitle}>{t('re.newsBiz')}</Text>
       {news.length === 0 ? (
         <View style={s.placeholder}><Text style={s.placeholderSub}>{t('re.loadingNews')}</Text></View>
@@ -945,6 +961,11 @@ function BrokersBanner() {
 
 const makeS = (isRTL: boolean) => StyleSheet.create({
   container: { flex: 1, backgroundColor: '#FDF6EC' },
+  invBanner: { height: 148, marginTop: 16, marginHorizontal: 12, borderRadius: 8, overflow: 'hidden' },
+  invOverlay: { flex: 1, backgroundColor: 'rgba(22,34,44,0.55)', alignItems: 'center', justifyContent: 'center', paddingHorizontal: 20 },
+  invKicker: { color: '#E9C46A', fontSize: 10, fontWeight: '800', letterSpacing: 2.2 },
+  invTitle: { color: '#fff', fontSize: 23, fontWeight: '400', marginTop: 7, textAlign: 'center', letterSpacing: 0.2 },
+  invSub: { color: 'rgba(255,255,255,0.85)', fontSize: 13, marginTop: 5, textAlign: 'center' },
   header: { flexDirection: isRTL ? 'row-reverse' : 'row', alignItems: 'center', paddingHorizontal: 14, paddingVertical: 12, gap: 10 },
   back: { padding: 4 },
   closeBtn: { width: 36, height: 36, borderRadius: 18, backgroundColor: 'rgba(255,255,255,0.2)', alignItems: 'center', justifyContent: 'center' },

@@ -173,11 +173,45 @@ const CAT_LABELS: Record<string, { label: string; icon: string; color: string }>
   abudhabi:    { label: 'אבו דאבי',  icon: '🏛', color: Colors.PINK },
 };
 
+// A stable id for this install, so a device counts once per tour however many
+// times it changes its mind.
+async function deviceId(): Promise<string> {
+  let id = await AsyncStorage.getItem('@deviceId');
+  if (!id) {
+    id = Date.now().toString(36) + Math.random().toString(36).slice(2, 10);
+    await AsyncStorage.setItem('@deviceId', id);
+  }
+  return id;
+}
+
 function RateRow({ storageKey, color }: { storageKey: string; color: string }) {
   const { t } = useI18n();
   const [rate, setRate] = useState(0);
-  useEffect(() => { AsyncStorage.getItem(storageKey).then(v => v && setRate(parseInt(v, 10))); }, [storageKey]);
-  const pick = (n: number) => { setRate(n); AsyncStorage.setItem(storageKey, String(n)); };
+  const [avg, setAvg] = useState<{ avg: number; count: number } | null>(null);
+
+  useEffect(() => {
+    AsyncStorage.getItem(storageKey).then(v => v && setRate(parseInt(v, 10)));
+    fetch(`${ALBUM_API}/api/ratings?key=${encodeURIComponent(storageKey)}`)
+      .then(r => r.json())
+      .then(j => { if (j?.success) setAvg({ avg: j.avg, count: j.count }); })
+      .catch(() => {});
+  }, [storageKey]);
+
+  const pick = async (n: number) => {
+    setRate(n);
+    AsyncStorage.setItem(storageKey, String(n));
+    try {
+      const device = await deviceId();
+      const r = await fetch(`${ALBUM_API}/api/ratings`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ key: storageKey, device, value: n }),
+      });
+      const j = await r.json();
+      if (j?.success) setAvg({ avg: j.avg, count: j.count });
+    } catch {}
+  };
+
   return (
     <View style={s.rateBox}>
       <Text style={s.rateLabel}>{t('itin.rate')}</Text>
@@ -188,6 +222,9 @@ function RateRow({ storageKey, color }: { storageKey: string; color: string }) {
           </TouchableOpacity>
         ))}
       </View>
+      {avg && avg.count > 0 ? (
+        <Text style={[s.rateAvg, { color }]}>★ {avg.avg} · {avg.count} {t('itin.raters')}</Text>
+      ) : null}
       {rate > 0 ? <Text style={[s.rateThanks, { color }]}>{t('itin.rateThanks')}</Text> : null}
     </View>
   );
@@ -225,6 +262,12 @@ function AlbumRow({ storageKey, color }: { storageKey: string; color: string }) 
       const r = await fetch(`${ALBUM_API}/api/album`, { method: 'POST', body: fd as any });
       const j = await r.json();
       if (Array.isArray(j.photos)) setPhotos(j.photos); else throw new Error('bad');
+      // Uploads are reviewed before they show, so say so rather than let the
+      // photo look like it vanished.
+      if (j.pending) {
+        const m = t('itin.photoPending');
+        Platform.OS === 'web' ? alert(m) : Alert.alert(m);
+      }
     } catch { Alert.alert(t('itin.permTitle'), t('sp.errMsg') || 'ההעלאה נכשלה, נסה שוב.'); }
     finally { setBusy(false); }
   };
@@ -949,6 +992,7 @@ const s = StyleSheet.create({
   rateLabel: { color: Colors.TEXT, fontWeight: '800', fontSize: 13, marginBottom: 6, writingDirection: 'rtl' },
   rateStars: { flexDirection: 'row-reverse', gap: 6 },
   rateStar: { fontSize: 26, color: '#D1D5DB' },
+  rateAvg: { fontSize: 13, fontWeight: '800', marginTop: 8 },
   rateThanks: { fontSize: 11, fontWeight: '700', marginTop: 6 },
   albumBox: { marginTop: 10, borderWidth: 1, borderColor: '#E5E7EB', borderRadius: 8, backgroundColor: '#fff', overflow: 'hidden' },
   albumHead: { flexDirection: 'row-reverse', alignItems: 'center', justifyContent: 'space-between', padding: 12 },
