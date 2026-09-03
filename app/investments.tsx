@@ -1,29 +1,16 @@
 import { useEffect, useMemo, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, ImageBackground } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, ImageBackground, Alert, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { useI18n } from '../constants/i18n';
 import { RE_API } from '../constants/realestate';
+import { DEMO_INVESTMENTS, type Opp } from '../constants/investmentsDemo';
 
 const NAVY = '#16222C', CREAM = '#F5F1EA', GOLD = '#E9C46A', TEAL = '#1A6B8A';
 const HERO = 'https://wellcomedubai.com/images/Yizhak/investments-hero.jpg';
 const FALLBACK = 'https://wellcomedubai.com/images/Yizhak/economy-uae-currency.jpg';
 
-type Opp = {
-  id: string; title: string; promoter: string; kind: string; area?: string;
-  minAmount: string; currency: string; yieldPct?: string; horizon?: string;
-  desc?: string; photos?: string[]; demo?: boolean; featured?: boolean;
-};
-
-// Placeholders only while the board is empty.
-const DEMO: Opp[] = [
-  { id: 'd1', title: 'Marina Heights · Off-Plan', promoter: 'Emaar', kind: 'realestate', area: 'Dubai Marina',
-    minAmount: '750,000', currency: 'AED', yieldPct: '8', horizon: '3-5', demo: true, featured: true },
-  { id: 'd2', title: 'JVC Rental Portfolio', promoter: 'Damac', kind: 'realestate', area: 'JVC',
-    minAmount: '700,000', currency: 'AED', yieldPct: '10', horizon: '2-4', demo: true },
-  { id: 'd3', title: 'Free Zone Company Setup', promoter: 'WellCome Dubai', kind: 'business', area: 'DMCC',
-    minAmount: '35,000', currency: 'AED', horizon: '1', demo: true },
-];
+const DEMO = DEMO_INVESTMENTS;
 
 const KINDS = ['all', 'realestate', 'business', 'fund', 'other'] as const;
 const KIND_COLOR: Record<string, string> = {
@@ -47,6 +34,7 @@ export default function InvestmentsScreen() {
   }, []);
 
   const list = useMemo(() => (filter === 'all' ? all : all.filter(o => o.kind === filter)), [all, filter]);
+  const open = (o: Opp) => router.push(`/investment/${o.id}` as any);
   // Paid projects get a full tile with a photo; free ones get a one-line strip below them.
   const paid = list.filter(o => o.featured);
   const free = list.filter(o => !o.featured);
@@ -89,7 +77,8 @@ export default function InvestmentsScreen() {
         {list.length === 0 && <Text style={[s.empty, { textAlign: ta, writingDirection: wd }]}>{t('inv.none')}</Text>}
 
         {paid.map(o => (
-          <View key={o.id} style={[s.card, s.cardPaid]}>
+          <TouchableOpacity key={o.id} activeOpacity={0.9} style={[s.card, s.cardPaid]}
+            onPress={() => open(o)}>
             <Image source={{ uri: imgOf(o) }} style={s.cardImg} resizeMode="cover" />
             <View style={[s.kindTag, { backgroundColor: KIND_COLOR[o.kind] || KIND_COLOR.other }, isRTL ? { right: 14 } : { left: 14 }]}>
               <Text style={s.kindTxt}>{t('inv.k.' + o.kind)}</Text>
@@ -110,12 +99,13 @@ export default function InvestmentsScreen() {
                 {!!o.horizon && <Stat k={t('inv.horizon')} v={`${o.horizon} ${t('inv.years')}`} />}
               </View>
             </View>
-          </View>
+          </TouchableOpacity>
         ))}
 
         {free.length > 0 && <Text style={[s.stripHead, { textAlign: ta, writingDirection: wd }]}>{t('inv.more')}</Text>}
         {free.map(o => (
-          <View key={o.id} style={[s.strip, { flexDirection: isRTL ? 'row-reverse' : 'row' }]}>
+          <TouchableOpacity key={o.id} activeOpacity={0.85} style={[s.strip, { flexDirection: isRTL ? 'row-reverse' : 'row' }]}
+            onPress={() => open(o)}>
             <View style={[s.stripBar, { backgroundColor: KIND_COLOR[o.kind] || KIND_COLOR.other }]} />
             <View style={{ flex: 1 }}>
               <Text style={[s.stripName, { textAlign: ta, writingDirection: wd }]} numberOfLines={1}>{o.title}</Text>
@@ -124,7 +114,7 @@ export default function InvestmentsScreen() {
               </Text>
             </View>
             <Text style={s.stripAmount}>{o.currency} {o.minAmount}</Text>
-          </View>
+          </TouchableOpacity>
         ))}
       </ScrollView>
 

@@ -33,6 +33,10 @@ export default function SubmitInvestmentScreen() {
   const [desc, setDesc] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
+  const [whatsapp, setWhatsapp] = useState('');
+  const [facebook, setFacebook] = useState('');
+  const [instagram, setInstagram] = useState('');
+  const [website, setWebsite] = useState('');
   const [photos, setPhotos] = useState<string[]>([]);
   const [video, setVideo] = useState<string | null>(null);
   const [sending, setSending] = useState(false);
@@ -55,7 +59,8 @@ export default function SubmitInvestmentScreen() {
     setSending(true);
     try {
       const fd = new FormData();
-      Object.entries({ title, promoter, kind, area, minAmount, currency, yieldPct, horizon, desc, contactPhone: phone, contactEmail: email })
+      Object.entries({ title, promoter, kind, area, minAmount, currency, yieldPct, horizon, desc,
+        contactPhone: phone, contactEmail: email, whatsapp, facebook, instagram, website })
         .forEach(([k, v]) => fd.append(k, String(v)));
       photos.forEach((uri, i) => fd.append('photos', { uri, name: `photo_${i}.jpg`, type: 'image/jpeg' } as any));
       if (video) fd.append('video', { uri: video, name: 'video.mp4', type: 'video/mp4' } as any);
@@ -161,6 +166,13 @@ export default function SubmitInvestmentScreen() {
         <Text style={[s.sec, { textAlign: ta, writingDirection: wd }]}>{t('si.contact')}</Text>
         <Field label={t('si.phone')} value={phone} onChange={setPhone} placeholder="+971..." keyboard="phone-pad" ta={ta} wd={wd} />
         <Field label={t('si.email')} value={email} onChange={setEmail} placeholder="email@example.com" keyboard="email-address" ta={ta} wd={wd} />
+
+        <Text style={[s.sec, { textAlign: ta, writingDirection: wd }]}>{t('si.channels')}</Text>
+        <Text style={[s.mediaNote, { textAlign: ta, writingDirection: wd }]}>{t('si.channelsNote')}</Text>
+        <Field label={t('si.whatsapp')} value={whatsapp} onChange={setWhatsapp} placeholder="+971..." keyboard="phone-pad" ta={ta} wd={wd} />
+        <Field label={t('si.facebook')} value={facebook} onChange={setFacebook} placeholder="facebook.com/yourpage" ta={ta} wd={wd} />
+        <Field label={t('si.instagram')} value={instagram} onChange={setInstagram} placeholder="@yourhandle" ta={ta} wd={wd} />
+        <Field label={t('si.website')} value={website} onChange={setWebsite} placeholder="www.example.com" ta={ta} wd={wd} />
 
         <TouchableOpacity style={[s.submit, sending && { opacity: 0.6 }]} disabled={sending} activeOpacity={0.85} onPress={submit}>
           <Text style={s.submitTxt}>{t('si.submit')}</Text>

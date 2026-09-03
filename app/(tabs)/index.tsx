@@ -75,6 +75,7 @@ const LEARN_TILES = [
   { id: 'about-app',  title: 'על האפליקציה',   titleEn: 'About the App',    img: 'https://wellcomedubai.com/images/icon-new.jpg', highlight: true },
   { id: 'itineraries', title: 'מסלולים מוכנים', titleEn: 'Ready Itineraries', img: 'https://wellcomedubai.com/images/Yizhak/dubai-skyline-evening.jpg', highlight: true, route: '/itineraries' },
   { id: 'coupons', title: 'עד 15% הנחה במסעדות', titleEn: 'Up to 15% off dining', img: 'https://images.pexels.com/photos/1279330/pexels-photo-1279330.jpeg', highlight: true, route: '/coupons' },
+  { id: 'investments', title: 'השקעות בדובאי', titleEn: 'Investing in Dubai', img: 'https://wellcomedubai.com/images/Yizhak/investments-hero.jpg', highlight: true, route: '/investments' },
   { id: 'why-us',     title: 'כרטיסים', titleEn: 'Tickets', img: require('../../assets/tickets-tile.jpg'), highlight: true },
   { id: 'tips',       title: 'טיפים',           titleEn: 'Tips',             img: 'https://wellcomedubai.com/images/Yizhak/dubai-mall-dubai-uae.jpg' },
   { id: 'history',    title: 'היסטוריה כללית',  titleEn: 'General History',  img: 'https://wellcomedubai.com/images/Yizhak/archs-shekh-zayed-grand-mosque-reflect-water-before-it.jpg' },
@@ -430,6 +431,7 @@ export default function Home() {
           {LEARN_TILES.filter(tile => tile.id !== 'israelis' || lang === 'he').map(tile => {
             const label = tile.id === 'itineraries' ? t('home.itineraries')
               : tile.id === 'coupons' ? (({ he: 'עד 15% הנחה במסעדות', en: 'Up to 15% off dining', ru: 'До 15% скидки в ресторанах', ar: 'خصم حتى 15% في المطاعم', hi: 'रेस्तराँ में 15% तक छूट' } as any)[lang] || 'Up to 15% off dining')
+              : tile.id === 'investments' ? t('inv.title')
               : t('learn.' + tile.id);
             return (
             <TouchableOpacity key={tile.id} activeOpacity={0.85} onPress={() => (tile as any).route ? router.push((tile as any).route) : tile.isEvents ? router.push('/events' as any) : tile.id === 'why-us' ? router.push('/tickets' as any) : router.push(`/learn/${tile.id}` as any)}>
